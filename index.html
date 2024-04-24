@@ -56,7 +56,7 @@
         </div>
 
       </div>
-
+      <br><br>
     </div>
 
     <div class="game-page">
@@ -91,7 +91,7 @@
       <h1>game over!</h1>
 
       <div id="reflection-map"></div>
-
+      <h3 class="basic button" onclick="go_home()">go to main menu</h3>
       <div class="reflections">
         <!-- <h3>hello<br>many points</h3> -->
       </div>
@@ -101,8 +101,12 @@
     <div class="chili-wrapper" id="loading" style="display: none;">
       <img src="assets/chili.svg">
       <h1>loading...</h1>
+      <h2 class="desc2">trying random location <span class="location-count"></span>...</h2>
     </div>
+    
+    <!-- https://developers.google.com/maps/documentation/geocoding/?csw=1#ReverseGeocoding -->
 
+    <script src="db.js"></script>
     <script src="main.js"></script>
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC-lSh-pb6I-D_fTCrXK-Rg0R-cr0E_Xyg&callback=initMap"></script>
   </body>

@@ -2,29 +2,6 @@
 // lat: -90, 90
 // lng: -180, 180
 
-var categories = [
-  {
-    "name": "world",
-    "img": "assets/earth.jpg",
-    "bounds": [
-      [-90, -180],
-      [90, -180],
-      [90, 180],
-      [-90, 180]
-    ]
-  },
-  {
-    "name": "usa",
-    "img": "assets/centralpark.jpg",
-    "bounds": [
-      [-90, -180],
-      [90, -180],
-      [90, 180],
-      [-90, 180]
-    ]
-  },
-]
-
 var map;
 var mapid = "9bd2e77c7cbe837c";
 var map_default_loc = [0, 0];
@@ -33,11 +10,23 @@ var suggestion_loc = false;
 var suggestion_markers = [];
 var sv;
 var find_coords_interval;
+var find_pano_interval;
 var real_loc;
 var allow_suggest = false;
 var gamesave_save = [];
 var miles = true;
 var time_start;
+var reflection_map;
+var reflection_markers = [];
+var polygon_points = [];
+var real_polygon_points = [];
+var polygon_maker = false;
+var polygon_markers = [];
+var map_polygon;
+var tried_locations = 0;
+var found_coords = false;
+var found_loc = false;
+var bounds_stuff;
 
 
 for (i in categories) {
@@ -52,15 +41,15 @@ for (i in categories) {
 function ray_casting(point, polygon) {
   var n = polygon.length,
   is_in = false,
-  x = point[0],
-  y = point[1],
+  x = point["lat"],
+  y = point["lng"],
   x1, x2, y1, y2;
 
   for(var i=0; i < n-1; ++i){
-    x1=polygon[i][0];
-    x2=polygon[i+1][0];
-    y1=polygon[i][1];
-    y2=polygon[i+1][1];
+    x1=polygon[i]["lat"];
+    x2=polygon[i+1]["lat"];
+    y1=polygon[i]["lng"];
+    y2=polygon[i+1]["lng"];
 
     if(y < y1 != y < y2 && x < (x2-x1) * (y-y1) / (y2-y1) + x1){
       is_in=!is_in;
@@ -173,7 +162,13 @@ function initMap() {
   
         document.querySelector(".suggest-button").classList.remove("disabled");
       }
+    });
 
+    reflection_map = new google.maps.Map(document.getElementById("reflection-map"), {
+      mapId: mapid,
+      zoom: 1,
+      center: lmao,
+      streetViewControl: false
     });
 
   } catch (err) {
@@ -195,45 +190,109 @@ function get_random_coord(category, do_after) {
   var max_loc = [-90, -180];
   var min_loc = [90, 180];
 
-  for (e in categories[category]["bounds"]) {
-    var bound = categories[category]["bounds"][e];
-    if (bound[0] > max_loc[0]) {
-      max_loc[0] = bound[0];
-    } else if (bound[0] < min_loc[0]) {
-      min_loc[0] = bound[0];
+  for (i in categories[category]["bounds"]) {
+
+    for (e in categories[category]["bounds"][i]) {
+      var bound = categories[category]["bounds"][i][e];
+      if (bound["lat"] > max_loc[0]) {
+        max_loc[0] = bound["lat"];
+      } else if (bound["lat"] < min_loc[0]) {
+        min_loc[0] = bound["lat"];
+      }
+      if (bound["lng"] > max_loc[1]) {
+        max_loc[1] = bound["lng"];
+      } else if (bound["lng"] < min_loc[1]) {
+        min_loc[1] = bound["lng"];
+      }
     }
-    if (bound[1] > max_loc[1]) {
-      max_loc[1] = bound[1];
-    } else if (bound[1] < min_loc[1]) {
-      min_loc[1] = bound[1];
-    }
+
   }
+
+  bounds_stuff = {"min": min_loc, "max": max_loc};
 
   console.log("bounds:", min_loc, max_loc);
 
+  find_pano_interval = false;
+  find_coords_interval = false;
+  found_coords = false;
+  found_loc = false;
+
   find_coords_interval = setInterval( () => {
+    var random_loc;
+    var loc_data;
 
-    var random_loc = [((Math.random() * (max_loc[0] - min_loc[0]) ) + min_loc[0]), ((Math.random() * (max_loc[1] - min_loc[1]) ) + min_loc[1])];
-    var loc_data = {"lat": random_loc[0], "lng": random_loc[1]};
-    console.log("random loc:", random_loc);
+    if (found_loc == true) {
+      console.log("FOUND LOC TRUE !!! FROM FIND COORDS");
+      clearInterval(find_pano_interval);
+      clearInterval(find_coords_interval);
+    }
 
-    sv.getPanoramaByLocation(loc_data, 10000, (data, status) => {
-      if (status == google.maps.StreetViewStatus.OK) {
-        clearInterval(find_coords_interval);
-        console.log("GOOD!!");
+    if (found_loc == false) {
+      
+      if (found_coords == false) {
+        tried_locations += 1;
+        document.querySelector(".location-count").innerHTML = `${tried_locations}`;
+        random_loc = [((Math.random() * (max_loc[0] - min_loc[0]) ) + min_loc[0]), ((Math.random() * (max_loc[1] - min_loc[1]) ) + min_loc[1])];
+        loc_data = {"lat": random_loc[0], "lng": random_loc[1]};
+        console.log("random loc:", random_loc);
 
-        real_loc = data.location.latLng.toJSON();
-        real_loc = [real_loc["lat"], real_loc["lng"]]
-        console.log("REAL LOC!!", real_loc);
+        
+        for (w in categories[category_playing]["bounds"]) {
+          var point_check_tm = ray_casting({"lat": random_loc[0], "lng": random_loc[1]}, categories[category_playing]["bounds"][w]);
+          console.log("RAY CHECK!!!!", point_check_tm);
+          if (point_check_tm == true) {
+            found_coords = true;
+            real_loc = loc_data;
+          }
+        }
 
-        document.querySelector(".chili-wrapper").style.display = "none";
-        do_after();
       } else {
-        console.log("NOT GOOD!!");
-      }
-    });
 
+        if (find_pano_interval == false){
+          find_pano_interval = setInterval( () => {
+            tried_locations += 0.1;
+            document.querySelector(".location-count").innerHTML = `${tried_locations}`;
+  
+            console.log(real_loc);
+  
+            if (found_loc == true) {
+              console.log("FOUND LOC TRUE !!! FROM FIND PANO");
+              clearInterval(find_pano_interval);
+              clearInterval(find_coords_interval);
+            }
+  
+            sv.getPanoramaByLocation(real_loc, 10000, (data, status) => {
+              if (status == google.maps.StreetViewStatus.OK) {
+                clearInterval(find_pano_interval);
+                console.log("GOOD!!");
+      
+                real_loc = data.location.latLng.toJSON();
+                real_loc = [real_loc["lat"], real_loc["lng"]]
+                console.log("REAL LOC!!", real_loc);
+      
+                document.querySelector(".chili-wrapper").style.display = "none";
+                document.querySelector(".suggestion").style.display = "";
+  
+                found_loc = true;
+                clearInterval(find_pano_interval);
+                clearInterval(find_coords_interval);
+                do_after();
+              } else {
+                console.log("NOT GOOD!!");
+                found_coords = false;
+              }
+            });
+      
+          }, 500);
+        }
+        
+      }
+    } else {
+      clearInterval(find_pano_interval);
+      clearInterval(find_coords_interval);
+    }
   }, 100);
+    
 }
 
 
@@ -254,15 +313,19 @@ function play_category(category_in) {
 function new_scene() { // new scene
 
   suggestion_loc = false;
+  tried_locations = 0;
   real_loc;
   document.querySelector(".chili-wrapper").style.display = "";
+  document.querySelector(".suggestion").style.display = "none";
   document.querySelector(".title-page").style.display = "none";
   document.querySelector(".end-page").style.display = "none";
   document.querySelector(".reflection-page").style.display = "none";
 
   get_random_coord(category_playing, () => {
+    clearInterval(find_pano_interval);
+    clearInterval(find_coords_interval);
     do_street_view(real_loc);
-    moveToLocation(0, 0);
+    moveToLocation(categories[category_playing]["center"][0], categories[category_playing]["center"][1], categories[category_playing]["zoom"]);
   })
   allow_suggest = true;
   resize_map(false);
@@ -288,10 +351,13 @@ function resize_map(big) {
   // }
 }
 
-function moveToLocation(lat, lng){
+function moveToLocation(lat, lng, zoom){
   var center = new google.maps.LatLng(lat, lng);
   map.panTo(center);
-  map.setZoom(1)
+  if (zoom == undefined) {
+    zoom = 1;
+  }
+  map.setZoom(zoom)
 }
 
 function make_suggestion() {
@@ -418,11 +484,182 @@ function funny_time(ms_elapsed) {
 
 function end_game() {
   document.querySelector(".reflection-page").style.display = "";
+  document.querySelector(".reflections").innerHTML = "";
   for (i in gamesave_save) {
     var node_tmtm = document.createElement("h3");
     var time_tmtm = parseInt(gamesave_save[i]["end time"]) - parseInt(gamesave_save[i]["start time"]);
     node_tmtm.innerHTML = `${i}<br>${gamesave_save[i]["real location"]}<br>${gamesave_save[i]["distance"]}<br>${funny_time(time_tmtm)}`;
     document.querySelector(".reflections").appendChild(node_tmtm);
+
+    var reflection_marker = new google.maps.Marker({
+      position: {"lat": gamesave_save[i]["suggestion"][0], "lng": gamesave_save[i]["suggestion"][1]},
+      map: reflection_map,
+      title: `[${i}] your suggestion`,
+      icon: {
+        url: "assets/blue_pin.svg"
+      }
+    });
+    reflection_markers.push(reflection_marker);
+    var reflection_marker = new google.maps.Marker({
+      position: {"lat": gamesave_save[i]["real location"][0], "lng": gamesave_save[i]["real location"][1]},
+      map: reflection_map,
+      title: `[${i}] real location`,
+      icon: {
+        url: "assets/red_pin.svg"
+      }
+    });
+    reflection_markers.push(reflection_marker);
+
+    var path_tm = [{"lat": gamesave_save[i]["suggestion"][0], "lng": gamesave_save[i]["suggestion"][1]},{"lat": gamesave_save[i]["real location"][0], "lng": gamesave_save[i]["real location"][1]}];
+    var yummy_path = new google.maps.Polyline({
+      path: path_tm,
+      map: reflection_map,
+      geodesic: true,
+      strokeColor: "#fbbc04",
+      strokeOpacity: 1.0,
+      strokeWeight: 5,
+    });
+
+    reflection_markers.push(yummy_path);
+
+    reflection_map.addListener("click", (mapsMouseEvent) => {
+      if ( polygon_maker == true) {
+    
+        point_loc = mapsMouseEvent.latLng.toJSON();
+  
+        console.log(point_loc);
+        polygon_points.push(point_loc);
+        var real_polygon_points = [];
+
+        for (i in polygon_points) {
+          if (polygon_points[i]["lat"]) {
+            real_polygon_points.push(polygon_points[i]);
+          }
+        }
+
+        if (map_polygon != false) {
+          map_polygon.setMap(null);
+        }
+
+        map_polygon = new google.maps.Polygon({
+          paths: real_polygon_points,
+          strokeColor: "#FF0000",
+          strokeOpacity: 0.8,
+          strokeWeight: 2,
+          fillColor: "#FF0000",
+          fillOpacity: 0.35,
+          map: reflection_map
+        });
+
+
+        var point_marker = new google.maps.Marker({
+          position: point_loc,
+          map: reflection_map,
+          title: "point",
+          icon: {
+            url: "assets/blue_pin.svg"
+          }
+        });
+        eval(`point_marker.addListener('click',()=> { remove_point_marker(${polygon_markers.length})});`);
+        
+        polygon_markers.push(point_marker);
+  
+        document.querySelector(".suggest-button").classList.remove("disabled");
+      }
+    });
+
   }
 
+}
+
+function remove_point_marker(id) {
+  polygon_markers[id].setMap(null);
+  polygon_points[id] = false;
+
+  var real_polygon_points = [];
+  for (i in polygon_points) {
+    if (polygon_points[i]["lat"]) {
+      real_polygon_points.push(polygon_points[i]);
+    }
+  }
+
+  if (map_polygon != false) {
+    map_polygon.setMap(null);
+  }
+
+  map_polygon = new google.maps.Polygon({
+    paths: real_polygon_points,
+    strokeColor: "#FF0000",
+    strokeOpacity: 0.8,
+    strokeWeight: 2,
+    fillColor: "#FF0000",
+    fillOpacity: 0.35,
+    map: reflection_map
+  });
+}
+
+function enable_polygon_maker() {
+  polygon_maker = true;
+  polygon_points = [];
+  map_polygon = false;
+
+  for (let i = 0; i < reflection_markers.length; i++) {
+    reflection_markers[i].setMap(null);
+  }
+  reflection_markers = [];
+  var node_tmtm = document.createElement("h2");
+  node_tmtm.classList.add("button");
+  node_tmtm.classList.add("basic");
+  node_tmtm.classList.add("rpm");
+  node_tmtm.setAttribute("onclick", `reset_polygon_maker()`);
+  node_tmtm.innerHTML = "reset polygon maker";
+  document.querySelector(".reflection-page").appendChild(node_tmtm);
+  var node_tmtm = document.createElement("h2");
+  node_tmtm.classList.add("button");
+  node_tmtm.classList.add("basic");
+  node_tmtm.classList.add("cpj");
+  node_tmtm.setAttribute("onclick", `copy_polygon_json()`);
+  node_tmtm.innerHTML = "copy polygon json";
+  document.querySelector(".reflection-page").appendChild(node_tmtm);
+  var node_tmtm = document.createElement("h2");
+  node_tmtm.classList.add("button");
+  node_tmtm.classList.add("basic");
+  node_tmtm.classList.add("dpm");
+  node_tmtm.setAttribute("onclick", `disable_polygon_maker()`);
+  node_tmtm.innerHTML = "disable polygon maker";
+  document.querySelector(".reflection-page").appendChild(node_tmtm);
+}
+
+function reset_polygon_maker() {
+  for (let i = 0; i < polygon_markers.length; i++) {
+    polygon_markers[i].setMap(null);
+  }
+  polygon_markers = [];
+  polygon_points = [];
+  map_polygon.setMap(null);
+  map_polygon = false;
+}
+
+function disable_polygon_maker() {
+  polygon_maker = false;
+  document.querySelector(".button.rpm").remove();
+  document.querySelector(".button.cpj").remove();
+  document.querySelector(".button.dpm").remove();
+}
+
+function copy_polygon_json() {
+  var real_polygon_points = [];
+  for (i in polygon_points) {
+    if (polygon_points[i]["lat"]) {
+      real_polygon_points.push(polygon_points[i]);
+    }
+  }
+  var polygon_json = JSON.stringify(real_polygon_points);
+  navigator.clipboard.writeText(polygon_json);
+}
+
+function go_home() {
+  document.querySelector(".end-page").style.display = "none";
+  document.querySelector(".reflection-page").style.display = "none";
+  document.querySelector(".title-page").style.display = "";
 }

@@ -181,6 +181,7 @@ input.basic {
   justify-content: center;
   flex-direction: column;
   z-index: 2000;
+  text-shadow: #00000050 0px 0px 10px;
 }
 
 .chili-wrapper img {
@@ -211,6 +212,7 @@ input.basic {
 .title-page {
   width: 100vw;
   height: 100vh;
+  overflow-y: scroll;
   top: 0px;
   left: 0px;
   position: fixed;
@@ -353,6 +355,7 @@ input.basic {
 .end-page {
   width: 100vw;
   height: 100vh;
+  overflow-y: scroll;
   top: 0px;
   left: 0px;
   position: fixed;
@@ -406,6 +409,7 @@ input.basic {
 .reflection-page {
   width: 100vw;
   height: 100vh;
+  overflow-y: scroll;
   top: 0px;
   left: 0px;
   position: fixed;
@@ -430,10 +434,25 @@ input.basic {
   justify-content: center;
   flex-wrap: wrap;
   gap: 10px;
+  margin-bottom: 2em;
 }
 
 .reflections h3 {
   border: 1px solid var(--input-basic-border);
   border-radius: 10px;
   padding: 10px;
+}
+
+#reflection-map {
+  width: 90vw;
+  height: 90vh;
+  margin-left: 5vw;
+  margin-top: 5vh;
+  z-index: 110;
+  border-radius: 15px;
+  margin-bottom: 2em;
+}
+
+.desc2 {
+  color: var(--main-txt-2);
 }
