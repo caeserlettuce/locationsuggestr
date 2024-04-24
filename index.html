@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    <meta charset="utf-8">
+    <title>locationsuggestr</title>
+    <meta name="keywords" content="groguessr map game locationsuggestr">
+    <meta name="og:description" content="find where you are: the game">
+    <!--<meta property="og:image" content="../assets/siren-blue.svg">-->
+    <meta property="og:title" content="locationsuggestr">
+    <meta name="twitter:description" content="find where you are: the game">
+    <!--<meta property="twitter:image" content="../assets/siren-blue.svg">-->
+    <meta property="twitter:title" content="locationsuggestr">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/svg" href="assets/chili.svg">
+  </head>
+  <body>
+
+    <div class="title-page">
+      <h1>locationsuggestr</h1>
+      <h2 class="desc">hello welcome to locationsuggestr, the game where you have to find where you are.<br>
+      basically you are put somewhere randomly on the map and you have to figure out where you<br>
+      are just through street view. this is DEFINITELY NOT a knockoff of another game. i would never.</h2>
+
+      <br>
+      <div class="divider"></div>
+      <br>
+
+      <h2>game settings</h2>
+      <br><br>
+
+      <svg class="toggle enabled" viewBox="0 0 2 1" onclick="toggle_button(0)" ja_id="0">
+        <circle cx="0.5" cy="0.5" r="0.5" class="background" />
+        <circle cx="1.5" cy="0.5" r="0.5" class="background" />
+        <rect x="0.5" y="0" width="1" height="1" class="background" />
+        <circle cx="0.5" cy="0.5" r="0.5" class="thumb" />
+      </svg>
+      <br><br>
+      <h3>use mi instead of km</h3>
+      
+      
+      <br>
+      
+      
+      <br>
+      <div class="divider"></div>
+      <br>
+
+      <h2>game categories</h2>
+      <h2 class="desc" style="margin-top: 0.25em;">click on one to start a game</h2>
+
+      <div class="game-categories">
+
+        <div class="template category">
+          <img src="assets/centralpark.jpg">
+          <h2>USA</h2>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="game-page">
+      
+      <div id="pano"></div>
+      <div class="suggestion">
+        <div id="map"></div>
+        <div class="bottom-options">
+          <h2 class="basic button resize-button" onclick="resize_map()">&gt;</h2>
+          <h2 class="basic button suggest-button disabled" onclick="make_suggestion()">suggest</h2>
+        </div>
+        
+      </div>
+      
+
+
+    </div>
+
+    <div class="end-page" style="display: none;">
+      <div class="stuff">
+        <h1>well guessed!</h1>
+        <h2>your guess was <span class="distance">1 MILLION</span> away!</h2>
+        <!-- <h2>you earned <span class="points-s">1 kajillion</span> point<span class="points-s">s</span></h2> -->
+        <br>
+        <h2 class="basic button" onclick="new_scene()">next round</h2>
+        <h2 class="basic button" onclick="end_game()">end game</h2>
+      </div>
+    </div>
+
+    <div class="reflection-page" style="display: none;">
+    
+      <h1>game over!</h1>
+
+      <div id="reflection-map"></div>
+
+      <div class="reflections">
+        <!-- <h3>hello<br>many points</h3> -->
+      </div>
+    </div>
+
+
+    <div class="chili-wrapper" id="loading" style="display: none;">
+      <img src="assets/chili.svg">
+      <h1>loading...</h1>
+    </div>
+
+    <script src="main.js"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC-lSh-pb6I-D_fTCrXK-Rg0R-cr0E_Xyg&callback=initMap"></script>
+  </body>
+</html>
