@@ -28,15 +28,27 @@
       <h2>game settings</h2>
       <br><br>
 
-      <svg class="toggle enabled" viewBox="0 0 2 1" onclick="toggle_button(0)" ja_id="0">
-        <circle cx="0.5" cy="0.5" r="0.5" class="background" />
-        <circle cx="1.5" cy="0.5" r="0.5" class="background" />
-        <rect x="0.5" y="0" width="1" height="1" class="background" />
-        <circle cx="0.5" cy="0.5" r="0.5" class="thumb" />
-      </svg>
-      <br><br>
-      <h3>use mi instead of km</h3>
+      <h3 style="display: flex; gap: 10px; justify-content: center;">
+        <svg class="toggle" viewBox="0 0 2 1" onclick="toggle_button(0)" ja_id="0">
+          <circle cx="0.5" cy="0.5" r="0.5" class="background" />
+          <circle cx="1.5" cy="0.5" r="0.5" class="background" />
+          <rect x="0.5" y="0" width="1" height="1" class="background" />
+          <circle cx="0.5" cy="0.5" r="0.5" class="thumb" />
+        </svg>
       
+        <span style="transform: translate(0px, 0.25em)">use km instead of mi</span>
+      </h3>
+      <br>
+      <h3 style="display: flex; gap: 10px; justify-content: center;">
+        <svg class="toggle" viewBox="0 0 2 1" onclick="toggle_button(1)" ja_id="1">
+          <circle cx="0.5" cy="0.5" r="0.5" class="background" />
+          <circle cx="1.5" cy="0.5" r="0.5" class="background" />
+          <rect x="0.5" y="0" width="1" height="1" class="background" />
+          <circle cx="0.5" cy="0.5" r="0.5" class="thumb" />
+        </svg>
+      
+        <span style="transform: translate(0px, 0.25em)">truly random locations</span>
+      </h3>
       
       <br>
       
@@ -121,6 +133,7 @@
       <div class="reflections">
         <!-- <h3>hello<br>many points</h3> -->
       </div>
+      <h3 class="basic button red" onclick="clear_history()">clear history</h3>
     </div>
 
 

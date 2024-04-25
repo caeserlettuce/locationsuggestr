@@ -710,3 +710,319 @@ var categories = [
     },
   ]
 
+
+  /*
+[
+    {
+        "address_components": [
+            {
+                "long_name": "94898HJR+M2",
+                "short_name": "94898HJR+M2",
+                "types": [
+                    "plus_code"
+                ]
+            }
+        ],
+        "formatted_address": "94898HJR+M2",
+        "geometry": {
+            "bounds": {
+                "south": 56.331625,
+                "west": -132.41,
+                "north": 56.33175,
+                "east": -132.409875
+            },
+            "location": {
+                "lat": 56.3316734,
+                "lng": -132.4099632
+            },
+            "location_type": "GEOMETRIC_CENTER",
+            "viewport": {
+                "south": 56.3303385197085,
+                "west": -132.4112864802915,
+                "north": 56.3330364802915,
+                "east": -132.4085885197085
+            }
+        },
+        "place_id": "GhIJAPoiRnQqTEARCBIlax6NYMA",
+        "plus_code": {
+            "global_code": "94898HJR+M2"
+        },
+        "types": [
+            "plus_code"
+        ]
+    },
+    {
+        "address_components": [
+            {
+                "long_name": "99929",
+                "short_name": "99929",
+                "types": [
+                    "postal_code"
+                ]
+            },
+            {
+                "long_name": "Wrangell",
+                "short_name": "Wrangell",
+                "types": [
+                    "locality",
+                    "political"
+                ]
+            },
+            {
+                "long_name": "Wrangell City and Borough",
+                "short_name": "Wrangell City and Boro",
+                "types": [
+                    "administrative_area_level_2",
+                    "political"
+                ]
+            },
+            {
+                "long_name": "Alaska",
+                "short_name": "AK",
+                "types": [
+                    "administrative_area_level_1",
+                    "political"
+                ]
+            },
+            {
+                "long_name": "United States",
+                "short_name": "US",
+                "types": [
+                    "country",
+                    "political"
+                ]
+            }
+        ],
+        "formatted_address": "Wrangell, AK 99929, USA",
+        "geometry": {
+            "bounds": {
+                "south": 55.912557,
+                "west": -132.7233621,
+                "north": 56.90330489999999,
+                "east": -130.9979241
+            },
+            "location": {
+                "lat": 56.3249862,
+                "lng": -132.0482099
+            },
+            "location_type": "APPROXIMATE",
+            "viewport": {
+                "south": 55.912557,
+                "west": -132.7233621,
+                "north": 56.90330489999999,
+                "east": -130.9979241
+            }
+        },
+        "place_id": "ChIJjTRIfvi7CFQRcsB2Bfsgtqs",
+        "types": [
+            "postal_code"
+        ]
+    },
+    {
+        "address_components": [
+            {
+                "long_name": "Wrangell",
+                "short_name": "Wrangell",
+                "types": [
+                    "locality",
+                    "political"
+                ]
+            },
+            {
+                "long_name": "Petersburg Borough",
+                "short_name": "Petersburg Borough",
+                "types": [
+                    "administrative_area_level_2",
+                    "political"
+                ]
+            },
+            {
+                "long_name": "Alaska",
+                "short_name": "AK",
+                "types": [
+                    "administrative_area_level_1",
+                    "political"
+                ]
+            },
+            {
+                "long_name": "United States",
+                "short_name": "US",
+                "types": [
+                    "country",
+                    "political"
+                ]
+            }
+        ],
+        "formatted_address": "Wrangell, AK, USA",
+        "geometry": {
+            "bounds": {
+                "south": 55.6338331,
+                "west": -133.1690792,
+                "north": 56.90330489999999,
+                "east": -130.997899
+            },
+            "location": {
+                "lat": 56.4706104,
+                "lng": -132.3815264
+            },
+            "location_type": "APPROXIMATE",
+            "viewport": {
+                "south": 55.6338331,
+                "west": -133.1690792,
+                "north": 56.90330489999999,
+                "east": -130.997899
+            }
+        },
+        "place_id": "ChIJq8l0wDrKCFQRc9jhlV0bTc0",
+        "types": [
+            "locality",
+            "political"
+        ]
+    },
+    {
+        "address_components": [
+            {
+                "long_name": "Wrangell City and Borough",
+                "short_name": "Wrangell City and Boro",
+                "types": [
+                    "administrative_area_level_2",
+                    "political"
+                ]
+            },
+            {
+                "long_name": "Wrangell",
+                "short_name": "Wrangell",
+                "types": [
+                    "locality",
+                    "political"
+                ]
+            },
+            {
+                "long_name": "Alaska",
+                "short_name": "AK",
+                "types": [
+                    "administrative_area_level_1",
+                    "political"
+                ]
+            },
+            {
+                "long_name": "United States",
+                "short_name": "US",
+                "types": [
+                    "country",
+                    "political"
+                ]
+            }
+        ],
+        "formatted_address": "Wrangell City and Boro, Wrangell, AK, USA",
+        "geometry": {
+            "bounds": {
+                "south": 55.6338331,
+                "west": -133.1690792,
+                "north": 56.90330489999999,
+                "east": -130.997899
+            },
+            "location": {
+                "lat": 56.438457,
+                "lng": -132.0392242
+            },
+            "location_type": "APPROXIMATE",
+            "viewport": {
+                "south": 55.6338331,
+                "west": -133.1690792,
+                "north": 56.90330489999999,
+                "east": -130.997899
+            }
+        },
+        "place_id": "ChIJm8DoiZa4CFQRjDkWmJTwDtU",
+        "types": [
+            "administrative_area_level_2",
+            "political"
+        ]
+    },
+    {
+        "address_components": [
+            {
+                "long_name": "Alaska",
+                "short_name": "AK",
+                "types": [
+                    "administrative_area_level_1",
+                    "political"
+                ]
+            },
+            {
+                "long_name": "United States",
+                "short_name": "US",
+                "types": [
+                    "country",
+                    "political"
+                ]
+            }
+        ],
+        "formatted_address": "Alaska, USA",
+        "geometry": {
+            "bounds": {
+                "south": 51.175092,
+                "west": 172.347846,
+                "north": 71.439786,
+                "east": -129.9741939
+            },
+            "location": {
+                "lat": 63.588753,
+                "lng": -154.4930619
+            },
+            "location_type": "APPROXIMATE",
+            "viewport": {
+                "south": 51.175092,
+                "west": 172.347846,
+                "north": 71.439786,
+                "east": -129.9741939
+            }
+        },
+        "place_id": "ChIJG8CuwJzfAFQRNduKqSde27w",
+        "types": [
+            "administrative_area_level_1",
+            "political"
+        ]
+    },
+    {
+        "address_components": [
+            {
+                "long_name": "United States",
+                "short_name": "US",
+                "types": [
+                    "country",
+                    "political"
+                ]
+            }
+        ],
+        "formatted_address": "United States",
+        "geometry": {
+            "bounds": {
+                "south": 18.7763,
+                "west": 166.9999999,
+                "north": 74.071038,
+                "east": -66.885417
+            },
+            "location": {
+                "lat": 37.09024,
+                "lng": -95.712891
+            },
+            "location_type": "APPROXIMATE",
+            "viewport": {
+                "south": 18.7763,
+                "west": 166.9999999,
+                "north": 74.071038,
+                "east": -66.885417
+            }
+        },
+        "place_id": "ChIJCzYy5IS16lQRQrfeQ5K5Oxw",
+        "types": [
+            "country",
+            "political"
+        ]
+    }
+]
+
+
+  */
