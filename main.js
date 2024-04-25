@@ -27,6 +27,18 @@ var tried_locations = 0;
 var found_coords = false;
 var found_loc = false;
 var bounds_stuff;
+var panorama
+var hours_checked = false;
+var hours_exist = true;
+var hours_exist = false;
+var fancy_hours;
+var fancy_minutes;
+var fancy_seconds;
+var prev_fancy_hours;
+var prev_fancy_minutes;
+var prev_fancy_seconds;
+var fancy_time_interval;
+var fancy_time_seconds = 0;
 
 
 for (i in categories) {
@@ -107,7 +119,7 @@ function do_street_view(loc) {
   // make it do the thing lmao
   var coordinates_tm = {"lat": loc[0], "lng": loc[1]};
 
-  const panorama = new google.maps.StreetViewPanorama(
+  panorama = new google.maps.StreetViewPanorama(
     document.getElementById("pano"), {
       position: coordinates_tm,
       pov: {
@@ -116,6 +128,11 @@ function do_street_view(loc) {
       },
     }
   );
+
+  var pano_loc = panorama.getPosition().toJSON();
+  console.log(pano_loc)
+  real_loc = [pano_loc["lat"], pano_loc["lng"]];  // this makes sure that if the panorama is like WAY off from the random point that it'll correct it and itll be fine
+
 
   //map.setStreetView(panorama);
 }
@@ -231,18 +248,50 @@ function get_random_coord(category, do_after) {
       
       if (found_coords == false) {
         tried_locations += 1;
-        document.querySelector(".location-count").innerHTML = `${tried_locations}`;
+        document.querySelector(".location-count").innerHTML = `${tried_locations.toFixed(1)}`;
         random_loc = [((Math.random() * (max_loc[0] - min_loc[0]) ) + min_loc[0]), ((Math.random() * (max_loc[1] - min_loc[1]) ) + min_loc[1])];
         loc_data = {"lat": random_loc[0], "lng": random_loc[1]};
         console.log("random loc:", random_loc);
 
-        
+        // see if its in bounds
         for (w in categories[category_playing]["bounds"]) {
           var point_check_tm = ray_casting({"lat": random_loc[0], "lng": random_loc[1]}, categories[category_playing]["bounds"][w]);
           console.log("RAY CHECK!!!!", point_check_tm);
           if (point_check_tm == true) {
-            found_coords = true;
-            real_loc = loc_data;
+
+            if (category_playing == 1) { // USA
+
+              tried_locations += 0.1;
+              document.querySelector(".location-count").innerHTML = `${tried_locations.toFixed(1)}`;
+              get_geocoding(loc_data["lat"], loc_data["lng"], (results) => {
+                console.log(results);
+                results_true = false;
+                for (s in results) { var hehe = `${results[s]}`; console.log(hehe);
+                  if (hehe.includes("USA") || hehe.includes("United States")) {
+                    results_true = true;
+                  }
+                } if (results_true == true) { found_coords = true; real_loc = loc_data; }
+              });
+    
+            } else if (category_playing == 2) { // seattle
+
+              tried_locations += 0.1;
+              document.querySelector(".location-count").innerHTML = `${tried_locations.toFixed(1)}`;
+              get_geocoding(loc_data["lat"], loc_data["lng"], (results) => {
+                console.log(results);
+                results_true = false;
+                for (s in results) { var hehe = `${results[s]}`; console.log(hehe)
+                  if (hehe.includes("Seattle")) {
+                    results_true = true;
+                  } 
+                } if (results_true == true) { found_coords = true; real_loc = loc_data; }
+              });
+
+            } else {
+              found_coords = true;
+              real_loc = loc_data;
+            }
+            
           }
         }
 
@@ -251,7 +300,7 @@ function get_random_coord(category, do_after) {
         if (find_pano_interval == false){
           find_pano_interval = setInterval( () => {
             tried_locations += 0.1;
-            document.querySelector(".location-count").innerHTML = `${tried_locations}`;
+            document.querySelector(".location-count").innerHTML = `${tried_locations.toFixed(1)}`;
   
             console.log(real_loc);
   
@@ -314,6 +363,9 @@ function new_scene() { // new scene
 
   suggestion_loc = false;
   tried_locations = 0;
+  fancy_time_seconds = 0;
+  clearInterval(fancy_time_interval);
+  fancy_time(0);
   real_loc;
   document.querySelector(".chili-wrapper").style.display = "";
   document.querySelector(".suggestion").style.display = "none";
@@ -336,6 +388,11 @@ function new_scene() { // new scene
   }
   suggestion_markers = [];
   time_start = new Date();
+
+  fancy_time_interval = setInterval( () => {
+    fancy_time_seconds += 1;
+    fancy_time(fancy_time_seconds);
+  }, 1000);
 
 }
 
@@ -366,6 +423,7 @@ function make_suggestion() {
     // submit suggestion
     resize_map(true);
     allow_suggest = false;
+    clearInterval(fancy_time_interval);
     document.querySelector(".suggest-button").classList.add("disabled");
     document.querySelector(".end-page").style.display = "";
 
@@ -662,4 +720,103 @@ function go_home() {
   document.querySelector(".end-page").style.display = "none";
   document.querySelector(".reflection-page").style.display = "none";
   document.querySelector(".title-page").style.display = "";
+}
+
+function get_geocoding(lat, lng, do_after) {
+  var geocoder = new google.maps.Geocoder();
+  var loc = new google.maps.LatLng(lat, lng);
+  var address_list_out = [];
+
+  geocoder.geocode( { 'location': loc}, function(results, status) {
+    if (status == 'OK') {
+      console.log(results);
+      for (i in results) {
+        address_list_out.push(results[i]["formatted_address"]);
+      }
+      do_after(address_list_out);
+
+    } else {
+      console.error('Geocode was not successful for the following reason: ' + status);
+    }
+  });
+}
+
+function reset_pano() {
+  // do_street_view(real_loc);
+  panorama.setPosition(new google.maps.LatLng(real_loc[0], real_loc[1]));
+}
+
+
+function do_num(num1, num2, elm) {
+  if (num1 != num2) {
+      document.getElementById(`${elm}`).style.transitionDuration = "500ms";
+      document.getElementById(`${elm}_1`).innerHTML = `${num1}`;
+      document.getElementById(`${elm}_2`).innerHTML = `${num2}`;
+      document.getElementById(`${elm}`).style.marginTop = "-1.2em";
+      setTimeout( () => {
+          document.getElementById(`${elm}`).style.transitionDuration = "0ms";
+          document.getElementById(`${elm}`).style.marginTop = "0px";
+          document.getElementById(`${elm}_2`).innerHTML = `${num1}`;
+          document.getElementById(`${elm}_1`).innerHTML = `${num2}`;
+      }, 500);
+  }
+}
+
+function doublefy(num) {
+  if (`${num}`.length == 1) {
+      num = `0${num}`;
+  } else {
+      num = `${num}`;
+  }
+  return num
+}
+function tripledecify(num) {
+  var out;
+  var tm = `${num}`.split(".");
+  if (tm.length == 1) {
+      out = `${num}.000`;
+  } else {
+      if (tm[1].length == 1) {
+          out = `${num}00`;
+      } else if (tm[1].length == 2) {
+          out = `${num}0`;
+      } else {
+          out = `${num}`;
+      }
+  }
+  return out
+}
+
+function fancy_time(seconds) {
+  var floor_seconds = Math.floor(seconds);
+  fancy_hours = Math.floor(floor_seconds / 3600);
+  fancy_minutes = Math.floor( ( floor_seconds - (fancy_hours * 3600) ) / 60 );
+  fancy_seconds = floor_seconds - (fancy_hours * 3600) - (fancy_minutes * 60);
+
+  // console.log(fancy_hours)
+  // console.log(fancy_minutes)
+  // console.log(fancy_seconds)
+  
+  if (fancy_hours > 0) {
+      hours_checked = true;
+      hours_exist = true;
+  }
+  if (hours_exist == true) {
+      var split_hours = doublefy(fancy_hours).split("");
+      var split_prev_hours = doublefy(prev_fancy_hours).split("");
+      do_num(split_prev_hours[0], split_hours[0], "h1");
+      do_num(split_prev_hours[1], split_hours[1], "h2");
+  }
+  var split_minutes = doublefy(fancy_minutes).split("");
+  var split_prev_minutes = doublefy(prev_fancy_minutes).split("");
+  do_num(split_prev_minutes[0], split_minutes[0], "m1");
+  do_num(split_prev_minutes[1], split_minutes[1], "m2");
+  var split_seconds = doublefy(fancy_seconds).split("");
+  var split_prev_seconds = doublefy(prev_fancy_seconds).split("");
+  do_num(split_prev_seconds[0], split_seconds[0], "s1");
+  do_num(split_prev_seconds[1], split_seconds[1], "s2");
+
+  prev_fancy_hours = fancy_hours;
+  prev_fancy_minutes = fancy_minutes;
+  prev_fancy_seconds = fancy_seconds;
 }

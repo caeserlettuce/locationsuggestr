@@ -291,9 +291,9 @@ input.basic {
 #map {
   width: 15vw;
   height: 15vh;
-  position: fixed !important;
+  /* position: fixed !important;
   bottom: 6em;
-  left: 4em;
+  left: 4em; */
   z-index: 110;
   border-radius: 15px;
   transition-duration: 300ms;
@@ -303,6 +303,16 @@ input.basic {
   width: 70vw;
   height: 70vh;
   border-radius: 10px;
+}
+
+.suggestion {
+  display: flex;
+  position: fixed;
+  bottom: 3em;
+  left: 5.5em;
+  z-index: 110;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .suggestion:hover > .bottom-options, #map.large ~ .bottom-options {
@@ -324,10 +334,10 @@ input.basic {
   width: 15vw!important;
   min-width: 10px;
   margin: 0px !important;
-  position: fixed;
+  /* position: fixed; */
   transition-duration: 300ms;
-  bottom: 2em;
-  left: 4em;
+  /* bottom: 2em;
+  left: 4em; */
   z-index: 150;
   display: flex;
   gap: 5px;
@@ -455,4 +465,31 @@ input.basic {
 
 .desc2 {
   color: var(--main-txt-2);
+}
+
+.reset-pano-button {
+  cursor: pointer;
+  margin: 0px !important;
+  width: 1.5em !important;
+}
+
+.time-wrapper {
+  display: flex;
+  margin-left: 10px;
+  margin-bottom: -9px;
+}
+
+.playertime {
+  font-size: 1.25em;
+  display: flex;
+  height: 1.25em;
+  overflow-y: hidden;
+  overflow-x: hidden;
+  justify-content: center;
+  min-width: max-content;
+}
+.playertime p {
+  margin: 0px;
+  user-select: none;
+  text-shadow: #000000 0px 0px 5px;
 }
