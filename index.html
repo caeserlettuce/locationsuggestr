@@ -47,11 +47,46 @@
           <circle cx="0.5" cy="0.5" r="0.5" class="thumb" />
         </svg>
       
-        <span style="transform: translate(0px, 0.25em)">truly random locations</span>
+        <span style="transform: translate(0px, 0.25em)">truly random locations</span><span style="transform: translate(-0.55em, 0.0em) scale(0.8); cursor: pointer;" onclick="open_info(1)">(i)</span>
       </h3>
       
       <br>
       
+      <div class="info-box" id="info_box_1" style="display: none;">
+        <div class="stuff">
+          <h1>[info] truly random locations</h1>
+
+          <h2 class="desc"> when truly random location is disabled, locationsuggestr will pick a random location, and then look at the population of
+            the closest 4 cities/towns, and based on their population, will move your location closer to said towns.
+            <br><br><br>
+            here's a more in-depth look at how the random location is found:
+            <br><br>
+            - the random location that you're put at is determined by taking the (rough) bounds of whatever map (category) you chose,
+            and picking a random latitude point and random longitude point that is within those bounds.
+            <br><br>
+            - then, an algorithm is run to see if the randomly picked coordinates is actually inside of the bounds (for specific maps like USA, 
+            the bounds is the rough shape of the US) and so this algorithm makes sure that it's actually within those bounds.
+            <br><br>
+            - if it is, then it moved onto the next step. if it's a specific map (again, like USA or seattle) then it goes and it gets what google 
+            considers to be the address at said coordinates.
+            <br><br>
+            - it then checks the address to see if it includes the US or seattle or whatever the category is (sometimes the algorithm doesnt work fully, and it'll
+            allow coordinates that are in like france or something.)
+            <br><br>
+            - if that passes, then it goes and checks with the google street view API to
+            see if there's a street view panorama within 1000ft (i think feet, it's just a number so i set it to the max which is 1000.) and if so,
+            then boom its found your location!
+            <br><br>
+            - if any of those passes fail, it goes back to the first step and does it all over again
+
+            <br><br><br>
+        
+        
+          </h2>
+          <h2 class="basic button" onclick="close_info(1)">close info</h2>
+        </div>
+      </div>
+
       
       <br>
       <div class="divider"></div>
@@ -147,6 +182,7 @@
 
     <script src="db.js"></script>
     <script src="main.js"></script>
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC-lSh-pb6I-D_fTCrXK-Rg0R-cr0E_Xyg&callback=initMap"></script>
+    <div id="callapi"></div>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC-lSh-pb6I-D_fTCrXK-Rg0R-cr0E_Xyg&libraries=places&callback=initMap"></script>
   </body>
 </html>

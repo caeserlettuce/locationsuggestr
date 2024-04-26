@@ -493,3 +493,30 @@ input.basic {
   user-select: none;
   text-shadow: #000000 0px 0px 5px;
 }
+
+.info-box {
+  width: 100vw;
+  height: 100vh;
+  overflow-y: scroll;
+  top: 0px;
+  left: 0px;
+  position: fixed;
+  z-index: 200;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.info-box .stuff {
+  width: fit-content;
+  height: fit-content;
+  background-color: var(--main-bg);
+  border: 2px solid var(--input-basic-border);
+  border-radius: 20px;
+  padding: 20px;
+  margin-top: 10px;
+  pointer-events: all;
+  max-width: 80vw;
+  max-height: 90vh;
+  overflow-y: scroll;
+}

@@ -27,7 +27,7 @@ var tried_locations = 0;
 var found_coords = false;
 var found_loc = false;
 var bounds_stuff;
-var panorama
+var panorama;
 var hours_checked = false;
 var hours_exist = true;
 var hours_exist = false;
@@ -42,13 +42,20 @@ var fancy_time_seconds = 0;
 var localstorage_object = {"hello": "yes"};
 var true_random = false;
 var nearby_city_radius = 50;
+var api_city_data = {};
+var places_api;
+var enable_cheat_markers = true;
+var the_funny = {};
+var geocoder;
 
 
 // LOCALSTORAGE
 try {
   var from_ls = JSON.parse(localStorage.getItem("locationsuggestr"));
-  if (from_ls["hello"]) {
-    localstorage_object = JSON.parse(JSON.stringify(from_ls));
+  if (typeof from_ls == typeof {}) {
+    if (from_ls["hello"]) {
+      localstorage_object = JSON.parse(JSON.stringify(from_ls));
+    }
   }
 } catch (err){
   console.error(err);
@@ -190,7 +197,7 @@ function do_street_view(loc) {
 
 function initMap() {
   try {
-    sv = new google.maps.StreetViewService();;
+    sv = new google.maps.StreetViewService();
     // The location of Uluru
     var lmao = { lat: map_default_loc[0], lng:  map_default_loc[1] };
     // The map, centered at Uluru
@@ -200,6 +207,9 @@ function initMap() {
       center: lmao,
       streetViewControl: false
     });
+
+    geocoder = new google.maps.Geocoder();
+    places_api = new google.maps.places.PlacesService(map);   // places api
     
     /*var markers = new Array();
     var new_marker = new google.maps.Marker({
@@ -251,7 +261,10 @@ function initMap() {
 //initMap([47.620198917035076, -122.34887843445061]);
 
 
-
+function add_tried_loc(num) {
+  tried_locations += num;
+  document.querySelector(".location-count").innerHTML = `${tried_locations.toFixed(2)}`;
+}
 
 function get_random_coord(category, do_after) {
 
@@ -298,11 +311,107 @@ function get_random_coord(category, do_after) {
     if (found_loc == false) {
       
       if (found_coords == false) {
-        tried_locations += 1;
-        document.querySelector(".location-count").innerHTML = `${tried_locations.toFixed(1)}`;
+        add_tried_loc(1);
         random_loc = [((Math.random() * (max_loc[0] - min_loc[0]) ) + min_loc[0]), ((Math.random() * (max_loc[1] - min_loc[1]) ) + min_loc[1])];
         loc_data = {"lat": random_loc[0], "lng": random_loc[1]};
         console.log("random loc:", random_loc);
+
+        // see if its in bounds
+        for (w in categories[category_playing]["bounds"]) {
+          var point_check_tm = ray_casting(loc_data, categories[category_playing]["bounds"][w]);
+          console.log("RAY CHECK!!!!", point_check_tm);
+          if (point_check_tm == true) {
+
+            if (category_playing == 1) { // USA
+              
+              get_geocoding(loc_data["lat"], loc_data["lng"], (results) => {
+                add_tried_loc(0.01);
+                console.log(results);
+                results_true = false;
+                for (s in results) { var hehe = `${results[s]}`; console.log(hehe);
+                  if (hehe.includes("USA") || hehe.includes("United States")) {
+                    results_true = true;
+                  }
+                } if (results_true == true) { found_coords = true; real_loc = loc_data; }
+              });
+    
+            } else if (category_playing == 2) { // seattle
+              
+              get_geocoding(loc_data["lat"], loc_data["lng"], (results) => {
+                add_tried_loc(0.01);
+                console.log(results);
+                results_true = false;
+                for (s in results) { var hehe = `${results[s]}`; console.log(hehe)
+                  if (hehe.includes("Seattle")) {
+                    results_true = true;
+                  } 
+                } if (results_true == true) { found_coords = true; real_loc = loc_data; }
+              });
+            } else {
+              found_coords = true;
+              real_loc = loc_data;
+            }
+          }
+        }
+
+      } else {
+        console.log(real_loc);
+
+        if (enable_cheat_markers == true) {
+          for (let i = 0; i < suggestion_markers.length; i++) {
+            suggestion_markers[i].setMap(null);
+          }
+          suggestion_markers = [];
+          var suggestion_marker = new google.maps.Marker({
+            position: real_loc,
+            map: map,
+            title: "real location",
+            icon: {
+              url: "assets/red_pin.svg"
+            }
+          });
+          suggestion_markers.push(suggestion_marker)
+          }
+
+          the_funny["do the rest"] = () => {
+            if (find_pano_interval == false){
+              find_pano_interval = setInterval( () => {
+                
+                if (found_loc == true) {
+                  console.log("FOUND LOC TRUE !!! FROM FIND PANO");
+                  clearInterval(find_pano_interval);
+                  clearInterval(find_coords_interval);
+                }
+      
+                sv.getPanoramaByLocation(real_loc, 10000, (data, status) => {
+                  add_tried_loc(0.01);
+                  if (status == google.maps.StreetViewStatus.OK) {
+                    console.log(status);
+                    clearInterval(find_pano_interval);
+                    console.log("GOOD!!");
+          
+                    real_loc = data.location.latLng.toJSON();
+                    real_loc = [real_loc["lat"], real_loc["lng"]]
+                    console.log("REAL LOC!!", real_loc);
+          
+                    document.querySelector(".chili-wrapper").style.display = "none";
+                    document.querySelector(".suggestion").style.display = "";
+      
+                    found_loc = true;
+                    clearInterval(find_pano_interval);
+                    clearInterval(find_coords_interval);
+                    do_after();
+                  } else {
+                    console.log("NOT GOOD!!");
+                    found_coords = false;
+                  }
+                });
+          
+              }, 500);
+            }
+          }
+          
+
 
         if (true_random == false) {   // TRUE RANDOM IS DISABLED, MAKE IT WEIGHTED N STUFF!!
 
@@ -315,89 +424,120 @@ function get_random_coord(category, do_after) {
           // https://publicapis.io/population-io-api
           // this one may be it ?? : https://www.census.gov/data/developers/data-sets/popest-popproj/popest.html
 
-        }
+          // ended up using wikidata! yippee!!
 
-        // see if its in bounds
-        for (w in categories[category_playing]["bounds"]) {
-          var point_check_tm = ray_casting({"lat": random_loc[0], "lng": random_loc[1]}, categories[category_playing]["bounds"][w]);
-          console.log("RAY CHECK!!!!", point_check_tm);
-          if (point_check_tm == true) {
+          // FOR SEARCH PARAMETERS:
+          // if it is in the USA, do CITY and STATE.
+          // for outside the US, do CITY and COUNTRY.
+          // if there are errors, uh, L. get good.
+          // gonna have to implement a failsafe that will fall back to the original random location if there's an error
 
-            if (category_playing == 1) { // USA
+          its_all_good = false;
 
-              tried_locations += 0.1;
-              document.querySelector(".location-count").innerHTML = `${tried_locations.toFixed(1)}`;
-              get_geocoding(loc_data["lat"], loc_data["lng"], (results) => {
-                console.log(results);
-                results_true = false;
-                for (s in results) { var hehe = `${results[s]}`; console.log(hehe);
-                  if (hehe.includes("USA") || hehe.includes("United States")) {
-                    results_true = true;
+
+          function get_geocody_lmao(loc, do_after) {
+              
+            geocoder.geocode( { 'location': loc}, function(results, status) {
+              if (status == 'OK') {
+                console.log("ADDY!!!!", results);
+
+                if (results[1]) {
+                  // woah! it has results! wow!
+                  if (results[1]["address_components"] && results[0]["geometry"]) {
+                    // WOW!!! IT EXISTS MORE!!
+                    var thingymabob = {};
+
+                    for (o in results[1]["address_components"]) {
+                      thingymabob[`${results[1]["address_components"][o]["types"][0]}`] = results[1]["address_components"][o]["long_name"]
+                    }
+                    console.log("THINGYMABOB!!!!", thingymabob)
+                    if (thingymabob["country"] && thingymabob["locality"] && thingymabob["administrative_area_level_1"] && results[0]["geometry"]["bounds"] && results[0]["geometry"]["location"]) {
+                      // it has the three elements of harmony
+                      
+                      towns_close.push({
+                        "loc": loc,
+                        "country": thingymabob["country"],
+                        "city": thingymabob["locality"],
+                        "state": thingymabob["administrative_area_level_1"],
+                        "bounds": [
+                          [
+                            results[0]["geometry"]["bounds"]["south"],
+                            results[0]["geometry"]["bounds"]["west"]
+                          ],
+                          [
+                            results[0]["geometry"]["bounds"]["north"],
+                            results[0]["geometry"]["bounds"]["east"]
+                          ]
+                        ],
+                        "location": [
+                          results[0]["geometry"]["location"]["lat"],
+                          results[0]["geometry"]["location"]["lng"]
+                        ]
+                      });
+                      //console.log(JSON.stringify(loc))
+                      //console.log(JSON.stringify(towns_loc_close[towns_loc_close.length - 1]))
+                      if (JSON.stringify(loc) == JSON.stringify(towns_loc_close[towns_loc_close.length - 1])) {
+                        do_after();   // the LAST ONE!!!
+                      }
+                    }
                   }
-                } if (results_true == true) { found_coords = true; real_loc = loc_data; }
-              });
-    
-            } else if (category_playing == 2) { // seattle
-
-              tried_locations += 0.1;
-              document.querySelector(".location-count").innerHTML = `${tried_locations.toFixed(1)}`;
-              get_geocoding(loc_data["lat"], loc_data["lng"], (results) => {
-                console.log(results);
-                results_true = false;
-                for (s in results) { var hehe = `${results[s]}`; console.log(hehe)
-                  if (hehe.includes("Seattle")) {
-                    results_true = true;
-                  } 
-                } if (results_true == true) { found_coords = true; real_loc = loc_data; }
-              });
-
-            } else {
-              found_coords = true;
-              real_loc = loc_data;
-            }
-            
-          }
-        }
-
-      } else {
-
-        if (find_pano_interval == false){
-          find_pano_interval = setInterval( () => {
-            tried_locations += 0.1;
-            document.querySelector(".location-count").innerHTML = `${tried_locations.toFixed(1)}`;
-  
-            console.log(real_loc);
-  
-            if (found_loc == true) {
-              console.log("FOUND LOC TRUE !!! FROM FIND PANO");
-              clearInterval(find_pano_interval);
-              clearInterval(find_coords_interval);
-            }
-  
-            sv.getPanoramaByLocation(real_loc, 10000, (data, status) => {
-              if (status == google.maps.StreetViewStatus.OK) {
-                console.log(status);
-                clearInterval(find_pano_interval);
-                console.log("GOOD!!");
-      
-                real_loc = data.location.latLng.toJSON();
-                real_loc = [real_loc["lat"], real_loc["lng"]]
-                console.log("REAL LOC!!", real_loc);
-      
-                document.querySelector(".chili-wrapper").style.display = "none";
-                document.querySelector(".suggestion").style.display = "";
-  
-                found_loc = true;
-                clearInterval(find_pano_interval);
-                clearInterval(find_coords_interval);
-                do_after();
+                }          
               } else {
-                console.log("NOT GOOD!!");
-                found_coords = false;
+                console.error('Geocode was not successful for the following reason: ' + status);
               }
             });
-      
-          }, 500);
+          }
+
+
+          its_all_good = false;
+
+          towns_loc_close = [];
+          towns_close = [];
+          towns_loc_close.push(real_loc);
+
+          var request = {
+            location: real_loc,
+            radius: '50000',
+            type: ['locality']
+          };
+
+          places_api.nearbySearch(request, (results, status) => {
+            add_tried_loc(0.01);
+            if (status === google.maps.places.PlacesServiceStatus.OK) {
+              var surrounding_towns = [];
+              for (let i = 0; i < results.length; i++) {
+                var place = results[i];
+                console.log(place);
+                surrounding_towns.push({
+                  "name": place["name"],
+                  "lat": place["geometry"]["lat"],
+                  "lng": place["geometry"]["lng"]
+                })
+              }
+
+              for (w in towns_loc_close) {
+                get_geocody_lmao(towns_loc_close[w], () => {
+    
+                  console.log("THIS IS WHAT IM DOING AFTERWARDS!!!");
+                  its_all_good = true;
+    
+                });
+              }
+              
+            }
+          });
+
+
+
+
+          
+
+          if (its_all_good == true) {
+            the_funny["do the rest"]();
+          }
+
+        } else {
+          the_funny["do the rest"]();
         }
         
       }
@@ -406,10 +546,7 @@ function get_random_coord(category, do_after) {
       clearInterval(find_coords_interval);
     }
   }, 100);
-    
 }
-
-
 
 function play_category(category_in) {
 
@@ -527,10 +664,10 @@ function make_suggestion() {
     var distance_text;
 
     if (kilometers == true) {
-      distance_text = `${distance} mi`;
+      distance_text = `${distance} km`;
       
     } else {
-      distance_text = `${distance} km`;
+      distance_text = `${distance} mi`;
     }
 
     document.querySelector(".distance").innerHTML = distance_text
@@ -794,7 +931,6 @@ function go_home() {
 }
 
 function get_geocoding(lat, lng, do_after) {
-  var geocoder = new google.maps.Geocoder();
   var loc = new google.maps.LatLng(lat, lng);
   var address_list_out = [];
 
@@ -890,4 +1026,81 @@ function fancy_time(seconds) {
   prev_fancy_hours = fancy_hours;
   prev_fancy_minutes = fancy_minutes;
   prev_fancy_seconds = fancy_seconds;
+}
+
+
+function get_city_population(city_name, do_after=false) {
+  var city_name = city_name.trim()
+  var url_city_name = encodeURIComponent(city_name);
+  api_city_data[city_name] = {};
+  api_city_data[city_name]["final do after"] = do_after;
+  call_api(
+    `https://www.wikidata.org/w/api.php?action=wbsearchentities&search=${url_city_name}&language=en&format=json&callback=api_callback`,
+    () => {
+      call_api(`https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${api_city_data[city_name]["id"]}&props=claims&format=json&callback=api_callback`, do_after)
+    },
+    {"city name": city_name});
+}
+
+
+function call_api(url, do_after=false, extra_data=false) {
+  try {
+    document.querySelector("#callapi").innerHTML = "";
+    //var url = "https://en.wikipedia.org/w/api.php?action=query&format=json&titles=New_York&prop=revisions&rvprop=content&callback=api_callback";
+    var script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.src = url;
+    document.querySelector("#callapi").appendChild(script);
+    // ^ who even knows what this stuff does i just copied it off of stackoverflow and it works so i dont complain
+    if (extra_data != false) {        // save do_after in an object so its accessible by api_callback after the api does the funny
+      if (extra_data["city name"]) {
+        api_city_data[extra_data["city name"]]["do after"] = do_after;
+      }
+    }
+  } catch (err) {
+    console.error(err);
+    if (extra_data != false) {        // save do_after in an object so its accessible by api_callback after the api does the funny
+      if (extra_data["city name"]) {
+        api_city_data[extra_data["city name"]]["error"] = err
+      }
+    }
+  }
+}
+
+function api_callback(res) {
+  //document.getElementById("getw").innerHTML = JSON.stringify(res.query.normalized[0]);
+  console.log(res)
+  try {
+    if (res["searchinfo"]) {
+      var city_name = res["searchinfo"]["search"];
+      api_city_data[city_name]["id"] = res["search"][0]["id"];
+      api_city_data[city_name]["data"] = res["search"][0];
+      api_city_data[city_name]["do after"]();
+      api_city_data[api_city_data[city_name]["id"]] = city_name;
+      // ^ important for population api call because it doesn't have the city name inclided, just the ID
+    } else if (res["entities"]) {
+      var list_tm = [];
+      for (i in res["entities"]) {
+        list_tm.push(i);
+      }
+      var city_id = list_tm[0];
+      var population_number = 0;
+      var population_claim = res["entities"][city_id]["claims"]["P1082"];
+      if (population_claim) {
+        population_number = parseInt(population_claim[0]["mainsnak"]["datavalue"]["value"]["amount"]);
+      }
+      console.log(population_claim);
+      console.log("population!", population_number);
+      api_city_data[api_city_data[city_id]]["final do after"](population_number);
+    }
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+function open_info(id) {
+  document.querySelector(`#info_box_${id}`).style.display = "";
+}
+function close_info(id) {
+  document.querySelector(`#info_box_${id}`).style.display = "none";
 }
