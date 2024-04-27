@@ -14,7 +14,7 @@ var find_pano_interval;
 var real_loc;
 var allow_suggest = false;
 var gamesave_save = [];
-var kilometers = true;
+var kilometers = false;
 var time_start;
 var reflection_map;
 var reflection_markers = [];
@@ -40,13 +40,18 @@ var prev_fancy_seconds;
 var fancy_time_interval;
 var fancy_time_seconds = 0;
 var localstorage_object = {"hello": "yes"};
-var true_random = false;
-var nearby_city_radius = 50;
+var true_random = true;
+var nearby_city_radius = 100;
 var api_city_data = {};
 var places_api;
-var enable_cheat_markers = true;
+var enable_cheat_markers = false;
 var the_funny = {};
 var geocoder;
+var coords_interval_done = true;
+var dev_loc = {
+  "lat": false,
+  "lng": false
+};
 
 
 // LOCALSTORAGE
@@ -97,6 +102,53 @@ if (true_random == true) {
   document.querySelector(`.toggle[ja_id="1"]`).classList.add("enabled");
 }
 
+function copy_json(input) {
+  return JSON.parse(JSON.stringify(input));
+}
+
+
+function funny_marker(label, marker_loc, colour) {
+  var suggestion_marker = new google.maps.Marker({
+    position: marker_loc,
+    map: map,
+    title: `${label}`,
+    icon: {
+      url: `assets/${colour}_pin.svg`
+    }
+  });
+  suggestion_markers.push(suggestion_marker)
+}
+
+function calculate_distance(p1, p2) {
+  const dx = p2["lat"] - p1["lat"];
+  const dy = p2["lng"] - p1["lng"];
+  const distance = Math.sqrt(dx * dx + dy * dy);
+  return distance;
+}
+
+function area_sqft(p1, p2) {
+  var lat1 = p1["lat"];
+  var lat2 = p2["lat"];
+  var lon1 = p1["lng"];
+  var lon2 = p2["lng"];
+
+  const R = 3959; // Earth's radius in miles
+  const toRad = Math.PI / 180;
+
+  const dLat = (lat2 - lat1) * toRad;
+  const dLon = (lon2 - lon1) * toRad;
+
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(lat1 * toRad) * Math.cos(lat2 * toRad) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const distance = R * c; // Distance in miles
+
+  const areaInSquareMiles = distance * distance;
+  const areaInSquareFeet = areaInSquareMiles * 27878400; // 1 square mile = 27,878,400 square feet
+
+  return areaInSquareFeet;
+}
 
 
 for (i in categories) {
@@ -268,6 +320,8 @@ function add_tried_loc(num) {
 
 function get_random_coord(category, do_after) {
 
+  its_all_good = false;
+
   var max_loc = [-90, -180];
   var min_loc = [90, 180];
 
@@ -297,254 +351,407 @@ function get_random_coord(category, do_after) {
   find_coords_interval = false;
   found_coords = false;
   found_loc = false;
+  coords_interval_done = true;
 
   find_coords_interval = setInterval( () => {
-    var random_loc;
-    var loc_data;
 
-    if (found_loc == true) {
-      console.log("FOUND LOC TRUE !!! FROM FIND COORDS");
-      clearInterval(find_pano_interval);
-      clearInterval(find_coords_interval);
-    }
+    if (coords_interval_done == true) {
+      coords_interval_done = false;
 
-    if (found_loc == false) {
-      
-      if (found_coords == false) {
-        add_tried_loc(1);
-        random_loc = [((Math.random() * (max_loc[0] - min_loc[0]) ) + min_loc[0]), ((Math.random() * (max_loc[1] - min_loc[1]) ) + min_loc[1])];
-        loc_data = {"lat": random_loc[0], "lng": random_loc[1]};
-        console.log("random loc:", random_loc);
-
-        // see if its in bounds
-        for (w in categories[category_playing]["bounds"]) {
-          var point_check_tm = ray_casting(loc_data, categories[category_playing]["bounds"][w]);
-          console.log("RAY CHECK!!!!", point_check_tm);
-          if (point_check_tm == true) {
-
-            if (category_playing == 1) { // USA
-              
-              get_geocoding(loc_data["lat"], loc_data["lng"], (results) => {
-                add_tried_loc(0.01);
-                console.log(results);
-                results_true = false;
-                for (s in results) { var hehe = `${results[s]}`; console.log(hehe);
-                  if (hehe.includes("USA") || hehe.includes("United States")) {
-                    results_true = true;
-                  }
-                } if (results_true == true) { found_coords = true; real_loc = loc_data; }
-              });
-    
-            } else if (category_playing == 2) { // seattle
-              
-              get_geocoding(loc_data["lat"], loc_data["lng"], (results) => {
-                add_tried_loc(0.01);
-                console.log(results);
-                results_true = false;
-                for (s in results) { var hehe = `${results[s]}`; console.log(hehe)
-                  if (hehe.includes("Seattle")) {
-                    results_true = true;
-                  } 
-                } if (results_true == true) { found_coords = true; real_loc = loc_data; }
-              });
-            } else {
-              found_coords = true;
-              real_loc = loc_data;
-            }
+      var random_loc;
+      var loc_data;
+  
+      if (found_loc == true) {
+        console.log("FOUND LOC TRUE !!! FROM FIND COORDS");
+        clearInterval(find_pano_interval);
+        clearInterval(find_coords_interval);
+      }
+  
+      if (found_loc == false) {
+        
+        if (found_coords == false) {
+          add_tried_loc(1);
+          random_loc = [((Math.random() * (max_loc[0] - min_loc[0]) ) + min_loc[0]), ((Math.random() * (max_loc[1] - min_loc[1]) ) + min_loc[1])];
+          if (dev_loc["lat"] != false && dev_loc["lng"] != false) {
+            random_loc = [dev_loc["lat"], dev_loc["lng"]];
           }
-        }
-
-      } else {
-        console.log(real_loc);
-
-        if (enable_cheat_markers == true) {
-          for (let i = 0; i < suggestion_markers.length; i++) {
-            suggestion_markers[i].setMap(null);
-          }
-          suggestion_markers = [];
-          var suggestion_marker = new google.maps.Marker({
-            position: real_loc,
-            map: map,
-            title: "real location",
-            icon: {
-              url: "assets/red_pin.svg"
-            }
-          });
-          suggestion_markers.push(suggestion_marker)
-          }
-
-          the_funny["do the rest"] = () => {
-            if (find_pano_interval == false){
-              find_pano_interval = setInterval( () => {
+          loc_data = {"lat": random_loc[0], "lng": random_loc[1]};
+          console.log("random loc:", random_loc);
+  
+          // see if its in bounds
+          for (w in categories[category_playing]["bounds"]) {
+            var point_check_tm = ray_casting(loc_data, categories[category_playing]["bounds"][w]);
+            console.log("RAY CHECK!!!!", point_check_tm);
+            if (point_check_tm == true) {
+  
+              if (category_playing == 1) { // USA
                 
-                if (found_loc == true) {
-                  console.log("FOUND LOC TRUE !!! FROM FIND PANO");
-                  clearInterval(find_pano_interval);
-                  clearInterval(find_coords_interval);
-                }
-      
-                sv.getPanoramaByLocation(real_loc, 10000, (data, status) => {
+                get_geocoding(loc_data["lat"], loc_data["lng"], (results) => {
                   add_tried_loc(0.01);
-                  if (status == google.maps.StreetViewStatus.OK) {
-                    console.log(status);
-                    clearInterval(find_pano_interval);
-                    console.log("GOOD!!");
-          
-                    real_loc = data.location.latLng.toJSON();
-                    real_loc = [real_loc["lat"], real_loc["lng"]]
-                    console.log("REAL LOC!!", real_loc);
-          
-                    document.querySelector(".chili-wrapper").style.display = "none";
-                    document.querySelector(".suggestion").style.display = "";
-      
-                    found_loc = true;
-                    clearInterval(find_pano_interval);
-                    clearInterval(find_coords_interval);
-                    do_after();
-                  } else {
-                    console.log("NOT GOOD!!");
-                    found_coords = false;
+                  console.log(results);
+                  results_true = false;
+                  for (s in results) {
+                    var hehe = `${results[s]}`;
+                    console.log(hehe);
+                    if (hehe.includes("USA") || hehe.includes("United States")) {
+                      results_true = true;
+                    }
+                  } if (results_true == true) {
+                    coords_interval_done = true;
+                    found_coords = true;
+                    real_loc = loc_data;
                   }
                 });
-          
-              }, 500);
+      
+              } else if (category_playing == 2) { // seattle
+                
+                get_geocoding(loc_data["lat"], loc_data["lng"], (results) => {
+                  add_tried_loc(0.01);
+                  console.log(results);
+                  results_true = false;
+                  for (s in results) {
+                    var hehe = `${results[s]}`;
+                    console.log(hehe)
+                    if (hehe.includes("Seattle")) {
+                      results_true = true;
+                    } 
+                  } if (results_true == true) {
+                    coords_interval_done = true;
+                    found_coords = true;
+                    real_loc = loc_data;
+                  }
+                });
+              } else {
+                found_coords = true;
+                real_loc = loc_data;
+                coords_interval_done = true;
+              }
+            } else {
+              coords_interval_done = true;
             }
           }
-          
+  
+        } else {
+          console.log(real_loc);
+  
+          if (enable_cheat_markers == true) {
+            for (let i = 0; i < suggestion_markers.length; i++) {
+              suggestion_markers[i].setMap(null);
+            }
+            suggestion_markers = [];
+            var suggestion_marker = new google.maps.Marker({
+              position: real_loc,
+              map: map,
+              title: "real location",
+              icon: {
+                url: "assets/red_pin.svg"
+              }
+            });
+            suggestion_markers.push(suggestion_marker)
+            }
 
-
-        if (true_random == false) {   // TRUE RANDOM IS DISABLED, MAKE IT WEIGHTED N STUFF!!
-
-          // NEARBY CITIES
-          // https://stackoverflow.com/questions/7202272/using-the-google-places-api-to-get-nearby-cities-for-a-given-place
-          
-          // POPULATION OF CITY
-          // https://www.wikidata.org/wiki/Property:P1082
-          // NOT FREE: https://api-ninjas.com/api/city
-          // https://publicapis.io/population-io-api
-          // this one may be it ?? : https://www.census.gov/data/developers/data-sets/popest-popproj/popest.html
-
-          // ended up using wikidata! yippee!!
-
-          // FOR SEARCH PARAMETERS:
-          // if it is in the USA, do CITY and STATE.
-          // for outside the US, do CITY and COUNTRY.
-          // if there are errors, uh, L. get good.
-          // gonna have to implement a failsafe that will fall back to the original random location if there's an error
-
-          its_all_good = false;
-
-
-          function get_geocody_lmao(loc, do_after) {
-              
-            geocoder.geocode( { 'location': loc}, function(results, status) {
-              if (status == 'OK') {
-                console.log("ADDY!!!!", results);
-
-                if (results[1]) {
-                  // woah! it has results! wow!
-                  if (results[1]["address_components"] && results[0]["geometry"]) {
-                    // WOW!!! IT EXISTS MORE!!
-                    var thingymabob = {};
-
-                    for (o in results[1]["address_components"]) {
-                      thingymabob[`${results[1]["address_components"][o]["types"][0]}`] = results[1]["address_components"][o]["long_name"]
+            // DO THE REST!!!!
+            // DO THE REST!!!!
+  
+            the_funny["do the rest"] = () => {
+              if (find_pano_interval == false){
+                find_pano_interval = setInterval( () => {
+                  
+                  if (found_loc == true) {
+                    console.log("FOUND LOC TRUE !!! FROM FIND PANO");
+                    clearInterval(find_pano_interval);
+                    clearInterval(find_coords_interval);
+                  }
+        
+                  sv.getPanoramaByLocation(real_loc, 10000, (data, status) => {
+                    add_tried_loc(0.01);
+                    if (status == google.maps.StreetViewStatus.OK) {
+                      console.log(status);
+                      clearInterval(find_pano_interval);
+                      console.log("GOOD!!");
+            
+                      real_loc = data.location.latLng.toJSON();
+                      real_loc = [real_loc["lat"], real_loc["lng"]];
+                      console.log("REAL LOC!!", real_loc);
+            
+                      document.querySelector(".chili-wrapper").style.display = "none";
+                      document.querySelector(".suggestion").style.display = "";
+        
+                      found_loc = true;
+                      clearInterval(find_pano_interval);
+                      clearInterval(find_coords_interval);
+                      do_after();
+                    } else {
+                      console.log("NOT GOOD!!");
+                      found_coords = false;
+                      coords_interval_done = true;
                     }
-                    console.log("THINGYMABOB!!!!", thingymabob)
-                    if (thingymabob["country"] && thingymabob["locality"] && thingymabob["administrative_area_level_1"] && results[0]["geometry"]["bounds"] && results[0]["geometry"]["location"]) {
-                      // it has the three elements of harmony
-                      
-                      towns_close.push({
-                        "loc": loc,
-                        "country": thingymabob["country"],
-                        "city": thingymabob["locality"],
-                        "state": thingymabob["administrative_area_level_1"],
-                        "bounds": [
-                          [
-                            results[0]["geometry"]["bounds"]["south"],
-                            results[0]["geometry"]["bounds"]["west"]
-                          ],
-                          [
-                            results[0]["geometry"]["bounds"]["north"],
-                            results[0]["geometry"]["bounds"]["east"]
-                          ]
-                        ],
-                        "location": [
-                          results[0]["geometry"]["location"]["lat"],
-                          results[0]["geometry"]["location"]["lng"]
-                        ]
-                      });
-                      //console.log(JSON.stringify(loc))
-                      //console.log(JSON.stringify(towns_loc_close[towns_loc_close.length - 1]))
-                      if (JSON.stringify(loc) == JSON.stringify(towns_loc_close[towns_loc_close.length - 1])) {
-                        do_after();   // the LAST ONE!!!
+                  });
+  
+                }, 500);
+              }
+            }
+
+            
+  
+  
+          if (true_random == false && categories[category_playing]["true random"] != false) {   // TRUE RANDOM IS DISABLED, MAKE IT WEIGHTED N STUFF!!
+  
+            // NEARBY CITIES
+            // https://stackoverflow.com/questions/7202272/using-the-google-places-api-to-get-nearby-cities-for-a-given-place
+            
+            // POPULATION OF CITY
+            // https://www.wikidata.org/wiki/Property:P1082
+            // NOT FREE: https://api-ninjas.com/api/city
+            // https://publicapis.io/population-io-api
+            // this one may be it ?? : https://www.census.gov/data/developers/data-sets/popest-popproj/popest.html
+  
+            // ended up using wikidata! yippee!!
+  
+            // FOR SEARCH PARAMETERS:
+            // if it is in the USA, do CITY and STATE.
+            // for outside the US, do CITY and COUNTRY.
+            // if there are errors, uh, L. get good.
+            // gonna have to implement a failsafe that will fall back to the original random location if there's an error
+  
+            towns_loc_close = [];
+            towns_close = [];
+            towns_loc_close.push(real_loc);
+  
+            var request = {
+              location: real_loc,
+              radius: '50000',
+              type: ['locality']
+            };
+  
+            places_api.nearbySearch(request, (results, status) => {
+              add_tried_loc(0.01);
+              if (status === google.maps.places.PlacesServiceStatus.OK) {
+                
+                for (let i = 0; i < results.length; i++) {
+                  console.log(typeof results, results)
+                  var place = results[i];
+                  console.log("PLACE !!!!", i, place);
+                  if (place["geometry"]) {
+                    if (place["geometry"]["location"] || place["geometry"]["viewport"]) {
+                      var use_location = false;
+                      var use_viewport = false;
+                      if (place["geometry"]["location"]["lat"] && place["geometry"]["location"]["lng"]) {
+                        if (typeof place["geometry"]["location"]["lat"] == typeof 0 && place["geometry"]["location"]["lng"] == typeof 0) {
+                          use_location = true;
+                        }
+                      }
+                      if (place["geometry"]["viewport"]["Gh"] && place["geometry"]["viewport"]["Vh"]) {
+                        if (place["geometry"]["viewport"]["Gh"]["hi"] && place["geometry"]["viewport"]["Vh"]["hi"]) {
+                          if (typeof place["geometry"]["viewport"]["Gh"]["hi"] == typeof 0 && typeof place["geometry"]["viewport"]["Vh"]["hi"] == typeof 0) {
+                            use_viewport = true;
+                          }
+                        }
+                      }
+                      if (use_location == true) {
+                        towns_loc_close.push({
+                          "lat": place["geometry"]["location"]["lat"],
+                          "lng": place["geometry"]["location"]["lng"]
+                        });
+                      } else if (use_viewport == true) {
+                        towns_loc_close.push({
+                          "lat": place["geometry"]["viewport"]["Vh"]["hi"],
+                          "lng": place["geometry"]["viewport"]["Gh"]["hi"]
+                        });
+                      } else {
+                        // do NOTHING!!
                       }
                     }
                   }
-                }          
-              } else {
-                console.error('Geocode was not successful for the following reason: ' + status);
+                }  
+                console.log("ALL TOWNS!!!", towns_loc_close);
+                for (w in towns_loc_close) {
+                  console.log("TOWN ??", w, towns_loc_close[w]);
+                  get_geocody_lmao(towns_loc_close[w], () => {
+                    console.log("THIS IS WHAT IM DOING AFTERWARDS!!!");
+                    console.log("TOWNS CLOSE!!!!", copy_json(towns_close));
+                    var city_math = {};
+                    for (we in towns_close) {
+                      var city_name = towns_close[we]["city"];
+                      city_math[city_name] = {};
+                      city_math[city_name]["distance"] = calculate_distance(towns_close[0]["loc"], towns_close[we]["loc"]);
+                      city_math[city_name]["loc"] = towns_close[we]["loc"];
+                      city_math[city_name]["area"] = area_sqft(
+                        {
+                          "lat": towns_close[we]["bounds"]["north"],
+                          "lng": towns_close[we]["bounds"]["west"]
+                        },
+                        {
+                          "lat": towns_close[we]["bounds"]["south"],
+                          "lng": towns_close[we]["bounds"]["east"]
+                        }
+                      ).toFixed(3);
+                      if (enable_cheat_markers == true) {
+                        funny_marker(`${city_name}`, towns_loc_close[w], "green");
+                      }
+                      console.log("CITY MATH RESULT:", city_name, city_math[city_name]["distance"]);
+                    }
+                    for (la in city_math) {
+                      if (city_math[la]["distance"] == 0) {
+                        //delete city_math[la];
+                      }
+                    }
+                    console.log("CITY MATH!!!!", city_math);
+                    // ACTRUAL MATHHHHHHH
+
+                    var cmn = [];
+                    for (woo in city_math) {
+                      cmn.push(woo);
+                    }
+
+                    if (city_math.length >= 2) {
+                      var size_factor = (city_math[cmn[0]]["area"] / city_math[cmn[1]]["area"]) * 1.0;
+                      
+                      if (size_factor < 1) {
+                        var lat_og = city_math[cmn[0]]["loc"]["lat"];
+                        var lng_og = city_math[cmn[0]]["loc"]["lng"];
+                        var lat_mg = city_math[cmn[1]]["loc"]["lat"];
+                        var lng_mg = city_math[cmn[1]]["loc"]["lng"];
+                        var lat_ch = lat_og + ( (lat_mg - lat_og) - ( (lat_mg - lat_og) * size_factor) );
+                        var lng_ch = lng_og + ( (lng_mg - lng_og) - ( (lng_mg - lng_og) * size_factor) );
+                        
+                        real_loc = {
+                          "lat": lat_ch,
+                          "lng": lng_ch
+
+                        }
+                        if (enable_cheat_markers == true) {
+                          funny_marker(`changed location`, real_loc, "green");
+                        }
+
+                      }
+                      
+                    }
+
+
+                    its_all_good = true;
+                  });
+                  //its_all_good = true;
+                }
               }
             });
-          }
+  
+  
+            function get_geocody_lmao(loc, do_after) {
+                
+              geocoder.geocode( { 'location': loc}, function(results, status) {
+                if (status == 'OK') {
+                  console.log("ADDY!!!!", results);
+  
+                  if (results[1]) {
+                    // woah! it has results! wow!
+                    if (results[1]["address_components"] && results[0]["geometry"]) {
+                      // WOW!!! IT EXISTS MORE!!
+                      var thingymabob = {};
+  
+                      for (o in results[1]["address_components"]) {
+                        thingymabob[`${results[1]["address_components"][o]["types"][0]}`] = results[1]["address_components"][o]["long_name"]
+                      }
+                      console.log("THINGYMABOB!!!!", thingymabob)
+                      if (thingymabob["country"] && thingymabob["locality"] && thingymabob["administrative_area_level_1"] && results[0]["geometry"]["bounds"] && results[0]["geometry"]["location"]) {
+                        // it has the three elements of harmony
+                        
+                        var use_bounds = false;
+                        var use_viewport = false;
+  
 
+                        if (typeof results[0]["geometry"]["bounds"]["Gh"] == typeof {} && typeof results[0]["geometry"]["bounds"]["Vh"] == typeof {} ) {
+                          if (typeof results[0]["geometry"]["bounds"]["Gh"]["hi"] == typeof 1.5 && typeof results[0]["geometry"]["bounds"]["Vh"]["hi"] == typeof 1.5 && typeof results[0]["geometry"]["bounds"]["Gh"]["lo"] == typeof 1.5 && typeof results[0]["geometry"]["bounds"]["Vh"]["lo"] == typeof 1.5) {
+                            use_bounds = true
+                          }
+                        }
+                        if (typeof results[0]["geometry"]["viewport"]["Gh"] == typeof {} && typeof results[0]["geometry"]["viewport"]["Vh"] == typeof {} ) {
+                          if (typeof results[0]["geometry"]["viewport"]["Gh"]["hi"] == typeof 1.5 && typeof results[0]["geometry"]["viewport"]["Vh"]["hi"] == typeof 1.5 && typeof results[0]["geometry"]["viewport"]["Gh"]["lo"] == typeof 1.5 && typeof results[0]["geometry"]["viewport"]["Vh"]["lo"] == typeof 1.5) {
+                            use_viewport = true
+                          }
+                        }
 
-          its_all_good = false;
+  
+                        var boundy = {};
 
-          towns_loc_close = [];
-          towns_close = [];
-          towns_loc_close.push(real_loc);
-
-          var request = {
-            location: real_loc,
-            radius: '50000',
-            type: ['locality']
-          };
-
-          places_api.nearbySearch(request, (results, status) => {
-            add_tried_loc(0.01);
-            if (status === google.maps.places.PlacesServiceStatus.OK) {
-              var surrounding_towns = [];
-              for (let i = 0; i < results.length; i++) {
-                var place = results[i];
-                console.log(place);
-                surrounding_towns.push({
-                  "name": place["name"],
-                  "lat": place["geometry"]["lat"],
-                  "lng": place["geometry"]["lng"]
-                })
-              }
-
-              for (w in towns_loc_close) {
-                get_geocody_lmao(towns_loc_close[w], () => {
-    
-                  console.log("THIS IS WHAT IM DOING AFTERWARDS!!!");
-                  its_all_good = true;
-    
-                });
-              }
-              
+                        console.log("USE BOUNDS:", use_bounds, "USE VIEWPORT:", use_viewport);
+  
+                        if (use_bounds == true) {
+                          boundy["north"] = results[0]["geometry"]["bounds"]["Gh"]["hi"];
+                          boundy["south"] = results[0]["geometry"]["bounds"]["Gh"]["lo"];
+                          boundy["west"] = results[0]["geometry"]["bounds"]["Vh"]["hi"];
+                          boundy["east"] = results[0]["geometry"]["bounds"]["Vh"]["lo"];
+                        } else if (use_viewport == true) {
+                          boundy["north"] = results[0]["geometry"]["viewport"]["Gh"]["hi"];
+                          boundy["south"] = results[0]["geometry"]["viewport"]["Gh"]["lo"];
+                          boundy["west"] = results[0]["geometry"]["viewport"]["Vh"]["hi"];
+                          boundy["east"] = results[0]["geometry"]["viewport"]["Vh"]["lo"];
+                        }
+  
+                        var center = {
+                          "lat": ( (boundy["west"] - boundy["east"]) / 2 ) + boundy["east"],
+                          "lng": ( (boundy["north"] - boundy["south"]) / 2 ) + boundy["south"]
+                        }
+  
+                        if (use_bounds == true || use_viewport == true) {
+  
+                          towns_close.push({
+                            "loc": loc,
+                            "country": thingymabob["country"],
+                            "city": thingymabob["locality"],
+                            "state": thingymabob["administrative_area_level_1"],
+                            "bounds": {
+                              "north": boundy["north"],
+                              "south": boundy["south"],
+                              "west": boundy["west"],
+                              "east": boundy["east"]
+                            },
+                            "location": [
+                              center["lat"],
+                              center["lng"]
+                            ]
+                          });
+                          //console.log(JSON.stringify(loc))
+                          //console.log(JSON.stringify(towns_loc_close[towns_loc_close.length - 1]))
+                          if (JSON.stringify(loc) == JSON.stringify(towns_loc_close[towns_loc_close.length - 1])) {
+                            do_after();   // the LAST ONE!!!
+                          }
+                        } else {
+                          if (JSON.stringify(loc) == JSON.stringify(towns_loc_close[towns_loc_close.length - 1])) {
+                            do_after();
+                          }
+                        }
+                      }
+                    }
+                  }          
+                } else {
+                  console.error('Geocode was not successful for the following reason: ' + status);
+                }
+              });
             }
-          });
-
-
-
-
-          
-
-          if (its_all_good == true) {
+            //its_all_good = false;
+  
+            
+  
+            if (its_all_good == true) {
+              the_funny["do the rest"]();
+            } else if (its_all_good == false) {
+              found_coords = false;
+              coords_interval_done = true;
+            }
+  
+          } else {
             the_funny["do the rest"]();
           }
-
-        } else {
-          the_funny["do the rest"]();
+          
         }
-        
+      } else {
+        clearInterval(find_pano_interval);
+        clearInterval(find_coords_interval);
       }
-    } else {
-      clearInterval(find_pano_interval);
-      clearInterval(find_coords_interval);
+
     }
+
   }, 100);
 }
 
