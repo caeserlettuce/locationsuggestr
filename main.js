@@ -39,7 +39,7 @@ var prev_fancy_minutes;
 var prev_fancy_seconds;
 var fancy_time_interval;
 var fancy_time_seconds = 0;
-var localstorage_object = {"hello": "yes"};
+var localstorage_object = { "hello": "yes" };
 var true_random = true;
 var nearby_city_radius = 100;
 var api_city_data = {};
@@ -52,17 +52,25 @@ var dev_loc = {
   "lat": false,
   "lng": false
 };
-
+var accurate_lines = false;
+var reflections_info_windows = {};
+var reflection_markers_new = {};
+var results_true;
+var use_google_search = false;
+var keys_pressed = {};
+var dev_point_get_index = 10000;
+var dev_points_markers = {};
+var dev_points_info_windows = {};
 
 // LOCALSTORAGE
 try {
   var from_ls = JSON.parse(localStorage.getItem("locationsuggestr"));
-  if (typeof from_ls == typeof {}) {
+  if (typeof from_ls == typeof {} && from_ls != null) {
     if (from_ls["hello"]) {
       localstorage_object = JSON.parse(JSON.stringify(from_ls));
     }
   }
-} catch (err){
+} catch (err) {
   console.error(err);
 }
 
@@ -75,23 +83,11 @@ if (localstorage_object["kilometers"] != undefined) {
 if (localstorage_object["true random"] != undefined) {
   true_random = localstorage_object["true random"];
 }
-
-function save_localstorage() {
-  localstorage_object["gamesave"] = gamesave_save;
-  localstorage_object["kilometers"] = kilometers;
-  localstorage_object["true random"] = true_random;
-  
-  localStorage.setItem("locationsuggestr", JSON.stringify(localstorage_object));
+if (localstorage_object["accurate lines"] != undefined) {
+  accurate_lines = localstorage_object["accurate lines"];
 }
-
-function clear_history() {
-  gamesave_save = [];
-  save_localstorage();
-  for (let i = 0; i < reflection_markers.length; i++) {
-    reflection_markers[i].setMap(null);
-  }
-  reflection_markers = [];
-  document.querySelector(".reflections").innerHTML = "";
+if (localstorage_object["use google search"] != undefined) {
+  use_google_search = localstorage_object["use google search"];
 }
 
 // toggle buttons auto
@@ -101,11 +97,74 @@ if (kilometers == true) {
 if (true_random == true) {
   document.querySelector(`.toggle[ja_id="1"]`).classList.add("enabled");
 }
+if (accurate_lines == true) {
+  document.querySelector(`.toggle[ja_id="2"]`).classList.add("enabled");
+}
+if (use_google_search == true) {
+  document.querySelector(`.toggle[ja_id="3"]`).classList.add("enabled");
+}
+
+function toggle_button(id) {
+  var enabledja = document.querySelector(`.toggle[ja_id="${id}"]`).classList.contains("enabled");
+  if (enabledja == false) {
+    document.querySelector(`.toggle[ja_id="${id}"]`).classList.add("enabled");      // ENABLING
+    if (id == 0) {
+      kilometers = true;
+    } else if (id == 1) {
+      true_random = true;
+    } else if (id == 2) {
+      accurate_lines = true;
+    } else if (id == 3) {
+      use_google_search = true;
+    }
+  } else {
+    document.querySelector(`.toggle[ja_id="${id}"]`).classList.remove("enabled");   // DISABLING
+    if (id == 0) {
+      kilometers = false;
+    } else if (id == 1) {
+      true_random = false;
+    } else if (id == 2) {
+      accurate_lines = false;
+    } else if (id == 3) {
+      use_google_search = false;
+    }
+  }
+  save_localstorage();
+}
+
+function save_localstorage() {
+  localstorage_object["gamesave"] = gamesave_save;
+  localstorage_object["kilometers"] = kilometers;
+  localstorage_object["true random"] = true_random;
+  localstorage_object["accurate lines"] = accurate_lines;
+  localstorage_object["use google search"] = use_google_search;
+
+  localStorage.setItem("locationsuggestr", JSON.stringify(localstorage_object));
+}
+
+function clear_history() {
+  gamesave_save = [];
+  save_localstorage();
+  for (let i = 0; i < reflection_markers.length; i++) {
+    reflection_markers[i]["blue"].setMap(null);
+    reflection_markers[i]["red"].setMap(null);
+  }
+  reflection_markers = [];
+  document.querySelector(".reflections").innerHTML = "";
+  go_home();
+}
 
 function copy_json(input) {
   return JSON.parse(JSON.stringify(input));
 }
 
+function get_len(obj) {
+  var len = 0;
+  for (i in obj) {
+    len += 1;
+  }
+  return len;
+}
 
 function funny_marker(label, marker_loc, colour) {
   var suggestion_marker = new google.maps.Marker({
@@ -151,30 +210,51 @@ function area_sqft(p1, p2) {
 }
 
 
+for (i in subcategories) {
+  if (i > 0) {
+    var subcategory_node = document.querySelector(".template.subcategory-wrapper").cloneNode(true);
+    subcategory_node.classList.remove("template");
+    subcategory_node.id = `sb_${i}`;
+    subcategory_node.querySelector(".subcategory-header").setAttribute("onclick", `toggle_subcategory(${i})`);
+    subcategory_node.querySelector("h2").innerHTML = `${subcategories[i]["name"]}`;
+    document.querySelector(".game-subcategories").appendChild(subcategory_node);
+  }
+}
+
 for (i in categories) {
-  var category_node = document.querySelector(".template.category").cloneNode(true);
-  category_node.classList.remove("template");
-  category_node.querySelector("img").setAttribute("src", `${categories[i]["img"]}`);
-  category_node.querySelector("h2").innerHTML = `${categories[i]["name"]}`;
-  category_node.setAttribute("onclick", `play_category(${i})`);
-  document.querySelector(".game-categories").appendChild(category_node);
+  if (categories[i]["subcategory"] > 0) {
+    var category_node = document.querySelector(`#sb_${categories[i]["subcategory"]} .subcategory .template.category`).cloneNode(true);
+    category_node.classList.remove("template");
+    category_node.querySelector("img").setAttribute("src", `${categories[i]["img"]}`);
+    category_node.querySelector("h2").innerHTML = `${categories[i]["name"]}`;
+    category_node.setAttribute("onclick", `play_category(${i})`);
+    document.querySelector(`#sb_${categories[i]["subcategory"]} .subcategory`).appendChild(category_node);
+  } else {  // in main category
+    var category_node = document.querySelector(".template.category").cloneNode(true);
+    category_node.classList.remove("template");
+    category_node.querySelector("img").setAttribute("src", `${categories[i]["img"]}`);
+    category_node.querySelector("h2").innerHTML = `${categories[i]["name"]}`;
+    category_node.setAttribute("onclick", `play_category(${i})`);
+    document.querySelector(".game-categories").appendChild(category_node);
+  }
+  
 }
 
 function ray_casting(point, polygon) {
   var n = polygon.length,
-  is_in = false,
-  x = point["lat"],
-  y = point["lng"],
-  x1, x2, y1, y2;
+    is_in = false,
+    x = point["lat"],
+    y = point["lng"],
+    x1, x2, y1, y2;
 
-  for(var i=0; i < n-1; ++i){
-    x1=polygon[i]["lat"];
-    x2=polygon[i+1]["lat"];
-    y1=polygon[i]["lng"];
-    y2=polygon[i+1]["lng"];
+  for (var i = 0; i < n - 1; ++i) {
+    x1 = polygon[i]["lat"];
+    x2 = polygon[i + 1]["lat"];
+    y1 = polygon[i]["lng"];
+    y2 = polygon[i + 1]["lng"];
 
-    if(y < y1 != y < y2 && x < (x2-x1) * (y-y1) / (y2-y1) + x1){
-      is_in=!is_in;
+    if (y < y1 != y < y2 && x < (x2 - x1) * (y - y1) / (y2 - y1) + x1) {
+      is_in = !is_in;
     }
   }
 
@@ -183,12 +263,12 @@ function ray_casting(point, polygon) {
 
 function haversine_distance(mk1, mk2) {
   var R = 3958.8; // Radius of the Earth in miles
-  var rlat1 = mk1["lat"] * (Math.PI/180); // Convert degrees to radians
-  var rlat2 = mk2["lat"] * (Math.PI/180); // Convert degrees to radians
-  var difflat = rlat2-rlat1; // Radian difference (latitudes)
-  var difflon = (mk2["lng"]-mk1["lng"]) * (Math.PI/180); // Radian difference (longitudes)
+  var rlat1 = mk1["lat"] * (Math.PI / 180); // Convert degrees to radians
+  var rlat2 = mk2["lat"] * (Math.PI / 180); // Convert degrees to radians
+  var difflat = rlat2 - rlat1; // Radian difference (latitudes)
+  var difflon = (mk2["lng"] - mk1["lng"]) * (Math.PI / 180); // Radian difference (longitudes)
 
-  var d = 2 * R * Math.asin(Math.sqrt(Math.sin(difflat/2)*Math.sin(difflat/2)+Math.cos(rlat1)*Math.cos(rlat2)*Math.sin(difflon/2)*Math.sin(difflon/2)));
+  var d = 2 * R * Math.asin(Math.sqrt(Math.sin(difflat / 2) * Math.sin(difflat / 2) + Math.cos(rlat1) * Math.cos(rlat2) * Math.sin(difflon / 2) * Math.sin(difflon / 2)));
   return d;
 }
 
@@ -227,16 +307,16 @@ function haversine_distance(mk1, mk2) {
 function do_street_view(loc) {
 
   // make it do the thing lmao
-  var coordinates_tm = {"lat": loc[0], "lng": loc[1]};
+  var coordinates_tm = { "lat": loc[0], "lng": loc[1] };
 
   panorama = new google.maps.StreetViewPanorama(
     document.getElementById("pano"), {
-      position: coordinates_tm,
-      pov: {
-        heading: 34,
-        pitch: 10,
-      },
-    }
+    position: coordinates_tm,
+    pov: {
+      heading: 34,
+      pitch: 10,
+    },
+  }
   );
 
   var pano_loc = panorama.getPosition().toJSON();
@@ -251,7 +331,7 @@ function initMap() {
   try {
     sv = new google.maps.StreetViewService();
     // The location of Uluru
-    var lmao = { lat: map_default_loc[0], lng:  map_default_loc[1] };
+    var lmao = { lat: map_default_loc[0], lng: map_default_loc[1] };
     // The map, centered at Uluru
     map = new google.maps.Map(document.getElementById("map"), {
       mapId: mapid,
@@ -262,7 +342,7 @@ function initMap() {
 
     geocoder = new google.maps.Geocoder();
     places_api = new google.maps.places.PlacesService(map);   // places api
-    
+
     /*var markers = new Array();
     var new_marker = new google.maps.Marker({
       position: {"lat": loc[0], "lng": loc[1]},
@@ -272,14 +352,14 @@ function initMap() {
     markers.push(new_marker);*/
 
     map.addListener("click", (mapsMouseEvent) => {
-      if ( allow_suggest == true) {
+      if (allow_suggest == true) {
         for (let i = 0; i < suggestion_markers.length; i++) {
           suggestion_markers[i].setMap(null);
         }
         suggestion_markers = [];
-        
+
         suggestion_loc = mapsMouseEvent.latLng.toJSON();
-  
+
         var suggestion_marker = new google.maps.Marker({
           position: suggestion_loc,
           map: map,
@@ -289,7 +369,7 @@ function initMap() {
           }
         });
         suggestion_markers.push(suggestion_marker)
-  
+
         document.querySelector(".suggest-button").classList.remove("disabled");
       }
     });
@@ -303,9 +383,9 @@ function initMap() {
 
   } catch (err) {
     if (err.message != "google is not defined") {   // i KNOW
-        console.error(err)
+      console.error(err)
     }
-  } 
+  }
 }
 
 // [50.448461, -38.474407]
@@ -343,7 +423,7 @@ function get_random_coord(category, do_after) {
 
   }
 
-  bounds_stuff = {"min": min_loc, "max": max_loc};
+  bounds_stuff = { "min": min_loc, "max": max_loc };
 
   console.log("bounds:", min_loc, max_loc);
 
@@ -353,39 +433,108 @@ function get_random_coord(category, do_after) {
   found_loc = false;
   coords_interval_done = true;
 
-  find_coords_interval = setInterval( () => {
+  find_coords_interval = setInterval(() => {
+    console.log("find coords interval")
 
     if (coords_interval_done == true) {
       coords_interval_done = false;
 
       var random_loc;
       var loc_data;
-  
+
       if (found_loc == true) {
         console.log("FOUND LOC TRUE !!! FROM FIND COORDS");
         clearInterval(find_pano_interval);
         clearInterval(find_coords_interval);
       }
-  
+
       if (found_loc == false) {
-        
+
         if (found_coords == false) {
+          var override = false;
           add_tried_loc(1);
-          random_loc = [((Math.random() * (max_loc[0] - min_loc[0]) ) + min_loc[0]), ((Math.random() * (max_loc[1] - min_loc[1]) ) + min_loc[1])];
+          random_loc = [((Math.random() * (max_loc[0] - min_loc[0])) + min_loc[0]), ((Math.random() * (max_loc[1] - min_loc[1])) + min_loc[1])];
           if (dev_loc["lat"] != false && dev_loc["lng"] != false) {
             random_loc = [dev_loc["lat"], dev_loc["lng"]];
           }
-          loc_data = {"lat": random_loc[0], "lng": random_loc[1]};
+          loc_data = { "lat": random_loc[0], "lng": random_loc[1] };
           console.log("random loc:", random_loc);
-  
+
           // see if its in bounds
           for (w in categories[category_playing]["bounds"]) {
             var point_check_tm = ray_casting(loc_data, categories[category_playing]["bounds"][w]);
             console.log("RAY CHECK!!!!", point_check_tm);
             if (point_check_tm == true) {
-  
-              if (category_playing == 1) { // USA
-                
+
+              // filters
+              if (categories[category_playing]["filters"]) {
+                // t'as filters
+                // do the filters things tomorrow jesse
+
+                get_geocoding(loc_data["lat"], loc_data["lng"], (results) => {
+                  add_tried_loc(0.01);
+                  console.log("RESULTS!!!", results);
+                  results_true = false;
+
+                  var filters = categories[category_playing]["filters"];
+                  var filters_true = {};
+
+                  if (results["country"] && ( results["locality"] || results["administrative_area_level_1"] || results["administrative_area_level_2"] )) {  // it's gotta have a country and locality/aal1/aal2/aal3
+
+                    for (fl in filters) {
+                      if (fl in results) {
+                        filters_true[fl] = false;
+                        for (lw in filters[fl]) {
+                          if (results[fl].toLowerCase() == filters[fl][lw].toLowerCase()) { // if the filter is there tm
+                            filters_true[fl] = true;
+                          }
+                        }
+                      }
+                    }
+
+                    if (get_len(categories[category_playing]["filters"]) == 0) {
+                      results_true = true;
+                    }
+                  }
+
+                  console.log("filters true!!", filters_true);
+
+                  for (ft in filters_true) {
+                    if (filters_true[ft] == true) {
+                      if (override == false) {
+                        results_true = true;
+                      }
+                    } else {
+                      console.log("override is now true!!")
+                      override = true;
+                    }
+                  }
+
+                  if (override == true) {
+                    results_true = false;
+                  }
+
+                  console.log("OVERRIDE:", override, "RESULTSTRUE:", results_true);
+
+                  if (results_true == true) {
+                    found_coords = true;
+                    real_loc = loc_data;
+                    coords_interval_done = true;
+                  } else {
+                    coords_interval_done = true;
+                  }
+                });
+
+              } else {
+                if (override == false) {
+                  found_coords = true;
+                  real_loc = loc_data;
+                  coords_interval_done = true;
+                }
+              }
+
+              /*if (category_playing == 1) { // USA
+
                 get_geocoding(loc_data["lat"], loc_data["lng"], (results) => {
                   add_tried_loc(0.01);
                   console.log(results);
@@ -394,17 +543,18 @@ function get_random_coord(category, do_after) {
                     var hehe = `${results[s]}`;
                     console.log(hehe);
                     if (hehe.includes("USA") || hehe.includes("United States")) {
-                      results_true = true;
+                      if (override == false) {
+                        results_true = true;
+                      }
                     }
                   } if (results_true == true) {
-                    coords_interval_done = true;
                     found_coords = true;
                     real_loc = loc_data;
+                    coords_interval_done = true;
                   }
                 });
-      
               } else if (category_playing == 2) { // seattle
-                
+
                 get_geocoding(loc_data["lat"], loc_data["lng"], (results) => {
                   add_tried_loc(0.01);
                   console.log(results);
@@ -413,27 +563,28 @@ function get_random_coord(category, do_after) {
                     var hehe = `${results[s]}`;
                     console.log(hehe)
                     if (hehe.includes("Seattle")) {
-                      results_true = true;
-                    } 
+                      if (override == false) {
+                        results_true = true;
+                      }
+                    }
                   } if (results_true == true) {
-                    coords_interval_done = true;
                     found_coords = true;
                     real_loc = loc_data;
+                    coords_interval_done = true;
                   }
-                });
-              } else {
-                found_coords = true;
-                real_loc = loc_data;
-                coords_interval_done = true;
-              }
+                });*/
+              
+
+
+              
             } else {
               coords_interval_done = true;
             }
           }
-  
+
         } else {
           console.log(real_loc);
-  
+
           if (enable_cheat_markers == true) {
             for (let i = 0; i < suggestion_markers.length; i++) {
               suggestion_markers[i].setMap(null);
@@ -448,86 +599,90 @@ function get_random_coord(category, do_after) {
               }
             });
             suggestion_markers.push(suggestion_marker)
-            }
+          }
 
-            // DO THE REST!!!!
-            // DO THE REST!!!!
-  
-            the_funny["do the rest"] = () => {
-              if (find_pano_interval == false){
-                find_pano_interval = setInterval( () => {
-                  
-                  if (found_loc == true) {
-                    console.log("FOUND LOC TRUE !!! FROM FIND PANO");
+          // DO THE REST!!!!
+          // DO THE REST!!!!
+
+          the_funny["do the rest"] = () => {
+            if (find_pano_interval == false) {
+              find_pano_interval = setInterval(() => {
+
+                if (found_loc == true) {
+                  console.log("FOUND LOC TRUE !!! FROM FIND PANO");
+                  clearInterval(find_pano_interval);
+                  clearInterval(find_coords_interval);
+                }
+
+                sv.getPanoramaByLocation(real_loc, 10000, (data, status) => {
+                  add_tried_loc(0.01);
+                  if (status == google.maps.StreetViewStatus.OK) {
+                    console.log(status);
+                    clearInterval(find_pano_interval);
+                    console.log("GOOD!!");
+
+                    real_loc = data.location.latLng.toJSON();
+                    real_loc = [real_loc["lat"], real_loc["lng"]];
+                    console.log("REAL LOC!!", real_loc);
+
+                    document.querySelector(".chili-wrapper").style.display = "none";
+                    document.querySelector(".suggestion").style.display = "";
+                    if (use_google_search == true) {
+                      document.querySelector(".google-search").style.display = "";
+                    }
+                    
+
+                    found_loc = true;
                     clearInterval(find_pano_interval);
                     clearInterval(find_coords_interval);
+                    do_after();
+                  } else {
+                    console.log("NOT GOOD!!");
+                    found_coords = false;
+                    coords_interval_done = true;
                   }
-        
-                  sv.getPanoramaByLocation(real_loc, 10000, (data, status) => {
-                    add_tried_loc(0.01);
-                    if (status == google.maps.StreetViewStatus.OK) {
-                      console.log(status);
-                      clearInterval(find_pano_interval);
-                      console.log("GOOD!!");
-            
-                      real_loc = data.location.latLng.toJSON();
-                      real_loc = [real_loc["lat"], real_loc["lng"]];
-                      console.log("REAL LOC!!", real_loc);
-            
-                      document.querySelector(".chili-wrapper").style.display = "none";
-                      document.querySelector(".suggestion").style.display = "";
-        
-                      found_loc = true;
-                      clearInterval(find_pano_interval);
-                      clearInterval(find_coords_interval);
-                      do_after();
-                    } else {
-                      console.log("NOT GOOD!!");
-                      found_coords = false;
-                      coords_interval_done = true;
-                    }
-                  });
-  
-                }, 500);
-              }
-            }
+                });
 
-            
-  
-  
+              }, 500);
+            }
+          }
+
+
+
+
           if (true_random == false && categories[category_playing]["true random"] != false) {   // TRUE RANDOM IS DISABLED, MAKE IT WEIGHTED N STUFF!!
-  
+
             // NEARBY CITIES
             // https://stackoverflow.com/questions/7202272/using-the-google-places-api-to-get-nearby-cities-for-a-given-place
-            
+
             // POPULATION OF CITY
             // https://www.wikidata.org/wiki/Property:P1082
             // NOT FREE: https://api-ninjas.com/api/city
             // https://publicapis.io/population-io-api
             // this one may be it ?? : https://www.census.gov/data/developers/data-sets/popest-popproj/popest.html
-  
+
             // ended up using wikidata! yippee!!
-  
+
             // FOR SEARCH PARAMETERS:
             // if it is in the USA, do CITY and STATE.
             // for outside the US, do CITY and COUNTRY.
             // if there are errors, uh, L. get good.
             // gonna have to implement a failsafe that will fall back to the original random location if there's an error
-  
+
             towns_loc_close = [];
             towns_close = [];
             towns_loc_close.push(real_loc);
-  
+
             var request = {
               location: real_loc,
               radius: '50000',
               type: ['locality']
             };
-  
+
             places_api.nearbySearch(request, (results, status) => {
               add_tried_loc(0.01);
               if (status === google.maps.places.PlacesServiceStatus.OK) {
-                
+
                 for (let i = 0; i < results.length; i++) {
                   console.log(typeof results, results)
                   var place = results[i];
@@ -563,7 +718,7 @@ function get_random_coord(category, do_after) {
                       }
                     }
                   }
-                }  
+                }
                 console.log("ALL TOWNS!!!", towns_loc_close);
                 for (w in towns_loc_close) {
                   console.log("TOWN ??", w, towns_loc_close[w]);
@@ -606,15 +761,15 @@ function get_random_coord(category, do_after) {
 
                     if (city_math.length >= 2) {
                       var size_factor = (city_math[cmn[0]]["area"] / city_math[cmn[1]]["area"]) * 1.0;
-                      
+
                       if (size_factor < 1) {
                         var lat_og = city_math[cmn[0]]["loc"]["lat"];
                         var lng_og = city_math[cmn[0]]["loc"]["lng"];
                         var lat_mg = city_math[cmn[1]]["loc"]["lat"];
                         var lng_mg = city_math[cmn[1]]["loc"]["lng"];
-                        var lat_ch = lat_og + ( (lat_mg - lat_og) - ( (lat_mg - lat_og) * size_factor) );
-                        var lng_ch = lng_og + ( (lng_mg - lng_og) - ( (lng_mg - lng_og) * size_factor) );
-                        
+                        var lat_ch = lat_og + ((lat_mg - lat_og) - ((lat_mg - lat_og) * size_factor));
+                        var lng_ch = lng_og + ((lng_mg - lng_og) - ((lng_mg - lng_og) * size_factor));
+
                         real_loc = {
                           "lat": lat_ch,
                           "lng": lng_ch
@@ -625,7 +780,7 @@ function get_random_coord(category, do_after) {
                         }
 
                       }
-                      
+
                     }
 
 
@@ -635,47 +790,48 @@ function get_random_coord(category, do_after) {
                 }
               }
             });
-  
-  
+
+
             function get_geocody_lmao(loc, do_after) {
-                
-              geocoder.geocode( { 'location': loc}, function(results, status) {
+
+              geocoder.geocode({ 'location': loc }, function (results, status) {
+                add_tried_loc(0.1);
                 if (status == 'OK') {
                   console.log("ADDY!!!!", results);
-  
+
                   if (results[1]) {
                     // woah! it has results! wow!
                     if (results[1]["address_components"] && results[0]["geometry"]) {
                       // WOW!!! IT EXISTS MORE!!
                       var thingymabob = {};
-  
+
                       for (o in results[1]["address_components"]) {
                         thingymabob[`${results[1]["address_components"][o]["types"][0]}`] = results[1]["address_components"][o]["long_name"]
                       }
                       console.log("THINGYMABOB!!!!", thingymabob)
                       if (thingymabob["country"] && thingymabob["locality"] && thingymabob["administrative_area_level_1"] && results[0]["geometry"]["bounds"] && results[0]["geometry"]["location"]) {
                         // it has the three elements of harmony
-                        
+
                         var use_bounds = false;
                         var use_viewport = false;
-  
 
-                        if (typeof results[0]["geometry"]["bounds"]["Gh"] == typeof {} && typeof results[0]["geometry"]["bounds"]["Vh"] == typeof {} ) {
+
+                        if (typeof results[0]["geometry"]["bounds"]["Gh"] == typeof {} && typeof results[0]["geometry"]["bounds"]["Vh"] == typeof {}) {
                           if (typeof results[0]["geometry"]["bounds"]["Gh"]["hi"] == typeof 1.5 && typeof results[0]["geometry"]["bounds"]["Vh"]["hi"] == typeof 1.5 && typeof results[0]["geometry"]["bounds"]["Gh"]["lo"] == typeof 1.5 && typeof results[0]["geometry"]["bounds"]["Vh"]["lo"] == typeof 1.5) {
                             use_bounds = true
                           }
                         }
-                        if (typeof results[0]["geometry"]["viewport"]["Gh"] == typeof {} && typeof results[0]["geometry"]["viewport"]["Vh"] == typeof {} ) {
+                        if (typeof results[0]["geometry"]["viewport"]["Gh"] == typeof {} && typeof results[0]["geometry"]["viewport"]["Vh"] == typeof {}) {
                           if (typeof results[0]["geometry"]["viewport"]["Gh"]["hi"] == typeof 1.5 && typeof results[0]["geometry"]["viewport"]["Vh"]["hi"] == typeof 1.5 && typeof results[0]["geometry"]["viewport"]["Gh"]["lo"] == typeof 1.5 && typeof results[0]["geometry"]["viewport"]["Vh"]["lo"] == typeof 1.5) {
                             use_viewport = true
                           }
                         }
 
-  
+
                         var boundy = {};
 
                         console.log("USE BOUNDS:", use_bounds, "USE VIEWPORT:", use_viewport);
-  
+
                         if (use_bounds == true) {
                           boundy["north"] = results[0]["geometry"]["bounds"]["Gh"]["hi"];
                           boundy["south"] = results[0]["geometry"]["bounds"]["Gh"]["lo"];
@@ -687,14 +843,14 @@ function get_random_coord(category, do_after) {
                           boundy["west"] = results[0]["geometry"]["viewport"]["Vh"]["hi"];
                           boundy["east"] = results[0]["geometry"]["viewport"]["Vh"]["lo"];
                         }
-  
+
                         var center = {
-                          "lat": ( (boundy["west"] - boundy["east"]) / 2 ) + boundy["east"],
-                          "lng": ( (boundy["north"] - boundy["south"]) / 2 ) + boundy["south"]
+                          "lat": ((boundy["west"] - boundy["east"]) / 2) + boundy["east"],
+                          "lng": ((boundy["north"] - boundy["south"]) / 2) + boundy["south"]
                         }
-  
+
                         if (use_bounds == true || use_viewport == true) {
-  
+
                           towns_close.push({
                             "loc": loc,
                             "country": thingymabob["country"],
@@ -723,27 +879,27 @@ function get_random_coord(category, do_after) {
                         }
                       }
                     }
-                  }          
+                  }
                 } else {
                   console.error('Geocode was not successful for the following reason: ' + status);
                 }
               });
             }
             //its_all_good = false;
-  
-            
-  
+
+
+
             if (its_all_good == true) {
               the_funny["do the rest"]();
             } else if (its_all_good == false) {
               found_coords = false;
               coords_interval_done = true;
             }
-  
+
           } else {
             the_funny["do the rest"]();
           }
-          
+
         }
       } else {
         clearInterval(find_pano_interval);
@@ -763,7 +919,7 @@ function play_category(category_in) {
   document.querySelector(".title-page").style.display = "none";
   document.querySelector(".end-page").style.display = "none";
   document.querySelector(".reflection-page").style.display = "none";
-  
+
   new_scene();
 
 }
@@ -781,6 +937,9 @@ function new_scene() { // new scene
   document.querySelector(".title-page").style.display = "none";
   document.querySelector(".end-page").style.display = "none";
   document.querySelector(".reflection-page").style.display = "none";
+  document.querySelector(".google-search").style.display = "none";
+
+  
 
   get_random_coord(category_playing, () => {
     clearInterval(find_pano_interval);
@@ -798,7 +957,7 @@ function new_scene() { // new scene
   suggestion_markers = [];
   time_start = new Date();
 
-  fancy_time_interval = setInterval( () => {
+  fancy_time_interval = setInterval(() => {
     fancy_time_seconds += 1;
     fancy_time(fancy_time_seconds);
   }, 1000);
@@ -817,7 +976,7 @@ function resize_map(big) {
   // }
 }
 
-function moveToLocation(lat, lng, zoom){
+function moveToLocation(lat, lng, zoom) {
   var center = new google.maps.LatLng(lat, lng);
   map.panTo(center);
   if (zoom == undefined) {
@@ -837,7 +996,7 @@ function make_suggestion() {
     document.querySelector(".end-page").style.display = "";
 
     var suggestion_marker = new google.maps.Marker({
-      position: {"lat": real_loc[0], "lng": real_loc[1]},
+      position: { "lat": real_loc[0], "lng": real_loc[1] },
       map: map,
       title: "real location",
       icon: {
@@ -846,7 +1005,7 @@ function make_suggestion() {
     });
     suggestion_markers.push(suggestion_marker)
 
-    var distance_miles = haversine_distance(suggestion_loc, {"lat": real_loc[0], "lng": real_loc[1]})
+    var distance_miles = haversine_distance(suggestion_loc, { "lat": real_loc[0], "lng": real_loc[1] })
 
     var distance;
 
@@ -872,7 +1031,7 @@ function make_suggestion() {
 
     if (kilometers == true) {
       distance_text = `${distance} km`;
-      
+
     } else {
       distance_text = `${distance} mi`;
     }
@@ -883,14 +1042,28 @@ function make_suggestion() {
       { lat: suggestion_loc["lat"], lng: suggestion_loc["lng"] },
       { lat: real_loc[0], lng: real_loc[1] },
     ];
-    var yummy_path = new google.maps.Polyline({
-      path: path_tm,
-      map: map,
-      geodesic: true,
-      strokeColor: "#fbbc04",
-      strokeOpacity: 1.0,
-      strokeWeight: 5,
-    });
+    var yummy_path;
+    if (accurate_lines == true) {
+      yummy_path = new google.maps.Polyline({
+        path: path_tm,
+        map: map,
+        geodesic: true,
+        strokeColor: "#fbbc04",
+        strokeOpacity: 1.0,
+        strokeWeight: 5,
+      });
+    } else {
+      yummy_path = new google.maps.Polygon({
+        paths: path_tm,
+        strokeColor: "#fbbc04",
+        strokeOpacity: 1.0,
+        strokeWeight: 5,
+        fillColor: "#fbbc04",
+        fillOpacity: 0.0,
+        map: map
+      });
+    }
+
 
     suggestion_markers.push(yummy_path);
 
@@ -908,25 +1081,7 @@ function make_suggestion() {
   }
 }
 
-function toggle_button(id) {
-  var enabledja = document.querySelector(`.toggle[ja_id="${id}"]`).classList.contains("enabled");
-  if (enabledja == false) {
-    document.querySelector(`.toggle[ja_id="${id}"]`).classList.add("enabled");      // ENABLING
-    if (id == 0) {
-      kilometers = true;
-    } else if (id == 1) {
-      true_random = true;
-    }
-  } else {
-    document.querySelector(`.toggle[ja_id="${id}"]`).classList.remove("enabled");   // DISABLING
-    if (id == 0) {
-      kilometers = false;
-    } else if (id == 1) {
-      true_random = false;
-    }
-  }
-  save_localstorage();
-}
+
 
 function doublefy(num) {
   var out = `${parseInt(num)}`;
@@ -937,9 +1092,9 @@ function doublefy(num) {
 }
 
 function funny_time(ms_elapsed) {
-  s_elapsed = parseInt(ms_elapsed/1000);
+  s_elapsed = parseInt(ms_elapsed / 1000);
   h = parseInt(s_elapsed / 3600);
-  s_elapsed = s_elapsed - ( h * 3600 );
+  s_elapsed = s_elapsed - (h * 3600);
   m = parseInt(s_elapsed / 60);
   s_elapsed = s_elapsed - (m * 60);
   s = s_elapsed;
@@ -958,86 +1113,178 @@ function funny_time(ms_elapsed) {
 function end_game() {
   document.querySelector(".reflection-page").style.display = "";
   document.querySelector(".reflections").innerHTML = "";
+  reflections_info_windows = {};
+  reflection_markers_new = {};
   for (i in gamesave_save) {
+    reflection_markers_new[i] = {};
+    reflections_info_windows[i] = {};
     var node_tmtm = document.createElement("h3");
     var time_tmtm = parseInt(gamesave_save[i]["end time"]) - parseInt(gamesave_save[i]["start time"]);
     node_tmtm.innerHTML = `${i}<br>${gamesave_save[i]["real location"]}<br>${gamesave_save[i]["distance"]}<br>${funny_time(time_tmtm)}`;
     document.querySelector(".reflections").appendChild(node_tmtm);
 
     var reflection_marker = new google.maps.Marker({
-      position: {"lat": gamesave_save[i]["suggestion"][0], "lng": gamesave_save[i]["suggestion"][1]},
+      position: { "lat": gamesave_save[i]["suggestion"][0], "lng": gamesave_save[i]["suggestion"][1] },
       map: reflection_map,
       title: `[${i}] your suggestion`,
       icon: {
         url: "assets/blue_pin.svg"
       }
     });
+    reflection_markers_new[i]["blue"] = reflection_marker;
     reflection_markers.push(reflection_marker);
     var reflection_marker = new google.maps.Marker({
-      position: {"lat": gamesave_save[i]["real location"][0], "lng": gamesave_save[i]["real location"][1]},
+      position: { "lat": gamesave_save[i]["real location"][0], "lng": gamesave_save[i]["real location"][1] },
       map: reflection_map,
       title: `[${i}] real location`,
       icon: {
         url: "assets/red_pin.svg"
       }
     });
-    reflection_markers.push(reflection_marker);
+    reflection_markers_new[i]["red"] = reflection_marker;
 
-    var path_tm = [{"lat": gamesave_save[i]["suggestion"][0], "lng": gamesave_save[i]["suggestion"][1]},{"lat": gamesave_save[i]["real location"][0], "lng": gamesave_save[i]["real location"][1]}];
-    var yummy_path = new google.maps.Polyline({
-      path: path_tm,
-      map: reflection_map,
-      geodesic: true,
-      strokeColor: "#fbbc04",
-      strokeOpacity: 1.0,
-      strokeWeight: 5,
+    var ifw_node = document.querySelector(".infowindow-wrapper").cloneNode(true);
+
+    ifw_node.querySelector(".num").innerHTML = `${i}`;
+    ifw_node.querySelector(".pin").innerHTML = `your suggestion`;
+    ifw_node.querySelector(".latlng").innerHTML = `${gamesave_save[i]["suggestion"]}`;
+    ifw_node.querySelector(".time").innerHTML = `${funny_time(time_tmtm)}`;
+
+    reflections_info_windows[i]["blue"] = new google.maps.InfoWindow({
+      content: ifw_node.innerHTML
     });
+    ifw_node.querySelector(".pin").innerHTML = `real location`;
+    ifw_node.querySelector(".latlng").innerHTML = `${gamesave_save[i]["real location"]}`;
+    reflections_info_windows[i]["red"] = new google.maps.InfoWindow({
+      content: ifw_node.innerHTML
+    });
+
+    console.log(reflections_info_windows[i]["blue"]);
+    google.maps.event.addListener(reflection_markers_new[i]["blue"], 'click', function() {
+      var number = parseInt(this["title"].split(" ")[0].replace("[", "").replace("]", ""));
+      reflections_info_windows[number]["blue"].open(reflection_map, reflection_markers_new[number]["blue"]);
+    });
+
+    google.maps.event.addListener(reflection_markers_new[i]["red"], 'click', function() {
+      var number = parseInt(this["title"].split(" ")[0].replace("[", "").replace("]", ""));
+      reflections_info_windows[number]["red"].open(reflection_map, reflection_markers_new[number]["red"]);
+    });
+
+
+    var path_tm = [{ "lat": gamesave_save[i]["suggestion"][0], "lng": gamesave_save[i]["suggestion"][1] }, { "lat": gamesave_save[i]["real location"][0], "lng": gamesave_save[i]["real location"][1] }];
+    var yummy_path;
+    if (accurate_lines == true) {
+      yummy_path = new google.maps.Polyline({
+        path: path_tm,
+        map: reflection_map,
+        geodesic: true,
+        strokeColor: "#fbbc04",
+        strokeOpacity: 1.0,
+        strokeWeight: 5,
+      });
+    } else {
+      yummy_path = new google.maps.Polygon({
+        paths: path_tm,
+        strokeColor: "#fbbc04",
+        strokeOpacity: 1.0,
+        strokeWeight: 5,
+        fillColor: "#fbbc04",
+        fillOpacity: 0.0,
+        map: reflection_map
+      });
+    }
 
     reflection_markers.push(yummy_path);
 
     reflection_map.addListener("click", (mapsMouseEvent) => {
-      if ( polygon_maker == true) {
-    
+      if (polygon_maker == true) {
+
         point_loc = mapsMouseEvent.latLng.toJSON();
-  
+
         console.log(point_loc);
-        polygon_points.push(point_loc);
-        var real_polygon_points = [];
-
-        for (i in polygon_points) {
-          if (polygon_points[i]["lat"]) {
-            real_polygon_points.push(polygon_points[i]);
-          }
-        }
-
-        if (map_polygon != false) {
-          map_polygon.setMap(null);
-        }
-
-        map_polygon = new google.maps.Polygon({
-          paths: real_polygon_points,
-          strokeColor: "#FF0000",
-          strokeOpacity: 0.8,
-          strokeWeight: 2,
-          fillColor: "#FF0000",
-          fillOpacity: 0.35,
-          map: reflection_map
-        });
 
 
-        var point_marker = new google.maps.Marker({
-          position: point_loc,
-          map: reflection_map,
-          title: "point",
-          icon: {
-            url: "assets/blue_pin.svg"
-          }
-        });
-        eval(`point_marker.addListener('click',()=> { remove_point_marker(${polygon_markers.length})});`);
-        
-        polygon_markers.push(point_marker);
+        if (keys_pressed["shift"] == true) {
+
+          // ALLALALLALLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLALALLALALLALALALLALALLALALLALALALLALLALALLALALLALALLA
+          // ALLALALLALLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLALALLALALLALALALLALALLALALLALALALLALLALALLALALLALALLA
+          // ALLALALLALLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLALALLALALLALALALLALALLALALLALALALLALLALALLALALLALALLA
+          // ALLALALLALLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLALALLALALLALALALLALALLALALLALALALLALLALALLALALLALALLA
+          // ALLALALLALLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLALALLALALLALALALLALALLALALLALALALLALLALALLALALLALALLA
+
+          get_geocoding(point_loc["lat"], point_loc["lng"], (result, point_loc) => {
+
+            dev_point_get_index += 1;
+
+            dev_points_markers[dev_point_get_index] = new google.maps.Marker({
+              position: point_loc,
+              map: reflection_map,
+              title: `[${dev_point_get_index}] click for point info`,
+              icon: {
+                url: "assets/blue_pin.svg"
+              }
+            });
+
+            console.log("RESULT HEHASH", result)
+            var results = result;
+            console.log(results)
+
+            dev_points_info_windows[dev_point_get_index] = new google.maps.InfoWindow({
+              content: `
+  <div style="color: black;">
+    <h3>${point_loc["lat"]}, ${point_loc["lng"]}<br>${JSON.stringify(result, null, 2).replaceAll("\n", "<br>")}</h3>
+  </div`
+            });
+            console.log("hi hi hih ")
+            console.log(dev_points_markers[dev_point_get_index])
   
-        document.querySelector(".suggest-button").classList.remove("disabled");
+            google.maps.event.addListener(dev_points_markers[dev_point_get_index], 'click', function() {
+              var number = parseInt(this["title"].split(" ")[0].replace("[", "").replace("]", ""));
+              dev_points_info_windows[number].open(reflection_map, dev_points_markers[number]);
+            });
+          }, point_loc)
+
+
+        } else {
+          polygon_points.push(point_loc);
+          var real_polygon_points = [];
+  
+          for (i in polygon_points) {
+            if (polygon_points[i]["lat"]) {
+              real_polygon_points.push(polygon_points[i]);
+            }
+          }
+  
+          if (map_polygon != false) {
+            map_polygon.setMap(null);
+          }
+  
+          map_polygon = new google.maps.Polygon({
+            paths: real_polygon_points,
+            strokeColor: "#FF0000",
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: "#FF0000",
+            fillOpacity: 0.35,
+            map: reflection_map
+          });
+  
+  
+          var point_marker = new google.maps.Marker({
+            position: point_loc,
+            map: reflection_map,
+            title: "point",
+            icon: {
+              url: "assets/blue_pin.svg"
+            }
+          });
+          eval(`point_marker.addListener('click',()=> { remove_point_marker(${polygon_markers.length})});`);
+  
+          polygon_markers.push(point_marker);
+  
+          document.querySelector(".suggest-button").classList.remove("disabled");
+        }
+        
       }
     });
 
@@ -1079,13 +1326,18 @@ function enable_polygon_maker() {
   for (let i = 0; i < reflection_markers.length; i++) {
     reflection_markers[i].setMap(null);
   }
+  for (i in reflection_markers_new) {
+    reflection_markers_new[i]["blue"].setMap(null);
+    reflection_markers_new[i]["red"].setMap(null);
+  }
+
   reflection_markers = [];
   var node_tmtm = document.createElement("h2");
   node_tmtm.classList.add("button");
   node_tmtm.classList.add("basic");
   node_tmtm.classList.add("rpm");
   node_tmtm.setAttribute("onclick", `reset_polygon_maker()`);
-  node_tmtm.innerHTML = "reset polygon maker";
+  node_tmtm.innerHTML = "reset polygon editor";
   document.querySelector(".reflection-page").appendChild(node_tmtm);
   var node_tmtm = document.createElement("h2");
   node_tmtm.classList.add("button");
@@ -1099,7 +1351,7 @@ function enable_polygon_maker() {
   node_tmtm.classList.add("basic");
   node_tmtm.classList.add("dpm");
   node_tmtm.setAttribute("onclick", `disable_polygon_maker()`);
-  node_tmtm.innerHTML = "disable polygon maker";
+  node_tmtm.innerHTML = "disable polygon editor";
   document.querySelector(".reflection-page").appendChild(node_tmtm);
 }
 
@@ -1127,7 +1379,8 @@ function copy_polygon_json() {
       real_polygon_points.push(polygon_points[i]);
     }
   }
-  var polygon_json = JSON.stringify(real_polygon_points);
+  var polygon_json = JSON.stringify(real_polygon_points).replace("}, {", `},
+                {`);
   navigator.clipboard.writeText(polygon_json);
 }
 
@@ -1137,17 +1390,18 @@ function go_home() {
   document.querySelector(".title-page").style.display = "";
 }
 
-function get_geocoding(lat, lng, do_after) {
+function get_geocoding(lat, lng, do_after, data_thru) {
   var loc = new google.maps.LatLng(lat, lng);
-  var address_list_out = [];
+  var address_info_out = {};
 
-  geocoder.geocode( { 'location': loc}, function(results, status) {
+  geocoder.geocode({ 'location': loc }, function (results, status) {
     if (status == 'OK') {
       console.log("GEOCODING RESULTS!!", results);
-      for (i in results) {
-        address_list_out.push(results[i]["formatted_address"]);
+      for (i in results[0]["address_components"]) {
+        var key = results[0]["address_components"][i]["types"][0];
+        address_info_out[key] = results[0]["address_components"][i]["long_name"];
       }
-      do_after(address_list_out);
+      do_after(address_info_out, data_thru);
 
     } else {
       console.error('Geocode was not successful for the following reason: ' + status);
@@ -1163,24 +1417,24 @@ function reset_pano() {
 
 function do_num(num1, num2, elm) {
   if (num1 != num2) {
-      document.getElementById(`${elm}`).style.transitionDuration = "500ms";
-      document.getElementById(`${elm}_1`).innerHTML = `${num1}`;
-      document.getElementById(`${elm}_2`).innerHTML = `${num2}`;
-      document.getElementById(`${elm}`).style.marginTop = "-1.2em";
-      setTimeout( () => {
-          document.getElementById(`${elm}`).style.transitionDuration = "0ms";
-          document.getElementById(`${elm}`).style.marginTop = "0px";
-          document.getElementById(`${elm}_2`).innerHTML = `${num1}`;
-          document.getElementById(`${elm}_1`).innerHTML = `${num2}`;
-      }, 500);
+    document.getElementById(`${elm}`).style.transitionDuration = "500ms";
+    document.getElementById(`${elm}_1`).innerHTML = `${num1}`;
+    document.getElementById(`${elm}_2`).innerHTML = `${num2}`;
+    document.getElementById(`${elm}`).style.marginTop = "-1.2em";
+    setTimeout(() => {
+      document.getElementById(`${elm}`).style.transitionDuration = "0ms";
+      document.getElementById(`${elm}`).style.marginTop = "0px";
+      document.getElementById(`${elm}_2`).innerHTML = `${num1}`;
+      document.getElementById(`${elm}_1`).innerHTML = `${num2}`;
+    }, 500);
   }
 }
 
 function doublefy(num) {
   if (`${num}`.length == 1) {
-      num = `0${num}`;
+    num = `0${num}`;
   } else {
-      num = `${num}`;
+    num = `${num}`;
   }
   return num
 }
@@ -1188,15 +1442,15 @@ function tripledecify(num) {
   var out;
   var tm = `${num}`.split(".");
   if (tm.length == 1) {
-      out = `${num}.000`;
+    out = `${num}.000`;
   } else {
-      if (tm[1].length == 1) {
-          out = `${num}00`;
-      } else if (tm[1].length == 2) {
-          out = `${num}0`;
-      } else {
-          out = `${num}`;
-      }
+    if (tm[1].length == 1) {
+      out = `${num}00`;
+    } else if (tm[1].length == 2) {
+      out = `${num}0`;
+    } else {
+      out = `${num}`;
+    }
   }
   return out
 }
@@ -1204,22 +1458,22 @@ function tripledecify(num) {
 function fancy_time(seconds) {
   var floor_seconds = Math.floor(seconds);
   fancy_hours = Math.floor(floor_seconds / 3600);
-  fancy_minutes = Math.floor( ( floor_seconds - (fancy_hours * 3600) ) / 60 );
+  fancy_minutes = Math.floor((floor_seconds - (fancy_hours * 3600)) / 60);
   fancy_seconds = floor_seconds - (fancy_hours * 3600) - (fancy_minutes * 60);
 
   // console.log(fancy_hours)
   // console.log(fancy_minutes)
   // console.log(fancy_seconds)
-  
+
   if (fancy_hours > 0) {
-      hours_checked = true;
-      hours_exist = true;
+    hours_checked = true;
+    hours_exist = true;
   }
   if (hours_exist == true) {
-      var split_hours = doublefy(fancy_hours).split("");
-      var split_prev_hours = doublefy(prev_fancy_hours).split("");
-      do_num(split_prev_hours[0], split_hours[0], "h1");
-      do_num(split_prev_hours[1], split_hours[1], "h2");
+    var split_hours = doublefy(fancy_hours).split("");
+    var split_prev_hours = doublefy(prev_fancy_hours).split("");
+    do_num(split_prev_hours[0], split_hours[0], "h1");
+    do_num(split_prev_hours[1], split_hours[1], "h2");
   }
   var split_minutes = doublefy(fancy_minutes).split("");
   var split_prev_minutes = doublefy(prev_fancy_minutes).split("");
@@ -1236,7 +1490,7 @@ function fancy_time(seconds) {
 }
 
 
-function get_city_population(city_name, do_after=false) {
+function get_city_population(city_name, do_after = false) {
   var city_name = city_name.trim()
   var url_city_name = encodeURIComponent(city_name);
   api_city_data[city_name] = {};
@@ -1246,11 +1500,11 @@ function get_city_population(city_name, do_after=false) {
     () => {
       call_api(`https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${api_city_data[city_name]["id"]}&props=claims&format=json&callback=api_callback`, do_after)
     },
-    {"city name": city_name});
+    { "city name": city_name });
 }
 
 
-function call_api(url, do_after=false, extra_data=false) {
+function call_api(url, do_after = false, extra_data = false) {
   try {
     document.querySelector("#callapi").innerHTML = "";
     //var url = "https://en.wikipedia.org/w/api.php?action=query&format=json&titles=New_York&prop=revisions&rvprop=content&callback=api_callback";
@@ -1311,3 +1565,53 @@ function open_info(id) {
 function close_info(id) {
   document.querySelector(`#info_box_${id}`).style.display = "none";
 }
+
+function toggle_subcategory(id) {
+  var sb = document.querySelector(`#sb_${id} .subcategory`);
+  if (sb.classList.contains("expanded")) {
+    sb.classList.remove("expanded");
+  } else{
+    sb.classList.add("expanded");
+  }
+}
+
+function resize_google() {
+  var gog = document.querySelector(".google-search");
+  if (gog.classList.contains("expanded")) {
+    gog.classList.remove("expanded")
+    gog.querySelector(".button").innerHTML = ">";
+  } else {
+    gog.classList.add("expanded")
+    gog.querySelector(".button").innerHTML = "<";
+  }
+}
+
+function open_polygon_editor() {
+  end_game();
+  enable_polygon_maker();
+}
+
+
+document.addEventListener('keydown', (event) => {
+  var name = event.key;
+  var keyid = event.which;
+  // Alert the key name and key code on keydown
+  //console.log(keyid)
+
+  if (keyid == 16) {
+    keys_pressed["shift"] = true;
+  }
+
+});
+
+document.addEventListener('keyup', (event) => {
+  var name = event.key;
+  var keyid = event.which;
+  // Alert the key name and key code on keydown
+  //console.log(keyid)
+
+  if (keyid == 16) {
+    keys_pressed["shift"] = false;
+  }
+
+});

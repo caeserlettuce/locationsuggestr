@@ -28,7 +28,7 @@
       <h2>game settings</h2>
       <br><br>
 
-      <h3 style="display: flex; gap: 10px; justify-content: center;">
+      <h3 style="display: flex; gap: 10px; justify-content: center;" class="toggle-wrapper">
         <svg class="toggle" viewBox="0 0 2 1" onclick="toggle_button(0)" ja_id="0">
           <circle cx="0.5" cy="0.5" r="0.5" class="background" />
           <circle cx="1.5" cy="0.5" r="0.5" class="background" />
@@ -38,8 +38,7 @@
       
         <span style="transform: translate(0px, 0.25em)">use km instead of mi</span>
       </h3>
-      <br>
-      <h3 style="display: flex; gap: 10px; justify-content: center;">
+      <h3 style="display: flex; gap: 10px; justify-content: center;" class="toggle-wrapper hidden">
         <svg class="toggle" viewBox="0 0 2 1" onclick="toggle_button(1)" ja_id="1">
           <circle cx="0.5" cy="0.5" r="0.5" class="background" />
           <circle cx="1.5" cy="0.5" r="0.5" class="background" />
@@ -49,6 +48,27 @@
       
         <span style="transform: translate(0px, 0.25em)">truly random locations</span><span style="transform: translate(-0.55em, 0.0em) scale(0.8); cursor: pointer;" onclick="open_info(1)">(i)</span>
       </h3>
+      <h3 style="display: flex; gap: 10px; justify-content: center;" class="toggle-wrapper">
+        <svg class="toggle" viewBox="0 0 2 1" onclick="toggle_button(2)" ja_id="2">
+          <circle cx="0.5" cy="0.5" r="0.5" class="background" />
+          <circle cx="1.5" cy="0.5" r="0.5" class="background" />
+          <rect x="0.5" y="0" width="1" height="1" class="background" />
+          <circle cx="0.5" cy="0.5" r="0.5" class="thumb" />
+        </svg>
+      
+        <span style="transform: translate(0px, 0.25em)">globe accurate lines</span><span style="transform: translate(-0.55em, 0.0em) scale(0.8); cursor: pointer;" onclick="open_info(2)">(i)</span>
+      </h3>
+      <h3 style="display: flex; gap: 10px; justify-content: center;" class="toggle-wrapper">
+        <svg class="toggle" viewBox="0 0 2 1" onclick="toggle_button(3)" ja_id="3"">
+          <circle cx="0.5" cy="0.5" r="0.5" class="background" />
+          <circle cx="1.5" cy="0.5" r="0.5" class="background" />
+          <rect x="0.5" y="0" width="1" height="1" class="background" />
+          <circle cx="0.5" cy="0.5" r="0.5" class="thumb" />
+        </svg>
+      
+        <span style="transform: translate(0px, 0.25em)">use google search</span>
+      </h3>
+      
       
       <br>
       
@@ -91,6 +111,18 @@
         </div>
       </div>
 
+      <div class="info-box" id="info_box_2" style="display: none;">
+        <div class="stuff">
+          <h1>[info] globe accurate lines</h1>
+
+          <h2 class="desc"> when toggled, any lines on the map (like the lines that connect where your guess was and where the real location is)
+            will follow the curve of the earth (so when its toggled the lines will technically be straight, because they follow the path along 
+            that you would take if you were walking in a straight line between each point)
+        
+          </h2>
+          <h2 class="basic button" onclick="close_info(2)">close info</h2>
+        </div>
+      </div>
       
       <br>
       <div class="divider"></div>
@@ -108,6 +140,35 @@
 
       </div>
       <br><br>
+      <h2>game subcategories</h2>
+      <h2 class="desc" style="margin-top: 0.25em;">so that these don't clutter the categories section</h2>
+      <br><br>
+      <div class="game-subcategories">
+
+        <div class="template subcategory-wrapper" id="sb_">
+          <div class="subcategory-header">
+            <h2>usa - states</h2>
+          </div>
+          <br>
+          <div class="subcategory expanded">
+            <div class="template category">
+              <img src="assets/centralpark.jpg">
+              <h2>USA</h2>
+            </div>
+          </div>
+          <br>
+        </div>
+
+
+      </div>
+
+
+      <br><br>
+
+      <h2>developer tools</h2>
+      <h2 class="desc" style="margin-top: 0.25em;">dont mind these its for me making the website</h2>
+      <h2 class="basic button" onclick="open_polygon_editor()">polygon editor</h2>
+
     </div>
 
     <div class="game-page">
@@ -148,7 +209,13 @@
         
       </div>
       
-
+      <div class="google-search">
+        <div class="iframe-container">
+          <iframe style="width: 100%; height: 100%;" src="https://www.google.com/search?igu=1" frameborder="0" marginheight="0" marginwidth="0" width="10vw" height="14vh">Loading…</iframe>
+        </div>
+        
+        <h2 class="basic button resize-button" onclick="resize_google()">&gt;</h2>
+      </div>
 
     </div>
 
@@ -173,6 +240,15 @@
         <!-- <h3>hello<br>many points</h3> -->
       </div>
       <h3 class="basic button red" onclick="clear_history()">clear history</h3>
+    </div>
+
+    <div class="infowindow-wrapper" style="display:none;">
+      <div class="info-window" id="content">
+        <h1>location #<span class="num"></span></h1>
+        <h2 class="pin">the location</h2>
+        <h2 class="latlng">-1 1</h2>
+        <h2>found in <span class="time">00:00:20</span></h2>
+      </div>
     </div>
 
 
