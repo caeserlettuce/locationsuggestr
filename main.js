@@ -1266,6 +1266,7 @@ function end_game() {
             strokeWeight: 2,
             fillColor: "#FF0000",
             fillOpacity: 0.35,
+            clickable: false,
             map: reflection_map
           });
   
@@ -1379,8 +1380,10 @@ function copy_polygon_json() {
       real_polygon_points.push(polygon_points[i]);
     }
   }
-  var polygon_json = JSON.stringify(real_polygon_points).replace("}, {", `},
-                {`);
+  var polygon_json = JSON.stringify(real_polygon_points).replaceAll("},{", `},
+                {`).replaceAll("[{", `[
+                    {`).replaceAll("}]", `}
+                ]`);
   navigator.clipboard.writeText(polygon_json);
 }
 

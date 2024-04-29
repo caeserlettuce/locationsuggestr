@@ -591,3 +591,17 @@ input.basic {
 .google-search .button {
   margin-top: 15px !important;
 }
+
+footer {
+  background-color: #333333;
+  height: 4rem;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  gap: 0.3rem;
+  padding-left: 0.3rem;
+}
+
+footer img {
+  height: 3rem;
+}
