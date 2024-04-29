@@ -795,7 +795,7 @@ function get_random_coord(category, do_after) {
             function get_geocody_lmao(loc, do_after) {
 
               geocoder.geocode({ 'location': loc }, function (results, status) {
-                add_tried_loc(0.1);
+                add_tried_loc(0.01);
                 if (status == 'OK') {
                   console.log("ADDY!!!!", results);
 
@@ -1196,98 +1196,102 @@ function end_game() {
 
     reflection_markers.push(yummy_path);
 
-    reflection_map.addListener("click", (mapsMouseEvent) => {
-      if (polygon_maker == true) {
+    //console.log(i);
+    if (i == 0) {
+      console.log("hi")
+      reflection_map.addListener("click", (mapsMouseEvent) => {
+        if (polygon_maker == true) {
 
-        point_loc = mapsMouseEvent.latLng.toJSON();
+          point_loc = mapsMouseEvent.latLng.toJSON();
 
-        console.log(point_loc);
+          console.log(point_loc);
 
 
-        if (keys_pressed["shift"] == true) {
+          if (keys_pressed["shift"] == true) {
 
-          // ALLALALLALLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLALALLALALLALALALLALALLALALLALALALLALLALALLALALLALALLA
-          // ALLALALLALLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLALALLALALLALALALLALALLALALLALALALLALLALALLALALLALALLA
-          // ALLALALLALLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLALALLALALLALALALLALALLALALLALALALLALLALALLALALLALALLA
-          // ALLALALLALLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLALALLALALLALALALLALALLALALLALALALLALLALALLALALLALALLA
-          // ALLALALLALLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLALALLALALLALALALLALALLALALLALALALLALLALALLALALLALALLA
+            // ALLALALLALLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLALALLALALLALALALLALALLALALLALALALLALLALALLALALLALALLA
+            // ALLALALLALLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLALALLALALLALALALLALALLALALLALALALLALLALALLALALLALALLA
+            // ALLALALLALLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLALALLALALLALALALLALALLALALLALALALLALLALALLALALLALALLA
+            // ALLALALLALLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLALALLALALLALALALLALALLALALLALALALLALLALALLALALLALALLA
+            // ALLALALLALLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLALALLALALLALALALLALALLALALLALALALLALLALALLALALLALALLA
 
-          get_geocoding(point_loc["lat"], point_loc["lng"], (result, point_loc) => {
+            get_geocoding(point_loc["lat"], point_loc["lng"], (result, point_loc) => {
 
-            dev_point_get_index += 1;
+              dev_point_get_index += 1;
 
-            dev_points_markers[dev_point_get_index] = new google.maps.Marker({
+              dev_points_markers[dev_point_get_index] = new google.maps.Marker({
+                position: point_loc,
+                map: reflection_map,
+                title: `[${dev_point_get_index}] click for point info`,
+                icon: {
+                  url: "assets/blue_pin.svg"
+                }
+              });
+
+              console.log("RESULT HEHASH", result)
+              var results = result;
+              console.log(results)
+
+              dev_points_info_windows[dev_point_get_index] = new google.maps.InfoWindow({
+                content: `
+    <div style="color: black;">
+      <h3>${point_loc["lat"]}, ${point_loc["lng"]}<br>${JSON.stringify(result, null, 2).replaceAll("\n", "<br>")}</h3>
+    </div`
+              });
+              console.log("hi hi hih ")
+              console.log(dev_points_markers[dev_point_get_index])
+    
+              google.maps.event.addListener(dev_points_markers[dev_point_get_index], 'click', function() {
+                var number = parseInt(this["title"].split(" ")[0].replace("[", "").replace("]", ""));
+                dev_points_info_windows[number].open(reflection_map, dev_points_markers[number]);
+              });
+            }, point_loc)
+
+
+          } else {
+            polygon_points.push(point_loc);
+            var real_polygon_points = [];
+    
+            for (i in polygon_points) {
+              if (polygon_points[i]["lat"]) {
+                real_polygon_points.push(polygon_points[i]);
+              }
+            }
+    
+            if (map_polygon != false) {
+              map_polygon.setMap(null);
+            }
+    
+            map_polygon = new google.maps.Polygon({
+              paths: real_polygon_points,
+              strokeColor: "#FF0000",
+              strokeOpacity: 0.8,
+              strokeWeight: 2,
+              fillColor: "#FF0000",
+              fillOpacity: 0.35,
+              clickable: false,
+              map: reflection_map
+            });
+    
+    
+            var point_marker = new google.maps.Marker({
               position: point_loc,
               map: reflection_map,
-              title: `[${dev_point_get_index}] click for point info`,
+              title: "point",
               icon: {
                 url: "assets/blue_pin.svg"
               }
             });
-
-            console.log("RESULT HEHASH", result)
-            var results = result;
-            console.log(results)
-
-            dev_points_info_windows[dev_point_get_index] = new google.maps.InfoWindow({
-              content: `
-  <div style="color: black;">
-    <h3>${point_loc["lat"]}, ${point_loc["lng"]}<br>${JSON.stringify(result, null, 2).replaceAll("\n", "<br>")}</h3>
-  </div`
-            });
-            console.log("hi hi hih ")
-            console.log(dev_points_markers[dev_point_get_index])
-  
-            google.maps.event.addListener(dev_points_markers[dev_point_get_index], 'click', function() {
-              var number = parseInt(this["title"].split(" ")[0].replace("[", "").replace("]", ""));
-              dev_points_info_windows[number].open(reflection_map, dev_points_markers[number]);
-            });
-          }, point_loc)
-
-
-        } else {
-          polygon_points.push(point_loc);
-          var real_polygon_points = [];
-  
-          for (i in polygon_points) {
-            if (polygon_points[i]["lat"]) {
-              real_polygon_points.push(polygon_points[i]);
-            }
+            eval(`point_marker.addListener('click',()=> { remove_point_marker(${polygon_markers.length})});`);
+    
+            polygon_markers.push(point_marker);
+    
+            document.querySelector(".suggest-button").classList.remove("disabled");
           }
-  
-          if (map_polygon != false) {
-            map_polygon.setMap(null);
-          }
-  
-          map_polygon = new google.maps.Polygon({
-            paths: real_polygon_points,
-            strokeColor: "#FF0000",
-            strokeOpacity: 0.8,
-            strokeWeight: 2,
-            fillColor: "#FF0000",
-            fillOpacity: 0.35,
-            clickable: false,
-            map: reflection_map
-          });
-  
-  
-          var point_marker = new google.maps.Marker({
-            position: point_loc,
-            map: reflection_map,
-            title: "point",
-            icon: {
-              url: "assets/blue_pin.svg"
-            }
-          });
-          eval(`point_marker.addListener('click',()=> { remove_point_marker(${polygon_markers.length})});`);
-  
-          polygon_markers.push(point_marker);
-  
-          document.querySelector(".suggest-button").classList.remove("disabled");
+          
         }
-        
-      }
-    });
+      });
+    }
 
   }
   save_localstorage();
