@@ -1115,16 +1115,17 @@ function end_game() {
   document.querySelector(".reflection-page").style.display = "";
   document.querySelector(".reflections").innerHTML = "";
   reflections_info_windows = {};
-  reflection_markers_new = {};
+  reflection_markers_new = [];
   for (i in gamesave_save) {
-    reflection_markers_new[i] = {};
+    reflection_markers_new.push({});
     reflections_info_windows[i] = {};
     var node_tmtm = document.createElement("h3");
     var time_tmtm = parseInt(gamesave_save[i]["end time"]) - parseInt(gamesave_save[i]["start time"]);
     node_tmtm.innerHTML = `${i}<br>${gamesave_save[i]["real location"]}<br>${gamesave_save[i]["distance"]}<br>${funny_time(time_tmtm)}`;
     document.querySelector(".reflections").appendChild(node_tmtm);
 
-    var reflection_marker = new google.maps.Marker({
+    
+    reflection_markers_new[i]["blue"] = new google.maps.Marker({
       position: { "lat": gamesave_save[i]["suggestion"][0], "lng": gamesave_save[i]["suggestion"][1] },
       map: reflection_map,
       title: `[${i}] your suggestion`,
@@ -1132,9 +1133,9 @@ function end_game() {
         url: "assets/blue_pin.svg"
       }
     });
-    reflection_markers_new[i]["blue"] = reflection_marker;
-    reflection_markers.push(reflection_marker);
-    var reflection_marker = new google.maps.Marker({
+    //reflection_markers.push(reflection_marker);
+    
+    reflection_markers_new[i]["red"] = new google.maps.Marker({
       position: { "lat": gamesave_save[i]["real location"][0], "lng": gamesave_save[i]["real location"][1] },
       map: reflection_map,
       title: `[${i}] real location`,
@@ -1142,7 +1143,8 @@ function end_game() {
         url: "assets/red_pin.svg"
       }
     });
-    reflection_markers_new[i]["red"] = reflection_marker;
+
+    //reflection_marker.setMap(null);
 
     var ifw_node = document.querySelector(".infowindow-wrapper").cloneNode(true);
 
@@ -1344,7 +1346,8 @@ function enable_polygon_maker() {
   for (let i = 0; i < reflection_markers.length; i++) {
     reflection_markers[i].setMap(null);
   }
-  for (i in reflection_markers_new) {
+  for (let i = 0; i < reflection_markers_new.length; i++) {
+    //console.log(i);
     reflection_markers_new[i]["blue"].setMap(null);
     reflection_markers_new[i]["red"].setMap(null);
   }
