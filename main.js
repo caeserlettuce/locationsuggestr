@@ -796,7 +796,7 @@ function get_random_coord(category, do_after) {
             function get_geocody_lmao(loc, do_after) {
 
               geocoder.geocode({ 'location': loc }, function (results, status) {
-                add_tried_loc(0.1);
+                add_tried_loc(0.01);
                 if (status == 'OK') {
                   console.log("ADDY!!!!", results);
 
