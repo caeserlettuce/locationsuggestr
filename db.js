@@ -745,7 +745,7 @@ var categories = [
     {
         "name": "washington",
         "img": "assets/washington.jpg",
-        "subcategory": 13,
+        "subcategory": 3,
         "center": [47.174911635380816, -120.31871259464444],
         "true random": true,
         "zoom": 6,
@@ -2590,7 +2590,7 @@ var categories = [
     {
         "name": "guadalajara",
         "img": "assets/guadalajara.jpg",
-        "subcategory": 3,
+        "subcategory": 4,
         "center": [20.672566322792502, -103.35291227814245],
         "zoom": 9,
         "filters": {
@@ -2641,7 +2641,7 @@ var categories = [
     {
         "name": "tijuana",
         "img": "assets/tijuana.jpg",
-        "subcategory": 3,
+        "subcategory": 4,
         "center": [32.49810567798841, -116.98720741911484],
         "zoom": 9,
         "filters": {
@@ -2673,7 +2673,7 @@ var categories = [
     {
         "name": "puebla",
         "img": "assets/puebla.jpg",
-        "subcategory": 3,
+        "subcategory": 4,
         "center": [19.04489696291029, -98.20694983955812],
         "zoom": 9,
         "filters": {
@@ -2706,7 +2706,7 @@ var categories = [
     {
         "name": "mexico city",
         "img": "assets/mexicocity.jpg",
-        "subcategory": 3,
+        "subcategory": 4,
         "center": [19.427755266513262, -99.13388444886084],
         "zoom": 9,
         "filters": {
@@ -2749,7 +2749,7 @@ var categories = [
     {
         "name": "costa rica",
         "img": "assets/costarica.jpg",
-        "subcategory": 3,
+        "subcategory": 4,
         "center": [9.920470393525115, -84.07612669604828],
         "zoom": 8,
         "filters": {
@@ -3061,7 +3061,7 @@ var categories = [
     {
         "name": "panama",
         "img": "assets/panama.jpg",
-        "subcategory": 3,
+        "subcategory": 4,
         "center": [8.879960815060484, -79.95625390614154],
         "zoom": 8,
         "filters": {
@@ -3714,7 +3714,7 @@ var categories = [
     {
         "name": "guatemala",
         "img": "assets/guatemala.jpg",
-        "subcategory": 3,
+        "subcategory": 4,
         "center": [15.73694412846272, -90.09228194191516],
         "zoom": 8,
         "filters": {
@@ -3802,7 +3802,7 @@ var categories = [
     {
         "name": "belize",
         "img": "assets/belize.jpg",
-        "subcategory": 3,
+        "subcategory": 4,
         "center": [16.94929500636335, -88.71899100005707],
         "zoom": 8,
         "filters": {
@@ -3861,7 +3861,7 @@ var categories = [
     {
         "name": "el salvador",
         "img": "assets/elsalvador.jpg",
-        "subcategory": 3,
+        "subcategory": 4,
         "center": [13.728914035467005, -89.00463544457013],
         "zoom": 8,
         "filters": {
@@ -4062,7 +4062,7 @@ var categories = [
     {
         "name": "honduras",
         "img": "assets/honduras.jpg",
-        "subcategory": 3,
+        "subcategory": 4,
         "center": [14.676797246124472, -87.06005550992582],
         "zoom": 8,
         "filters": {
@@ -4289,7 +4289,7 @@ var categories = [
     {
         "name": "nicaragua",
         "img": "assets/nicaragua.jpg",
-        "subcategory": 3,
+        "subcategory": 4,
         "center": [12.841461711010574, -85.1813934581052],
         "zoom": 8,
         "filters": {
@@ -4450,7 +4450,7 @@ var categories = [
     {
         "name": "oregon",
         "img": "assets/oregon.jpg",
-        "subcategory": 7,
+        "subcategory": 3,
         "center": [43.78690171509536, -120.53792419223625],
         "zoom": 6,
         "filters": {
@@ -4677,7 +4677,7 @@ var categories = [
     {
         "name": "idaho",
         "img": "assets/idaho.jpg",
-        "subcategory": 7,
+        "subcategory": 3,
         "center": [44.67460457577636, -114.3285308069875],
         "zoom": 6,
         "filters": {
@@ -4967,7 +4967,7 @@ var categories = [
     {
         "name": "california",
         "img": "assets/california.jpg",
-        "subcategory": 7,
+        "subcategory": 3,
         "center": [37.018645960361766, -119.8656401819875],
         "zoom": 6,
         "filters": {
@@ -5052,7 +5052,7 @@ var categories = [
     {
         "name": "nevada",
         "img": "assets/nevada.jpg",
-        "subcategory": 7,
+        "subcategory": 3,
         "center": [39.421547427932204, -116.9105230612832],
         "zoom": 6,
         "filters": {
@@ -5164,7 +5164,7 @@ var categories = [
     {
         "name": "arizona",
         "img": "assets/arizona.jpg",
-        "subcategory": 7,
+        "subcategory": 3,
         "center": [34.324945410123966, -111.77501194895324],
         "zoom": 6,
         "filters": {
@@ -5459,7 +5459,7 @@ var categories = [
     {
         "name": "new mexico",
         "img": "assets/newmexico.jpg",
-        "subcategory": 7,
+        "subcategory": 3,
         "center": [34.4264911617643, -106.12105264863924],
         "zoom": 6,
         "filters": {
@@ -5546,7 +5546,7 @@ var categories = [
     {
         "name": "texas",
         "img": "assets/texas.jpg",
-        "subcategory": 7,
+        "subcategory": 3,
         "center": [31.538793978184994, -99.22560306735701],
         "zoom": 6,
         "filters": {
@@ -6097,7 +6097,7 @@ var categories = [
     {
         "name": "utah",
         "img": "assets/utah.jpg",
-        "subcategory": 7,
+        "subcategory": 3,
         "center": [39.27463169649976, -111.64071441703797],
         "zoom": 6,
         "filters": {
@@ -6135,7 +6135,7 @@ var categories = [
     {
         "name": "colorado",
         "img": "assets/colorado.jpg",
-        "subcategory": 7,
+        "subcategory": 3,
         "center": [38.976829847046695, -105.70445513938044],
         "zoom": 6,
         "filters": {
@@ -6180,7 +6180,7 @@ var categories = [
     {
         "name": "wyoming",
         "img": "assets/wyoming.jpg",
-        "subcategory": 7,
+        "subcategory": 3,
         "center": [0, 0],
         "zoom": 6,
         "filters": {
@@ -6281,7 +6281,7 @@ var categories = [
     {
         "name": "montana",
         "img": "assets/montana.jpg",
-        "subcategory": 7,
+        "subcategory": 3,
         "center": [46.87465155299735, -109.82335311952059],
         "zoom": 6,
         "filters": {
@@ -6612,6 +6612,96 @@ var categories = [
             ]
         ]
     },
+    {
+        "name": "north dakota",
+        "img": "assets/northdakota.jpg",
+        "subcategory": 3,
+        "center": [47.409721304860206, -100.4242223198398],
+        "zoom": 6,
+        "filters": {
+            "country": [
+                "United States"
+            ],
+            "administrative_area_level_1": [
+               "North Dakota" 
+            ]
+        },
+        "bounds": [
+
+        ]
+    },
+    {
+        "name": "south dakota",
+        "img": "assets/southdakota.jpg",
+        "subcategory": 3,
+        "center": [44.47714108801498, -100.4022496635898],
+        "zoom": 6,
+        "filters": {
+            "country": [
+                "United States"
+            ],
+            "administrative_area_level_1": [
+               "South Dakota" 
+            ]
+        },
+        "bounds": [
+
+        ]
+    },
+    {
+        "name": "nebraska",
+        "img": "assets/nebraska.jpg",
+        "subcategory": 3,
+        "center": [41.47178615370718, -99.6112340385898],
+        "zoom": 6,
+        "filters": {
+            "country": [
+                "United States"
+            ],
+            "administrative_area_level_1": [
+               "Nebraska"
+            ]
+        },
+        "bounds": [
+
+        ]
+    },
+    {
+        "name": "kansas",
+        "img": "assets/kansas.jpg",
+        "subcategory": 3,
+        "center": [38.50255478715873, -98.5126012260898],
+        "zoom": 6,
+        "filters": {
+            "country": [
+                "United States"
+            ],
+            "administrative_area_level_1": [
+               "Kansas"
+            ]
+        },
+        "bounds": [
+
+        ]
+    },
+    {
+        "name": "oklahoma",
+        "img": "assets/oklahoma.jpg",
+        "subcategory": 3,
+        "center": [35.5205430162417, -97.8753941948398],
+        "zoom": 6,
+        "filters": {
+            "country": [
+                "United States"
+            ],
+            "administrative_area_level_1": [
+               "Oklahoma"
+            ]
+        },
+        "bounds": [
+
+        ]
+    },
 
 
     /*
@@ -6626,7 +6716,7 @@ var categories = [
                 ""
             ],
             "administrative_area_level_1": [
-               "" 
+               ""
             ]
         },
         "bounds": [
@@ -6643,41 +6733,41 @@ var subcategories = [
         "name": "popular"
     },
     {   // 2
-        "name": "cities - north america"
+        "name": "north america"
     },
     {   // 3
-        "name": "mexico, south america, & the caribbean"
+        "name": "usa - states"
     },
     {   // 4
-        "name": "cities - mexico, south america, & the caribbean"
+        "name": "mexico, south america, & the caribbean"
     },
     {   // 5
-        "name": "europe & oceania"
+        "name": "countries - mexico, south america, & the caribbean"
     },
     {   // 6
-        "name": "cities - europe & oceania"
+        "name": "europe & oceania"
     },
     {   // 7
-        "name": "africa"
+        "name": "countries - europe & oceania"
     },
     {   // 8
-        "name": "cities - africa"
+        "name": "africa"
     },
     {   // 9
-        "name": "middle east"
+        "name": "countries - africa"
     },
     {   // 10
-        "name": "cities - middle east"
+        "name": "middle east"
     },
     {   // 11
-        "name": "asia"
+        "name": "countries - middle east"
     },
     {   // 12
-        "name": "cities - asia"
+        "name": "asia"
     },
     {   // 13
-        "name": "usa - states"
-    }
+        "name": "countries - asia"
+    },
 ]
 
 
