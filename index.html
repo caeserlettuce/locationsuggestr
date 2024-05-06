@@ -61,7 +61,7 @@
         <span style="transform: translate(0px, 0.25em)">globe accurate lines</span><span style="transform: translate(-0.55em, 0.0em) scale(0.8); cursor: pointer;" onclick="open_info(2)">(i)</span>
       </h3>
       <h3 style="display: flex; gap: 10px; justify-content: center;" class="toggle-wrapper">
-        <svg class="toggle" viewBox="0 0 2 1" onclick="toggle_button(3)" ja_id="3"">
+        <svg class="toggle" viewBox="0 0 2 1" onclick="toggle_button(3)" ja_id="3">
           <circle cx="0.5" cy="0.5" r="0.5" class="background" />
           <circle cx="1.5" cy="0.5" r="0.5" class="background" />
           <rect x="0.5" y="0" width="1" height="1" class="background" />
@@ -69,6 +69,16 @@
         </svg>
       
         <span style="transform: translate(0px, 0.25em)">use google search</span>
+      </h3>
+      <h3 style="display: flex; gap: 10px; justify-content: center;" class="toggle-wrapper">
+        <svg class="toggle" viewBox="0 0 2 1" onclick="toggle_button(4)" ja_id="4">
+          <circle cx="0.5" cy="0.5" r="0.5" class="background" />
+          <circle cx="1.5" cy="0.5" r="0.5" class="background" />
+          <rect x="0.5" y="0" width="1" height="1" class="background" />
+          <circle cx="0.5" cy="0.5" r="0.5" class="thumb" />
+        </svg>
+      
+        <span style="transform: translate(0px, 0.25em)">enable notepad</span>
       </h3>
       
       
@@ -176,7 +186,7 @@
       <footer>
         <img src="./assets/notepad.png">
         <img src="./assets/technoblade.png">
-        <h2>website ©2024 <a href="https://dapug.lol">dapug.lol</a>. images sourced from google.</h2>
+        <h2>website ©2024 <a href="https://dapug.lol">dapug.lol</a>. images sourced from google.</h2> <h2 class="desc">have an issue with this site? email me at jesse@benson.lol</h2>
       </footer>
 
     </div>
@@ -226,6 +236,13 @@
         
         <h2 class="basic button resize-button" onclick="resize_google()">&gt;</h2>
       </div>
+
+      <div class="notepad-wrapper nop">
+        <div class="notepad nop" contenteditable> 
+
+        </div>
+      </div>
+      
 
     </div>
 

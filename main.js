@@ -62,6 +62,7 @@ var dev_point_get_index = 10000;
 var dev_points_markers = {};
 var dev_points_info_windows = {};
 var mouse_events = [];
+var enable_notepad = false;
 
 // LOCALSTORAGE
 try {
@@ -90,6 +91,9 @@ if (localstorage_object["accurate lines"] != undefined) {
 if (localstorage_object["use google search"] != undefined) {
   use_google_search = localstorage_object["use google search"];
 }
+if (localstorage_object["enable notepad"] != undefined) {
+  enable_notepad = localstorage_object["enable notepad"];
+}
 
 // toggle buttons auto
 if (kilometers == true) {
@@ -104,6 +108,9 @@ if (accurate_lines == true) {
 if (use_google_search == true) {
   document.querySelector(`.toggle[ja_id="3"]`).classList.add("enabled");
 }
+if (enable_notepad == true) {
+  document.querySelector(`.toggle[ja_id="4"]`).classList.add("enabled");
+}
 
 function toggle_button(id) {
   var enabledja = document.querySelector(`.toggle[ja_id="${id}"]`).classList.contains("enabled");
@@ -117,6 +124,8 @@ function toggle_button(id) {
       accurate_lines = true;
     } else if (id == 3) {
       use_google_search = true;
+    } else if (id == 4) {
+      enable_notepad = true;
     }
   } else {
     document.querySelector(`.toggle[ja_id="${id}"]`).classList.remove("enabled");   // DISABLING
@@ -128,6 +137,8 @@ function toggle_button(id) {
       accurate_lines = false;
     } else if (id == 3) {
       use_google_search = false;
+    } else if (id == 4) {
+      enable_notepad = false;
     }
   }
   save_localstorage();
@@ -139,6 +150,7 @@ function save_localstorage() {
   localstorage_object["true random"] = true_random;
   localstorage_object["accurate lines"] = accurate_lines;
   localstorage_object["use google search"] = use_google_search;
+  localstorage_object["enable notepad"] = enable_notepad;
 
   localStorage.setItem("locationsuggestr", JSON.stringify(localstorage_object));
 }
@@ -618,6 +630,9 @@ function get_random_coord(category, do_after) {
                 sv.getPanoramaByLocation(real_loc, 10000, (data, status) => {
                   add_tried_loc(0.01);
                   if (status == google.maps.StreetViewStatus.OK) {
+                    
+                    //console.log("WOOOOOOOO !!!!!", data);
+
                     console.log(status);
                     clearInterval(find_pano_interval);
                     console.log("GOOD!!");
@@ -630,6 +645,9 @@ function get_random_coord(category, do_after) {
                     document.querySelector(".suggestion").style.display = "";
                     if (use_google_search == true) {
                       document.querySelector(".google-search").style.display = "";
+                    }
+                    if (enable_notepad == true) {
+                      document.querySelector(".notepad-wrapper").style.display = "";
                     }
                     
 
@@ -939,6 +957,8 @@ function new_scene() { // new scene
   document.querySelector(".end-page").style.display = "none";
   document.querySelector(".reflection-page").style.display = "none";
   document.querySelector(".google-search").style.display = "none";
+  document.querySelector(".notepad-wrapper").style.display = "none";
+  document.querySelector(".notepad").innerHTML = "";
 
   
 
@@ -1075,7 +1095,8 @@ function make_suggestion() {
       "real location": [real_loc[0], real_loc[1]],
       "distance": distance_text,
       "start time": time_start.getTime(),
-      "end time": time_end.getTime()
+      "end time": time_end.getTime(),
+      "notepad": document.querySelector(".notepad").innerHTML
     }
     gamesave_save.push(gamesave_json);
     save_localstorage();
@@ -1201,6 +1222,7 @@ function end_game() {
 
     if (i == 0) {
       reflection_map.addListener("click", (mapsMouseEvent) => {
+
         var event_json = JSON.stringify(mapsMouseEvent);
   
         if (mouse_events.includes(event_json)) {
@@ -1296,6 +1318,7 @@ function end_game() {
             point_marker.addListener('click',()=> {
               console.log("removing ${polygon_markers.length}...");
               remove_point_marker(${polygon_markers.length});
+              document.querySelector("#reflection-map").focus();
             });`);
       
               polygon_markers.push(point_marker);
@@ -1357,6 +1380,7 @@ function enable_polygon_maker() {
   node_tmtm.classList.add("button");
   node_tmtm.classList.add("basic");
   node_tmtm.classList.add("rpm");
+  node_tmtm.classList.add("red");
   node_tmtm.setAttribute("onclick", `reset_polygon_maker()`);
   node_tmtm.innerHTML = "reset polygon editor";
   document.querySelector(".reflection-page").appendChild(node_tmtm);

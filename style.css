@@ -605,3 +605,27 @@ footer {
 footer img {
   height: 3rem;
 }
+
+.notepad {
+  width: 45vw;
+  height: 45vh;
+  background-color: var(--main-bg-2);
+  border: 3.5px solid var(--input-basic-border);
+  font-size: 1.25em;
+  border-radius: 20px;
+  padding: 10px;
+  margin-right: 10px;
+  cursor: pointer;  
+}
+
+.notepad-wrapper {
+  position: fixed;
+  bottom: 2em;
+  right: -44vw;
+  z-index: 200;
+  background-color: #00000000;
+  transition-duration: 250ms;
+}
+.notepad-wrapper:hover, .notepad-wrapper:has(.notepad:focus) {
+  right: 0px;
+}
