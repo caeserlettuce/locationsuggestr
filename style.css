@@ -477,6 +477,12 @@ input.basic {
   width: 1.5em !important;
 }
 
+.skip-button {
+  cursor: pointer;
+  margin: 0px !important;
+  width: 1.5em !important;
+}
+
 .time-wrapper {
   display: flex;
   margin-left: 10px;
