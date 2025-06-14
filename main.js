@@ -64,6 +64,13 @@ var dev_points_info_windows = {};
 var mouse_events = [];
 var enable_notepad = false;
 
+var dev_polygon = false;
+var dev_path = [];
+var dev_index = 140;
+var rendex = 0;
+var rendex_refresh = 5;
+var selected_marker = false;
+
 // LOCALSTORAGE
 try {
   var from_ls = JSON.parse(localStorage.getItem("locationsuggestr"));
@@ -340,7 +347,7 @@ function do_street_view(loc) {
   //map.setStreetView(panorama);
 }
 
-function initMap() {
+async function initMap() {
   try {
     sv = new google.maps.StreetViewService();
     // The location of Uluru
@@ -355,6 +362,8 @@ function initMap() {
 
     geocoder = new google.maps.Geocoder();
     places_api = new google.maps.places.PlacesService(map);   // places api
+
+    const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
 
     /*var markers = new Array();
     var new_marker = new google.maps.Marker({
@@ -1103,6 +1112,9 @@ function make_suggestion() {
   }
 }
 
+function jcopy(json_in) {
+  return JSON.parse(JSON.stringify(json_in));
+}
 
 
 function doublefy(num) {
@@ -1281,49 +1293,75 @@ function end_game() {
   
   
             } else {
-              polygon_points.push(point_loc);
-              var real_polygon_points = [];
-      
-              for (i in polygon_points) {
-                if (polygon_points[i]["lat"]) {
-                  real_polygon_points.push(polygon_points[i]);
-                }
-              }
-      
-              if (map_polygon != false) {
-                map_polygon.setMap(null);
-              }
-      
-              map_polygon = new google.maps.Polygon({
-                paths: real_polygon_points,
-                strokeColor: "#FF0000",
-                strokeOpacity: 0.8,
-                strokeWeight: 2,
-                fillColor: "#FF0000",
-                fillOpacity: 0.35,
-                clickable: false,
-                map: reflection_map
-              });
-      
-      
-              var point_marker = new google.maps.Marker({
-                position: point_loc,
+
+              // PLOLYGON
+
+              var mkr_img = document.createElement("img");
+              mkr_img.src = "assets/blue_pin.svg";
+              mkr_img.setAttribute("oncontextmenu", `remove_dev_marker(${dev_index})`);
+
+              var point_marker = new google.maps.marker.AdvancedMarkerElement({
                 map: reflection_map,
-                title: "point",
-                icon: {
-                  url: "assets/blue_pin.svg"
-                }
+                // content: hi,
+                position: point_loc,
+                title: `${dev_index}`,
+                gmpDraggable: true,
+                gmpClickable: true,
+                content: mkr_img
               });
-              eval(`
-            point_marker.addListener('click',()=> {
-              console.log("removing ${polygon_markers.length}...");
-              remove_point_marker(${polygon_markers.length});
-              document.querySelector("#reflection-map").focus();
-            });`);
-      
-              polygon_markers.push(point_marker);
-      
-              document.querySelector(".suggest-button").classList.remove("disabled");
+
+              point_marker.addListener("dragend", (event) => {
+                var new_loc = event.latLng.toJSON();
+                var event_marker_id = parseInt(event.domEvent.srcElement.closest("gmp-advanced-marker").title);
+                var mindex_id = parseInt(get_marker_index(event_marker_id));
+                // console.log(mindex_id, event_marker_id);
+                dev_path[mindex_id]["loc"] = jcopy(new_loc);
+                selected_marker = parseInt(mindex_id);
+                render_dev_polygon();
+              });
+              
+              point_marker.addListener("drag", (event) => {
+                var new_loc = event.latLng.toJSON();
+                var event_marker_id = parseInt(event.domEvent.srcElement.closest("gmp-advanced-marker").title);
+                var mindex_id = parseInt(get_marker_index(event_marker_id));
+                // console.log(mindex_id, event_marker_id);
+                dev_path[mindex_id]["loc"] = jcopy(new_loc);
+                // selected_marker = parseInt(mindex_id);
+                if (rendex % rendex_refresh == 0) {
+                  render_dev_polygon();
+                }
+                rendex += 1;
+              });
+
+              point_marker.addListener("click", (event) => {
+                var new_loc = event.latLng.toJSON();
+                var event_marker_id = parseInt(event.domEvent.srcElement.closest("gmp-advanced-marker").title);
+                var mindex_id = parseInt(get_marker_index(event_marker_id));
+                selected_marker = parseInt(mindex_id);
+              });
+              
+
+
+
+
+              var marker_data = {
+                "loc": point_loc,
+                "marker": point_marker,
+                "id": dev_index
+              }
+
+              if (selected_marker !== false) {
+                dev_path.splice(selected_marker + 1, 0, marker_data);
+              } else {
+                dev_path.push(marker_data);
+              }
+
+
+              render_dev_polygon();
+
+              selected_marker += 1;
+
+              dev_index += 1
             }
             
           }
@@ -1334,6 +1372,56 @@ function end_game() {
 
   save_localstorage();
 }
+
+function remove_dev_marker(mid_in) {
+
+  var mindex = parseInt(get_marker_index(mid_in));
+
+  dev_path[mindex]["marker"].setMap(null);
+  dev_path.splice(mindex, 1);
+
+  selected_marker += -1;
+  render_dev_polygon();
+}
+
+
+
+function get_marker_index(mindex_in) {
+  mindex_in = parseInt(mindex_in)
+  var out = false;
+  for (i in dev_path) {
+    if (dev_path[i]["id"] == mindex_in) {
+      out = i;
+    }
+  }
+  return out
+}
+
+function render_dev_polygon() {
+
+  var polygon_points = [];
+
+  for (i in dev_path) {
+    polygon_points.push(dev_path[i]["loc"]);
+  }
+
+  if (dev_polygon != false) {
+    dev_polygon.setMap(null);
+  }
+
+  dev_polygon = new google.maps.Polygon({
+    paths: polygon_points,
+    strokeColor: "#FF0000",
+    strokeOpacity: 0.8,
+    strokeWeight: 2,
+    fillColor: "#FF0000",
+    fillOpacity: 0.35,
+    clickable: false,
+    map: reflection_map
+  });
+
+}
+
 
 function remove_point_marker(id) {
   polygon_markers[id].setMap(null);
@@ -1362,6 +1450,8 @@ function remove_point_marker(id) {
 }
 
 function enable_polygon_maker() {
+  document.querySelector(".reflection-page").style.display = "";
+  document.querySelector(".reflections").innerHTML = "";
   polygon_maker = true;
   polygon_points = [];
   map_polygon = false;
@@ -1376,6 +1466,12 @@ function enable_polygon_maker() {
   }
 
   reflection_markers = [];
+
+  dev_polygon = false;
+  dev_path = [];
+
+
+
   var node_tmtm = document.createElement("h2");
   node_tmtm.classList.add("button");
   node_tmtm.classList.add("basic");
@@ -1401,13 +1497,15 @@ function enable_polygon_maker() {
 }
 
 function reset_polygon_maker() {
-  for (let i = 0; i < polygon_markers.length; i++) {
-    polygon_markers[i].setMap(null);
+  for (i in dev_path) {
+    dev_path[i]["marker"].setMap("null");
   }
-  polygon_markers = [];
-  polygon_points = [];
-  map_polygon.setMap(null);
-  map_polygon = false;
+
+  dev_polygon = false;
+  dev_path = [];
+
+  dev_polygon.setMap(null);
+  dev_polygon = false;
 }
 
 function disable_polygon_maker() {
@@ -1419,10 +1517,8 @@ function disable_polygon_maker() {
 
 function copy_polygon_json() {
   var real_polygon_points = [];
-  for (i in polygon_points) {
-    if (polygon_points[i]["lat"]) {
-      real_polygon_points.push(polygon_points[i]);
-    }
+  for (i in dev_path) {
+    real_polygon_points.push(dev_path[i]["loc"]);
   }
   var polygon_json = JSON.stringify(real_polygon_points).replaceAll("},{", `},
                 {`).replaceAll("[{", `[
@@ -1662,3 +1758,9 @@ document.addEventListener('keyup', (event) => {
   }
 
 });
+
+
+
+// setTimeout( () => {
+//   open_polygon_editor();
+// }, 2000);
