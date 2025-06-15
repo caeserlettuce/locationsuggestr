@@ -187,14 +187,17 @@ function get_len(obj) {
 }
 
 function funny_marker(label, marker_loc, colour) {
-  var suggestion_marker = new google.maps.Marker({
-    position: marker_loc,
+  
+  var mkr_img = document.createElement("img");
+  mkr_img.src = `assets/${colour}_pin.svg`;
+
+  var suggestion_marker = new google.maps.marker.AdvancedMarkerElement({
     map: map,
+    position: marker_loc,
     title: `${label}`,
-    icon: {
-      url: `assets/${colour}_pin.svg`
-    }
+    content: mkr_img
   });
+
   suggestion_markers.push(suggestion_marker)
 }
 
@@ -365,13 +368,6 @@ async function initMap() {
 
     const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
 
-    /*var markers = new Array();
-    var new_marker = new google.maps.Marker({
-      position: {"lat": loc[0], "lng": loc[1]},
-      map: map,
-      title: "hi test"
-    });
-    markers.push(new_marker);*/
 
     map.addListener("click", (mapsMouseEvent) => {
       if (allow_suggest == true) {
@@ -382,14 +378,20 @@ async function initMap() {
 
         suggestion_loc = mapsMouseEvent.latLng.toJSON();
 
-        var suggestion_marker = new google.maps.Marker({
-          position: suggestion_loc,
+        var mkr_img = document.createElement("img");
+        mkr_img.src = `assets/blue_pin.svg`;
+
+        var suggestion_marker = new google.maps.marker.AdvancedMarkerElement({
           map: map,
-          title: "your suggestion",
-          icon: {
-            url: "assets/blue_pin.svg"
-          }
+          position: suggestion_loc,
+          title: `your suggestion`,
+          content: mkr_img
         });
+
+
+
+
+
         suggestion_markers.push(suggestion_marker)
 
         document.querySelector(".suggest-button").classList.remove("disabled");
@@ -612,14 +614,17 @@ function get_random_coord(category, do_after) {
               suggestion_markers[i].setMap(null);
             }
             suggestion_markers = [];
-            var suggestion_marker = new google.maps.Marker({
-              position: real_loc,
+
+            var mkr_img = document.createElement("img");
+            mkr_img.src = `assets/red_pin.svg`;
+    
+            var suggestion_marker = new google.maps.marker.AdvancedMarkerElement({
               map: map,
-              title: "real location",
-              icon: {
-                url: "assets/red_pin.svg"
-              }
+              position: real_loc,
+              title: `real location`,
+              content: mkr_img
             });
+
             suggestion_markers.push(suggestion_marker)
           }
 
@@ -1025,13 +1030,15 @@ function make_suggestion() {
     document.querySelector(".suggest-button").classList.add("disabled");
     document.querySelector(".end-page").style.display = "";
 
-    var suggestion_marker = new google.maps.Marker({
-      position: { "lat": real_loc[0], "lng": real_loc[1] },
+
+    var mkr_img = document.createElement("img");
+    mkr_img.src = `assets/red_pin.svg`;
+
+    var suggestion_marker = new google.maps.marker.AdvancedMarkerElement({
       map: map,
-      title: "real location",
-      icon: {
-        url: "assets/red_pin.svg"
-      }
+      position: { "lat": real_loc[0], "lng": real_loc[1] },
+      title: `real location`,
+      content: mkr_img
     });
     suggestion_markers.push(suggestion_marker)
 
@@ -1158,24 +1165,27 @@ function end_game() {
     document.querySelector(".reflections").appendChild(node_tmtm);
 
     
-    reflection_markers_new[i]["blue"] = new google.maps.Marker({
+    var mkr_img = document.createElement("img");
+    mkr_img.src = `assets/blue_pin.svg`;
+
+    reflection_markers_new[i]["blue"] = new google.maps.marker.AdvancedMarkerElement({
+      map: reflection_map,
       position: { "lat": gamesave_save[i]["suggestion"][0], "lng": gamesave_save[i]["suggestion"][1] },
-      map: reflection_map,
       title: `[${i}] your suggestion`,
-      icon: {
-        url: "assets/blue_pin.svg"
-      }
+      content: mkr_img
     });
-    //reflection_markers.push(reflection_marker);
-    
-    reflection_markers_new[i]["red"] = new google.maps.Marker({
-      position: { "lat": gamesave_save[i]["real location"][0], "lng": gamesave_save[i]["real location"][1] },
+
+
+    var mkr_img = document.createElement("img");
+    mkr_img.src = `assets/red_pin.svg`;
+
+    reflection_markers_new[i]["red"] = new google.maps.marker.AdvancedMarkerElement({
       map: reflection_map,
+      position: { "lat": gamesave_save[i]["real location"][0], "lng": gamesave_save[i]["real location"][1] },
       title: `[${i}] real location`,
-      icon: {
-        url: "assets/red_pin.svg"
-      }
+      content: mkr_img
     });
+    
 
     //reflection_marker.setMap(null);
 
@@ -1263,14 +1273,26 @@ function end_game() {
   
                 dev_point_get_index += 1;
   
-                dev_points_markers[dev_point_get_index] = new google.maps.Marker({
-                  position: point_loc,
+                // dev_points_markers[dev_point_get_index] = new google.maps.Marker({
+                //   position: point_loc,
+                //   map: reflection_map,
+                //   title: `[${dev_point_get_index}] click for point info`,
+                //   icon: {
+                //     url: "assets/blue_pin.svg"
+                //   }
+                // });
+
+                var mkr_img = document.createElement("img");
+                mkr_img.src = `assets/blue_pin.svg`;
+
+                dev_points_markers[dev_point_get_index] = new google.maps.marker.AdvancedMarkerElement({
                   map: reflection_map,
+                  position: point_loc,
                   title: `[${dev_point_get_index}] click for point info`,
-                  icon: {
-                    url: "assets/blue_pin.svg"
-                  }
+                  content: mkr_img
                 });
+
+                
   
                 console.log("RESULT HEHASH", result)
                 var results = result;
