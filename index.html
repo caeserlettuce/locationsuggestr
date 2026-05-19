@@ -288,9 +288,17 @@
     
     <!-- https://developers.google.com/maps/documentation/geocoding/?csw=1#ReverseGeocoding -->
 
+    <div class="json-code wrapper" style="display: none;">
+      <div class="json-code body">
+        <p style="user-select: none;">press ESC to close...</p>
+        <textarea class="code-text" disabled>honef</textarea>
+      </div>
+    </div>
+    
+
     <script src="db.js"></script>
     <script src="main.js"></script>
     <div id="callapi"></div>
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC-lSh-pb6I-D_fTCrXK-Rg0R-cr0E_Xyg&libraries=places&callback=initMap"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC-lSh-pb6I-D_fTCrXK-Rg0R-cr0E_Xyg&libraries=places,marker&callback=initMap"></script>
   </body>
 </html>

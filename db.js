@@ -13099,7 +13099,28 @@ var categories = [
             ]
         ]
     },
-
+    {
+        "name": "",
+        "img": "assets/.jpg",
+        "subcategory": 0,
+        "center": [0, 0],
+        "zoom": 1,
+        "filters": {
+            "country": [
+                ""
+            ],
+            "administrative_area_level_1": [
+               ""
+            ]
+        },
+        "bounds": [
+            [
+                {"lat":-67.87554134672945,"lng":13.35938572883606},
+                {"lat":-69.41124235697255,"lng":-97.03123927116394},
+                {"lat":9.102096738726456,"lng":-46.40623927116394}
+            ]
+        ]
+    },
 
     /*
     {

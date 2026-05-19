@@ -2,12 +2,25 @@
 // lat: -90, 90
 // lng: -180, 180
 
+/*
+
+TO DO LIST::::
+
+[x] fix the output of polygon json
+[x] fix markers being off to the right from where they should be
+[x] verify polygon editor is working all properly and stuff and doesnt interfere with the location history   (it seems to be)
+[x] fix the big huge error that occurrs sometimes when moving points in polygon editor
+
+
+*/
+
 var map;
 var mapid = "9bd2e77c7cbe837c";
 var map_default_loc = [0, 0];
 var category_playing;
 var suggestion_loc = false;
 var suggestion_markers = [];
+var suggestion_paths = [];
 var sv;
 var find_coords_interval;
 var find_pano_interval;
@@ -18,10 +31,10 @@ var kilometers = false;
 var time_start;
 var reflection_map;
 var reflection_markers = [];
+var reflection_paths = [];
 var polygon_points = [];
 var real_polygon_points = [];
 var polygon_maker = false;
-var polygon_markers = [];
 var map_polygon;
 var tried_locations = 0;
 var found_coords = false;
@@ -70,6 +83,7 @@ var dev_index = 140;
 var rendex = 0;
 var rendex_refresh = 5;
 var selected_marker = false;
+var copy_window_open = false;
 
 // LOCALSTORAGE
 try {
@@ -189,6 +203,7 @@ function get_len(obj) {
 function funny_marker(label, marker_loc, colour) {
   
   var mkr_img = document.createElement("img");
+  mkr_img.style = `margin-left: -14px;`;
   mkr_img.src = `assets/${colour}_pin.svg`;
 
   var suggestion_marker = new google.maps.marker.AdvancedMarkerElement({
@@ -379,6 +394,7 @@ async function initMap() {
         suggestion_loc = mapsMouseEvent.latLng.toJSON();
 
         var mkr_img = document.createElement("img");
+        mkr_img.style = `margin-left: -14px;`;
         mkr_img.src = `assets/blue_pin.svg`;
 
         var suggestion_marker = new google.maps.marker.AdvancedMarkerElement({
@@ -403,6 +419,161 @@ async function initMap() {
       zoom: 1,
       center: lmao,
       streetViewControl: false
+    });
+
+    reflection_map.addListener("click", (mapsMouseEvent) => {
+
+      var event_json = JSON.stringify(mapsMouseEvent);
+
+      if (mouse_events.includes(event_json)) {
+
+      } else {
+        mouse_events.push(event_json);
+        setTimeout(() => {
+          mouse_events.shift();
+        }, 1000);
+        if (polygon_maker == true) {
+
+          point_loc = mapsMouseEvent.latLng.toJSON();
+
+          console.log(point_loc);
+
+
+          if (keys_pressed["shift"] == true) {
+
+            // ALLALALLALLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLALALLALALLALALALLALALLALALLALALALLALLALALLALALLALALLA
+            // ALLALALLALLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLALALLALALLALALALLALALLALALLALALALLALLALALLALALLALALLA
+            // ALLALALLALLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLALALLALALLALALALLALALLALALLALALALLALLALALLALALLALALLA
+            // ALLALALLALLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLALALLALALLALALALLALALLALALLALALALLALLALALLALALLALALLA
+            // ALLALALLALLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLALALLALALLALALALLALALLALALLALALALLALLALALLALALLALALLA
+
+            get_geocoding(point_loc["lat"], point_loc["lng"], (result, point_loc) => {
+
+              dev_point_get_index += 1;
+
+              // dev_points_markers[dev_point_get_index] = new google.maps.Marker({
+              //   position: point_loc,
+              //   map: reflection_map,
+              //   title: `[${dev_point_get_index}] click for point info`,
+              //   icon: {
+              //     url: "assets/blue_pin.svg"
+              //   }
+              // });
+
+              var mkr_img = document.createElement("img");
+              mkr_img.style = `margin-left: -14px;`;
+              mkr_img.src = `assets/blue_pin.svg`;
+
+              dev_points_markers[dev_point_get_index] = new google.maps.marker.AdvancedMarkerElement({
+                map: reflection_map,
+                position: point_loc,
+                title: `[${dev_point_get_index}] click for point info`,
+                content: mkr_img
+              });
+
+              
+
+              console.log("RESULT HEHASH", result)
+              var results = result;
+              console.log(results)
+
+              dev_points_info_windows[dev_point_get_index] = new google.maps.InfoWindow({
+                content: `
+        <div style="color: black;">
+          <h3>${point_loc["lat"]}, ${point_loc["lng"]}<br>${JSON.stringify(result, null, 2).replaceAll("\n", "<br>")}</h3>
+        </div`
+              });
+              console.log("hi hi hih ")
+    
+              google.maps.event.addListener(dev_points_markers[dev_point_get_index], 'click', function() {
+                var number = parseInt(this["title"].split(" ")[0].replace("[", "").replace("]", ""));
+                dev_points_info_windows[number].open(reflection_map, dev_points_markers[number]);
+              });
+            }, point_loc)
+
+
+          } else {
+
+            // PLOLYGON
+
+            var mkr_img = document.createElement("img");
+            mkr_img.src = "assets/blue_pin.svg";
+            mkr_img.style = `margin-left: -14px;`;
+            mkr_img.setAttribute("oncontextmenu", `remove_dev_marker(${dev_index})`);
+
+            var point_marker = new google.maps.marker.AdvancedMarkerElement({
+              map: reflection_map,
+              // content: hi,
+              position: point_loc,
+              title: `${dev_index}`,
+              gmpDraggable: true,
+              gmpClickable: true,
+              content: mkr_img
+            });
+
+            point_marker.addListener("dragend", (event) => {
+              var new_loc = event.latLng.toJSON();
+              var closest = event.domEvent.srcElement.closest("gmp-advanced-marker");
+              if (closest != null) {
+                var event_marker_id = parseInt(closest.title);
+                var mindex_id = parseInt(get_marker_index(event_marker_id));
+                // console.log(mindex_id, event_marker_id);
+                dev_path[mindex_id]["loc"] = jcopy(new_loc);
+                selected_marker = parseInt(mindex_id);
+                render_dev_polygon();  
+              }
+            });
+            
+            point_marker.addListener("drag", (event) => {
+              var new_loc = event.latLng.toJSON();
+              var closest = event.domEvent.srcElement.closest("gmp-advanced-marker");
+              if (closest != null) {
+                var event_marker_id = parseInt(closest.title);
+                var mindex_id = parseInt(get_marker_index(event_marker_id));
+                // console.log(mindex_id, event_marker_id);
+                dev_path[mindex_id]["loc"] = jcopy(new_loc);
+                // selected_marker = parseInt(mindex_id);
+                if (rendex % rendex_refresh == 0) {
+                  render_dev_polygon();
+                }
+                rendex += 1;
+              }
+              
+            });
+
+            point_marker.addListener("click", (event) => {
+              var new_loc = event.latLng.toJSON();
+              var event_marker_id = parseInt(event.domEvent.srcElement.closest("gmp-advanced-marker").title);
+              var mindex_id = parseInt(get_marker_index(event_marker_id));
+              selected_marker = parseInt(mindex_id);
+            });
+            
+
+
+
+
+            var marker_data = {
+              "loc": point_loc,
+              "marker": point_marker,
+              "id": dev_index
+            }
+
+            if (selected_marker !== false) {
+              dev_path.splice(selected_marker + 1, 0, marker_data);
+            } else {
+              dev_path.push(marker_data);
+            }
+
+
+            render_dev_polygon();
+
+            selected_marker += 1;
+
+            dev_index += 1
+          }
+          
+        }
+      }
     });
 
   } catch (err) {
@@ -616,6 +787,7 @@ function get_random_coord(category, do_after) {
             suggestion_markers = [];
 
             var mkr_img = document.createElement("img");
+            mkr_img.style = `margin-left: -14px;`;
             mkr_img.src = `assets/red_pin.svg`;
     
             var suggestion_marker = new google.maps.marker.AdvancedMarkerElement({
@@ -1032,6 +1204,7 @@ function make_suggestion() {
 
 
     var mkr_img = document.createElement("img");
+    mkr_img.style = `margin-left: -14px;`;
     mkr_img.src = `assets/red_pin.svg`;
 
     var suggestion_marker = new google.maps.marker.AdvancedMarkerElement({
@@ -1079,6 +1252,8 @@ function make_suggestion() {
       { lat: suggestion_loc["lat"], lng: suggestion_loc["lng"] },
       { lat: real_loc[0], lng: real_loc[1] },
     ];
+
+    
     var yummy_path;
     if (accurate_lines == true) {
       yummy_path = new google.maps.Polyline({
@@ -1166,6 +1341,7 @@ function end_game() {
 
     
     var mkr_img = document.createElement("img");
+    mkr_img.style = `margin-left: -14px;`;
     mkr_img.src = `assets/blue_pin.svg`;
 
     reflection_markers_new[i]["blue"] = new google.maps.marker.AdvancedMarkerElement({
@@ -1177,6 +1353,7 @@ function end_game() {
 
 
     var mkr_img = document.createElement("img");
+    mkr_img.style = `margin-left: -14px;`;
     mkr_img.src = `assets/red_pin.svg`;
 
     reflection_markers_new[i]["red"] = new google.maps.marker.AdvancedMarkerElement({
@@ -1217,6 +1394,8 @@ function end_game() {
     });
 
 
+    reflection_markers.push(reflection_markers_new[i]);
+
     var path_tm = [{ "lat": gamesave_save[i]["suggestion"][0], "lng": gamesave_save[i]["suggestion"][1] }, { "lat": gamesave_save[i]["real location"][0], "lng": gamesave_save[i]["real location"][1] }];
     var yummy_path;
     if (accurate_lines == true) {
@@ -1240,155 +1419,12 @@ function end_game() {
       });
     }
 
-    reflection_markers.push(yummy_path);
+    reflection_paths.push(yummy_path);
+
+
 
     if (i == 0) {
-      reflection_map.addListener("click", (mapsMouseEvent) => {
-
-        var event_json = JSON.stringify(mapsMouseEvent);
-  
-        if (mouse_events.includes(event_json)) {
-  
-        } else {
-          mouse_events.push(event_json);
-          setTimeout(() => {
-            mouse_events.shift();
-          }, 1000);
-          if (polygon_maker == true) {
-  
-            point_loc = mapsMouseEvent.latLng.toJSON();
-  
-            console.log(point_loc);
-  
-  
-            if (keys_pressed["shift"] == true) {
-  
-              // ALLALALLALLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLALALLALALLALALALLALALLALALLALALALLALLALALLALALLALALLA
-              // ALLALALLALLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLALALLALALLALALALLALALLALALLALALALLALLALALLALALLALALLA
-              // ALLALALLALLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLALALLALALLALALALLALALLALALLALALALLALLALALLALALLALALLA
-              // ALLALALLALLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLALALLALALLALALALLALALLALALLALALALLALLALALLALALLALALLA
-              // ALLALALLALLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLALALLALALLALALALLALALLALALLALALALLALLALALLALALLALALLA
-  
-              get_geocoding(point_loc["lat"], point_loc["lng"], (result, point_loc) => {
-  
-                dev_point_get_index += 1;
-  
-                // dev_points_markers[dev_point_get_index] = new google.maps.Marker({
-                //   position: point_loc,
-                //   map: reflection_map,
-                //   title: `[${dev_point_get_index}] click for point info`,
-                //   icon: {
-                //     url: "assets/blue_pin.svg"
-                //   }
-                // });
-
-                var mkr_img = document.createElement("img");
-                mkr_img.src = `assets/blue_pin.svg`;
-
-                dev_points_markers[dev_point_get_index] = new google.maps.marker.AdvancedMarkerElement({
-                  map: reflection_map,
-                  position: point_loc,
-                  title: `[${dev_point_get_index}] click for point info`,
-                  content: mkr_img
-                });
-
-                
-  
-                console.log("RESULT HEHASH", result)
-                var results = result;
-                console.log(results)
-  
-                dev_points_info_windows[dev_point_get_index] = new google.maps.InfoWindow({
-                  content: `
-          <div style="color: black;">
-            <h3>${point_loc["lat"]}, ${point_loc["lng"]}<br>${JSON.stringify(result, null, 2).replaceAll("\n", "<br>")}</h3>
-          </div`
-                });
-                console.log("hi hi hih ")
-                console.log(dev_points_markers[dev_point_get_index])
       
-                google.maps.event.addListener(dev_points_markers[dev_point_get_index], 'click', function() {
-                  var number = parseInt(this["title"].split(" ")[0].replace("[", "").replace("]", ""));
-                  dev_points_info_windows[number].open(reflection_map, dev_points_markers[number]);
-                });
-              }, point_loc)
-  
-  
-            } else {
-
-              // PLOLYGON
-
-              var mkr_img = document.createElement("img");
-              mkr_img.src = "assets/blue_pin.svg";
-              mkr_img.setAttribute("oncontextmenu", `remove_dev_marker(${dev_index})`);
-
-              var point_marker = new google.maps.marker.AdvancedMarkerElement({
-                map: reflection_map,
-                // content: hi,
-                position: point_loc,
-                title: `${dev_index}`,
-                gmpDraggable: true,
-                gmpClickable: true,
-                content: mkr_img
-              });
-
-              point_marker.addListener("dragend", (event) => {
-                var new_loc = event.latLng.toJSON();
-                var event_marker_id = parseInt(event.domEvent.srcElement.closest("gmp-advanced-marker").title);
-                var mindex_id = parseInt(get_marker_index(event_marker_id));
-                // console.log(mindex_id, event_marker_id);
-                dev_path[mindex_id]["loc"] = jcopy(new_loc);
-                selected_marker = parseInt(mindex_id);
-                render_dev_polygon();
-              });
-              
-              point_marker.addListener("drag", (event) => {
-                var new_loc = event.latLng.toJSON();
-                var event_marker_id = parseInt(event.domEvent.srcElement.closest("gmp-advanced-marker").title);
-                var mindex_id = parseInt(get_marker_index(event_marker_id));
-                // console.log(mindex_id, event_marker_id);
-                dev_path[mindex_id]["loc"] = jcopy(new_loc);
-                // selected_marker = parseInt(mindex_id);
-                if (rendex % rendex_refresh == 0) {
-                  render_dev_polygon();
-                }
-                rendex += 1;
-              });
-
-              point_marker.addListener("click", (event) => {
-                var new_loc = event.latLng.toJSON();
-                var event_marker_id = parseInt(event.domEvent.srcElement.closest("gmp-advanced-marker").title);
-                var mindex_id = parseInt(get_marker_index(event_marker_id));
-                selected_marker = parseInt(mindex_id);
-              });
-              
-
-
-
-
-              var marker_data = {
-                "loc": point_loc,
-                "marker": point_marker,
-                "id": dev_index
-              }
-
-              if (selected_marker !== false) {
-                dev_path.splice(selected_marker + 1, 0, marker_data);
-              } else {
-                dev_path.push(marker_data);
-              }
-
-
-              render_dev_polygon();
-
-              selected_marker += 1;
-
-              dev_index += 1
-            }
-            
-          }
-        }
-      });
     }
   }
 
@@ -1446,7 +1482,6 @@ function render_dev_polygon() {
 
 
 function remove_point_marker(id) {
-  polygon_markers[id].setMap(null);
   polygon_points[id] = false;
 
   var real_polygon_points = [];
@@ -1474,12 +1509,13 @@ function remove_point_marker(id) {
 function enable_polygon_maker() {
   document.querySelector(".reflection-page").style.display = "";
   document.querySelector(".reflections").innerHTML = "";
-  polygon_maker = true;
-  polygon_points = [];
-  map_polygon = false;
 
   for (let i = 0; i < reflection_markers.length; i++) {
-    reflection_markers[i].setMap(null);
+    reflection_markers[i]["blue"].setMap(null);
+    reflection_markers[i]["red"].setMap(null);
+  }
+  for (let i = 0; i < reflection_paths.length; i++) {
+    reflection_paths[i].setMap(null);
   }
   for (let i = 0; i < reflection_markers_new.length; i++) {
     //console.log(i);
@@ -1489,49 +1525,61 @@ function enable_polygon_maker() {
 
   reflection_markers = [];
 
-  dev_polygon = false;
-  dev_path = [];
 
+  if (polygon_maker == false) {  // to prevent weird resetting if panel is closed and reopened
+    
+    polygon_points = [];
+    map_polygon = false;
+    dev_polygon = false;
+    dev_path = [];
 
+    var node_tmtm = document.createElement("h2");
+    node_tmtm.classList.add("button");
+    node_tmtm.classList.add("basic");
+    node_tmtm.classList.add("rpm");
+    node_tmtm.classList.add("red");
+    node_tmtm.setAttribute("onclick", `reset_polygon_maker()`);
+    node_tmtm.innerHTML = "reset polygon editor";
+    document.querySelector(".reflection-page").appendChild(node_tmtm);
+    var node_tmtm = document.createElement("h2");
+    node_tmtm.classList.add("button");
+    node_tmtm.classList.add("basic");
+    node_tmtm.classList.add("cpj");
+    node_tmtm.setAttribute("onclick", `copy_polygon_json()`);
+    node_tmtm.innerHTML = "copy polygon json";
+    document.querySelector(".reflection-page").appendChild(node_tmtm);
+    var node_tmtm = document.createElement("h2");
+    node_tmtm.classList.add("button");
+    node_tmtm.classList.add("basic");
+    node_tmtm.classList.add("dpm");
+    node_tmtm.setAttribute("onclick", `disable_polygon_maker()`);
+    node_tmtm.innerHTML = "disable polygon editor";
+    document.querySelector(".reflection-page").appendChild(node_tmtm);
 
-  var node_tmtm = document.createElement("h2");
-  node_tmtm.classList.add("button");
-  node_tmtm.classList.add("basic");
-  node_tmtm.classList.add("rpm");
-  node_tmtm.classList.add("red");
-  node_tmtm.setAttribute("onclick", `reset_polygon_maker()`);
-  node_tmtm.innerHTML = "reset polygon editor";
-  document.querySelector(".reflection-page").appendChild(node_tmtm);
-  var node_tmtm = document.createElement("h2");
-  node_tmtm.classList.add("button");
-  node_tmtm.classList.add("basic");
-  node_tmtm.classList.add("cpj");
-  node_tmtm.setAttribute("onclick", `copy_polygon_json()`);
-  node_tmtm.innerHTML = "copy polygon json";
-  document.querySelector(".reflection-page").appendChild(node_tmtm);
-  var node_tmtm = document.createElement("h2");
-  node_tmtm.classList.add("button");
-  node_tmtm.classList.add("basic");
-  node_tmtm.classList.add("dpm");
-  node_tmtm.setAttribute("onclick", `disable_polygon_maker()`);
-  node_tmtm.innerHTML = "disable polygon editor";
-  document.querySelector(".reflection-page").appendChild(node_tmtm);
+    polygon_maker = true;
+  }
 }
 
 function reset_polygon_maker() {
   for (i in dev_path) {
-    dev_path[i]["marker"].setMap("null");
+    dev_path[i]["marker"].setMap(null); // remember to keep null OUTSIDE of quotes or youll spend 15 minutes debugging a nothingburger mistake
   }
 
-  dev_polygon = false;
-  dev_path = [];
+  for (i in dev_points_markers) {
+    dev_points_markers[i].setMap(null);
+  }
 
-  dev_polygon.setMap(null);
+  dev_path = [];
+  dev_points_markers = [];
+  if (dev_polygon != false) {
+    dev_polygon.setMap(null);
+  }
   dev_polygon = false;
 }
 
 function disable_polygon_maker() {
   polygon_maker = false;
+  reset_polygon_maker()
   document.querySelector(".button.rpm").remove();
   document.querySelector(".button.cpj").remove();
   document.querySelector(".button.dpm").remove();
@@ -1543,10 +1591,14 @@ function copy_polygon_json() {
     real_polygon_points.push(dev_path[i]["loc"]);
   }
   var polygon_json = JSON.stringify(real_polygon_points).replaceAll("},{", `},
-                {`).replaceAll("[{", `[
-                    {`).replaceAll("}]", `}
-                ]`);
-  navigator.clipboard.writeText(polygon_json);
+                {`).replaceAll("[{", `            [
+                {`).replaceAll("}]", `}
+            ]`);
+
+
+  copy_window_open = true;
+  document.querySelector(".json-code.wrapper").style.display = "";
+  document.querySelector(".json-code.body .code-text").value = `${polygon_json}`;
 }
 
 function go_home() {
@@ -1777,6 +1829,11 @@ document.addEventListener('keyup', (event) => {
 
   if (keyid == 16) {
     keys_pressed["shift"] = false;
+  } else if (keyid == 27) { // escape
+    if (copy_window_open == true) {
+      copy_window_open = false;
+      document.querySelector(".json-code.wrapper").style.display = "none";
+    }
   }
 
 });

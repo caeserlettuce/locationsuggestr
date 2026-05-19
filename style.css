@@ -635,3 +635,36 @@ footer img {
 .notepad-wrapper:hover, .notepad-wrapper:has(.notepad:focus) {
   right: 0px;
 }
+
+.json-code.wrapper {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.json-code.body {
+  width: 97vw;
+  height: 97vh;
+  background-color: #141414;
+  display: block;
+  border-radius: 20px;
+}
+
+.json-code textarea {
+  background-color: #1e1e1e;
+  color: white;
+  font-family: 'Courier New', Courier, monospace;
+  outline: none;
+  border: none;
+  resize: none;
+  width: 90%;
+  height: 90%;
+  border-radius:10px;
+  padding: 10px;
+}
