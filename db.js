@@ -13783,7 +13783,7 @@ var categories = [
             "link": "https://www.needpix.com/photo/76369/venezuela-landscape-scenic-cactus-cacti-mountains-nature-outside-country",
             "author": ""
         },
-        "subcategory": 0,
+        "subcategory": 4,
         "center": [0, 0],
         "zoom": 1,
         "filters": {
