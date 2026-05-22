@@ -13261,7 +13261,7 @@ var categories = [
         "img": "assets/europe.jpg",
         "license": {
             "type": "CC BY-SA 3.0",
-            "link": "https://500px.com/photo/130666263/prague-by-night-by-victor",
+            "link": "https://commons.wikimedia.org/wiki/File:Prague_%28130666263%29.jpeg",
             "author": "Victor Porof"
         },
         "subcategory": 1,
