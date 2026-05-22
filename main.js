@@ -10,6 +10,9 @@ TO DO LIST::::
 [x] fix markers being off to the right from where they should be
 [x] verify polygon editor is working all properly and stuff and doesnt interfere with the location history   (it seems to be)
 [x] fix the big huge error that occurrs sometimes when moving points in polygon editor
+[ ] make the reflection map slightly shorter so the "main menu" button is clickable without having to scroll down
+[ ] make it so when you go into the polygon editor will scroll you back up to the top of the page so you dont have to
+
 
 
 */
@@ -1536,17 +1539,17 @@ function enable_polygon_maker() {
     var node_tmtm = document.createElement("h2");
     node_tmtm.classList.add("button");
     node_tmtm.classList.add("basic");
-    node_tmtm.classList.add("rpm");
-    node_tmtm.classList.add("red");
-    node_tmtm.setAttribute("onclick", `reset_polygon_maker()`);
-    node_tmtm.innerHTML = "reset polygon editor";
+    node_tmtm.classList.add("cpj");
+    node_tmtm.setAttribute("onclick", `copy_polygon_json()`);
+    node_tmtm.innerHTML = "copy polygon json";
     document.querySelector(".reflection-page").appendChild(node_tmtm);
     var node_tmtm = document.createElement("h2");
     node_tmtm.classList.add("button");
     node_tmtm.classList.add("basic");
-    node_tmtm.classList.add("cpj");
-    node_tmtm.setAttribute("onclick", `copy_polygon_json()`);
-    node_tmtm.innerHTML = "copy polygon json";
+    node_tmtm.classList.add("rpm");
+    node_tmtm.classList.add("red");
+    node_tmtm.setAttribute("onclick", `reset_polygon_maker()`);
+    node_tmtm.innerHTML = "reset polygon editor";
     document.querySelector(".reflection-page").appendChild(node_tmtm);
     var node_tmtm = document.createElement("h2");
     node_tmtm.classList.add("button");
@@ -1817,6 +1820,24 @@ document.addEventListener('keydown', (event) => {
 
   if (keyid == 16) {
     keys_pressed["shift"] = true;
+  } else if (keyid == 17) {
+    keys_pressed["control"] = true;
+  } else if (keyid == 90) { // z key !
+
+    if (polygon_maker == true) {
+      if (keys_pressed["control"]) {
+        if (keys_pressed["control"] == true) {
+          var path_len = dev_path.length - 1;
+          if (path_len >= 0) {
+            dev_path[path_len]["marker"].setMap(null);
+            dev_path.splice(path_len, 1);
+            selected_marker += -1;
+            render_dev_polygon();
+          }
+        }
+      }
+    }
+    
   }
 
 });
@@ -1829,6 +1850,8 @@ document.addEventListener('keyup', (event) => {
 
   if (keyid == 16) {
     keys_pressed["shift"] = false;
+  } else if (keyid == 17) {
+    keys_pressed["control"] = false;
   } else if (keyid == 27) { // escape
     if (copy_window_open == true) {
       copy_window_open = false;

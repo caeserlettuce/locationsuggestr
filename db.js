@@ -16,6 +16,11 @@ var categories = [
     {
         "name": "world",
         "img": "assets/earth.jpg",
+        "license": {
+            "type": "Public Domain",
+            "link": "https://www.pexels.com/photo/planet-earth-87651/",
+            "author": ""
+        },
         "subcategory": 0,
         "center": [0, 0],
         "zoom": 1,
@@ -34,6 +39,11 @@ var categories = [
     {
         "name": "usa",
         "img": "assets/united states.jpg",
+        "license": {
+            "type": "CC BY-SA 3.0",
+            "link": "https://commons.wikimedia.org/wiki/File:US_Capitol_east_side.JPG",
+            "author": "Martin Falbisoner"
+        },
         "subcategory": 1,
         "center": [38.942357239496204, -96.74598603293697],
         "zoom": 1,
@@ -700,6 +710,11 @@ var categories = [
     {
         "name": "seattle",
         "img": "assets/seattle.jpg",
+        "license": {
+            "type": "CC BY-SA 4.0",
+            "link": "https://commons.wikimedia.org/wiki/File:Seattle_4.jpg",
+            "author": "Daniel Schwen"
+        },
         "subcategory": 2,
         "center": [47.605962880734474, -122.33230352431077],
         "true random": false,
@@ -745,6 +760,11 @@ var categories = [
     {
         "name": "washington",
         "img": "assets/washington.jpg",
+        "license": {
+            "type": "CC0 1.0",
+            "link": "https://commons.wikimedia.org/wiki/File:Rainier20200906.jpg",
+            "author": "Caleb Riston"
+        },
         "subcategory": 3,
         "center": [47.174911635380816, -120.31871259464444],
         "true random": true,
@@ -1106,6 +1126,11 @@ var categories = [
     {
         "name": "uk",
         "img": "assets/united kingdom.jpg",
+        "license": {
+            "type": "CC BY 2.0",
+            "link": "https://www.flickr.com/photos/garethwiscombe/1071477228/in/photostream/",
+            "author": "garethwiscombe"
+        },
         "subcategory": 1,
         "center": [53.70994737820628, -1.7102519284668194],
         "true random": true,
@@ -1589,6 +1614,11 @@ var categories = [
     {
         "name": "portland",
         "img": "assets/portland.jpg",
+        "license": {
+            "type": "CC0 1.0",
+            "link": "https://commons.wikimedia.org/wiki/File:Portland_Oregon_Aerial,_June_2024.jpg",
+            "author": "Spicypepper999"
+        },
         "subcategory": 2,
         "center": [45.52486785854868, -122.66250224887416],
         "zoom": 10,
@@ -1635,6 +1665,11 @@ var categories = [
     {
         "name": "san francisco",
         "img": "assets/sanfran.jpg",
+        "license": {
+            "type": "CC BY-SA 4.0",
+            "link": "https://commons.wikimedia.org/wiki/File:Golden_Gate_Bridge_as_seen_from_Battery_East.jpg",
+            "author": "Frank Schulenburg"
+        },
         "subcategory": 2,
         "center": [37.77540240680293, -122.41947447617542],
         "zoom": 10,
@@ -1657,6 +1692,11 @@ var categories = [
     {
         "name": "los angeles",
         "img": "assets/la.jpg",
+        "license": {
+            "type": "CC BY-SA 4.0",
+            "link": "https://commons.wikimedia.org/wiki/File:Los_Angeles_with_Mount_Baldy.jpg",
+            "author": "Alek Leckszas"
+        },
         "subcategory": 2,
         "center": [33.937655533925245, -118.19840364041954],
         "zoom": 10,
@@ -1695,6 +1735,11 @@ var categories = [
     {
         "name": "san diego",
         "img": "assets/sandiego.jpg",
+        "license": {
+            "type": "CC BY-SA 2.0",
+            "link": "https://commons.wikimedia.org/wiki/File:San_Diego_skyline_at_dusk_from_Coronado_2015.jpg",
+            "author": "russellstreet"
+        },
         "subcategory": 2,
         "center": [32.71550345114792, -117.16209183986723],
         "zoom": 10,
@@ -1723,6 +1768,11 @@ var categories = [
     {
         "name": "las vegas",
         "img": "assets/vegas.jpg",
+        "license": {
+            "type": "CC BY-SA 3.0",
+            "link": "https://commons.wikimedia.org/wiki/File:Las_Vegas_Strip_2013.jpg",
+            "author": "EconomicOldenburger"
+        },
         "subcategory": 2,
         "center": [36.17402556082568, -115.15235754239204],
         "zoom": 9,
@@ -1769,6 +1819,11 @@ var categories = [
     {
         "name": "dallas",
         "img": "assets/dallas.jpg",
+        "license": {
+            "type": "CC BY-SA 4.0",
+            "link": "https://commons.wikimedia.org/wiki/File:X_in_road_marks_where_fatal_shot_hit_President_Kennedy,_Elm_Street,_Dealey_Plaza,_Dallas_City,_Texas,_USA.jpg",
+            "author": "Zygmunt Put"
+        },
         "subcategory": 2,
         "center": [32.77638921115539, -96.79703444159561],
         "zoom": 10,
@@ -1830,6 +1885,11 @@ var categories = [
     {
         "name": "new orleans",
         "img": "assets/neworleans.jpg",
+        "license": {
+            "type": "CC BY-SA 3.0",
+            "link": "https://commons.wikimedia.org/wiki/File:ChrisLitherlandBourbonSt.jpg",
+            "author": "Chris Litherland"
+        },
         "subcategory": 2,
         "center": [29.963364078682076, -90.1096923478334],
         "zoom": 10,
@@ -1867,6 +1927,11 @@ var categories = [
     {
         "name": "atlanta",
         "img": "assets/atlanta.jpg",
+        "license": {
+            "type": "PDM 1.0",
+            "link": "https://picryl.com/media/atlanta-georgia-city-architecture-buildings-7b2a67",
+            "author": ""
+        },
         "subcategory": 2,
         "center": [33.767258002569235, -84.37414261603094],
         "zoom": 10,
@@ -1897,6 +1962,11 @@ var categories = [
     {
         "name": "orlando",
         "img": "assets/orlando.jpg",
+        "license": {
+            "type": "CC BY-SA 4.0", 
+            "link": "https://commons.wikimedia.org/wiki/File:Lake_Eola_Park_in_Orlando_02.jpg",
+            "author": "Miosotis Jade"
+        },
         "subcategory": 2,
         "center": [28.53537885951152, -81.3777023635439],
         "zoom": 10,
@@ -1936,6 +2006,11 @@ var categories = [
     {
         "name": "tampa",
         "img": "assets/tampa.jpg",
+        "license": {
+            "type": "CC BY-NC-SA 2.0",
+            "link": "https://www.flickr.com/photos/lordisgood/44332570040",
+            "author": "Robert Du Bois"
+        },
         "subcategory": 2,
         "center": [27.97106545024637, -82.45436244987745],
         "zoom": 10,
@@ -1979,6 +2054,11 @@ var categories = [
     {
         "name": "miami",
         "img": "assets/miami.jpg",
+        "license": {
+            "type": "Public Domain",
+            "link": "https://www.pexels.com/photo/aerial-view-of-city-buildings-near-body-of-water-4366062/",
+            "author": "Antonio Cuellar"
+        },
         "subcategory": 2,
         "center": [25.785654343620376, -80.20690806897248],
         "zoom": 10,
@@ -2014,6 +2094,11 @@ var categories = [
     {
         "name": "nashville",
         "img": "assets/nashville.jpg",
+        "license": {
+            "type": "CC BY-SA 2.0",
+            "link": "https://www.flickr.com/photos/con4tini/31083742666/",
+            "author": "Domenico Convertini"
+        },
         "subcategory": 2,
         "center": [36.16486652559121, -86.78418048996137],
         "zoom": 10,
@@ -2046,6 +2131,11 @@ var categories = [
     {
         "name": "denver",
         "img": "assets/denver.jpg",
+        "license": {
+            "type": "CC BY 2.0",
+            "link": "https://www.flickr.com/photos/drljohnson/4280266430/",
+            "author": "Larry Johnson"
+        },
         "subcategory": 2,
         "center": [39.73677069548703, -104.98902337950288],
         "zoom": 10,
@@ -2084,6 +2174,11 @@ var categories = [
     {
         "name": "minneapolis",
         "img": "assets/minneapolis.jpg",
+        "license": {
+            "type": "CC BY-SA 2.0",
+            "link": "https://commons.wikimedia.org/wiki/File:Purple_Minneapolis_Skyline_-_RIP_Prince_(26503785291).jpg",
+            "author": "Tony Webster"
+        },
         "subcategory": 2,
         "center": [44.97750397114339, -93.26635822538688],
         "zoom": 10,
@@ -2122,6 +2217,11 @@ var categories = [
     {
         "name": "milwaukee",
         "img": "assets/milwaukee.jpg",
+        "license": {
+            "type": "CC BY-SA 4.0",
+            "link": "https://commons.wikimedia.org/wiki/File:Milwaukee_Skyline_2023.jpg",
+            "author": "Isaac Rowlett"
+        },
         "subcategory": 2,
         "center": [43.027886694623916, -87.97309544974067],
         "zoom": 10,
@@ -2154,6 +2254,11 @@ var categories = [
     {
         "name": "chicago",
         "img": "assets/chicago.jpg",
+        "license": {
+            "type": "Public Domain",
+            "link": "https://www.pexels.com/photo/chicago-cityscape-161963/",
+            "author": ""
+        },
         "subcategory": 2,
         "center": [41.865929849514195, -87.76695612768276],
         "zoom": 10,
@@ -2184,6 +2289,11 @@ var categories = [
     {
         "name": "indianapolis",
         "img": "assets/indianapolis.jpg",
+        "license": {
+            "type": "CC BY-SA 4.0",
+            "link": "https://commons.wikimedia.org/wiki/File:Downtown_Indianapolis.jpg",
+            "author": "Miyin2"
+        },
         "subcategory": 2,
         "center": [39.7828340611641, -86.16435174691055],
         "zoom": 10,
@@ -2220,6 +2330,11 @@ var categories = [
     {
         "name": "st. louis",
         "img": "assets/stlouis.jpg",
+        "license": {
+            "type": "CC BY-SA 4.0",
+            "link": "https://commons.wikimedia.org/wiki/File:St_Louis_night_expblend.jpg",
+            "author": "Daniel Schwen"
+        },
         "subcategory": 2,
         "center": [38.62781827885283, -90.1959046676102],
         "zoom": 10,
@@ -2262,6 +2377,11 @@ var categories = [
     {
         "name": "cincinatti",
         "img": "assets/cincinatti.jpg",
+        "license": {
+            "type": "Public Domain",
+            "link": "https://www.pexels.com/photo/photo-of-lighted-buildings-near-river-2570704/",
+            "author": "Dave Morgan"
+        },
         "subcategory": 2,
         "center": [39.1019788623117, -84.51171573815223],
         "zoom": 10,
@@ -2300,6 +2420,11 @@ var categories = [
     {
         "name": "detroit",
         "img": "assets/detroit.jpg",
+        "license": {
+            "type": "CC BY-SA 2.0",
+            "link": "https://commons.wikimedia.org/wiki/File:Detroit_Skyline_from_Windsor,_Ontario_9-5-2024.jpg",
+            "author": "Warren LeMay"
+        },
         "subcategory": 2,
         "center": [42.36173509793086, -83.1116453026603],
         "zoom": 10,
@@ -2341,6 +2466,11 @@ var categories = [
     {
         "name": "cleveland",
         "img": "assets/cleveland.jpg",
+        "license": {
+            "type": "CC BY 2.0",
+            "link": "https://www.flickr.com/photos/edrost88/53796125857/",
+            "author": "Erik Drost"
+        },
         "subcategory": 2,
         "center": [41.47992471790093, -81.71157525581265],
         "zoom": 10,
@@ -2374,6 +2504,11 @@ var categories = [
     {
         "name": "washington d.c.",
         "img": "assets/washingtondc.jpg",
+        "license": {
+            "type": "CC BY-SA 2.0",
+            "link": "https://www.flickr.com/photos/taedc/50920473547/",
+            "author": "Ted Eytan"
+        },
         "subcategory": 2,
         "center": [38.9097364170427, -77.03403290235572],
         "zoom": 10,
@@ -2418,6 +2553,11 @@ var categories = [
     {
         "name": "baltimore",
         "img": "assets/baltimore.jpg",
+        "license": {
+            "type": "CC BY-SA 4.0",
+            "link": "https://commons.wikimedia.org/wiki/File:Baltimore_center.jpg",
+            "author": "Patrick Gillespie"
+        },
         "subcategory": 2,
         "center": [39.29339177595428, -76.61157421756316],
         "zoom": 10,
@@ -2451,6 +2591,11 @@ var categories = [
     {
         "name": "philadelphia",
         "img": "assets/philadelphia.jpg",
+        "license": {
+            "type": "CC0 1.0",
+            "link": "https://www.rawpixel.com/image/5961295/free-public-domain-cc0-photo",
+            "author": ""
+        },
         "subcategory": 2,
         "center": [39.95150178132617, -75.16496696567707],
         "zoom": 10,
@@ -2490,6 +2635,11 @@ var categories = [
     {
         "name": "new york city",
         "img": "assets/nyc.jpg",
+        "license": {
+            "type": "CC BY-SA 4.0",
+            "link": "https://www.flickr.com/photos/197171168@N04/55050628766/",
+            "author": "Dillan Payne"
+        },
         "subcategory": 2,
         "center": [40.7126918760663, -74.00693932316027],
         "zoom": 10,
@@ -2556,6 +2706,11 @@ var categories = [
     {
         "name": "boston",
         "img": "assets/boston.jpg",
+        "license": {
+            "type": "CC BY 2.0",
+            "link": "https://www.flickr.com/photos/boblinsdell/10772382303/",
+            "author": "Robert Linsdell"
+        },
         "subcategory": 2,
         "center": [42.35883388861401, -71.07599298068749],
         "zoom": 10,
@@ -2590,6 +2745,11 @@ var categories = [
     {
         "name": "guadalajara",
         "img": "assets/guadalajara.jpg",
+        "license": {
+            "type": "CC BY-SA 4.0",
+            "link": "https://commons.wikimedia.org/wiki/File:Guadalajara,_Jalisco,_Mexico_(2021)_-_166.jpg",
+            "author": "Another Believer"
+        },
         "subcategory": 4,
         "center": [20.672566322792502, -103.35291227814245],
         "zoom": 9,
@@ -2641,6 +2801,11 @@ var categories = [
     {
         "name": "tijuana",
         "img": "assets/tijuana.jpg",
+        "license": {
+            "type": "CC BY-SA 4.0",
+            "link": "https://commons.wikimedia.org/wiki/File:Tijuana_skyline.jpg",
+            "author": "Urbaner44"
+        },
         "subcategory": 4,
         "center": [32.49810567798841, -116.98720741911484],
         "zoom": 9,
@@ -2673,6 +2838,11 @@ var categories = [
     {
         "name": "puebla",
         "img": "assets/puebla.jpg",
+        "license": {
+            "type": "CC BY 4.0",
+            "link": "https://matadornetwork.com/es/4-de-los-pueblos-mas-pintorescos-de-puebla/",
+            "author": "Rulo Luna Ramos"
+        },
         "subcategory": 4,
         "center": [19.04489696291029, -98.20694983955812],
         "zoom": 9,
@@ -2706,6 +2876,11 @@ var categories = [
     {
         "name": "mexico city",
         "img": "assets/mexicocity.jpg",
+        "license": {
+            "type": "CC BY 2.0",
+            "link": "https://www.flickr.com/photos/blok70/26075115853",
+            "author": "VV Nincic"
+        },
         "subcategory": 4,
         "center": [19.427755266513262, -99.13388444886084],
         "zoom": 9,
@@ -2749,6 +2924,11 @@ var categories = [
     {
         "name": "costa rica",
         "img": "assets/costarica.jpg",
+        "license": {
+            "type": "Public Domain",
+            "link": "https://www.pickpik.com/photography-volcano-daytime-costa-rica-clouds-blue-sky-62827",
+            "author": ""
+        },
         "subcategory": 4,
         "center": [9.920470393525115, -84.07612669604828],
         "zoom": 8,
@@ -3061,6 +3241,11 @@ var categories = [
     {
         "name": "panama",
         "img": "assets/panama.jpg",
+        "license": {
+            "type": "Public Domain",
+            "link": "https://www.pexels.com/photo/aerial-view-of-illuminated-panama-city-at-night-18118099/",
+            "author": "ZaetaFlow Sec"
+        },
         "subcategory": 4,
         "center": [8.879960815060484, -79.95625390614154],
         "zoom": 8,
@@ -3714,6 +3899,11 @@ var categories = [
     {
         "name": "guatemala",
         "img": "assets/guatemala.jpg",
+        "license": {
+            "type": "CC BY-SA 4.0",
+            "link": "https://commons.wikimedia.org/wiki/File:Guatemala_City_-_Guatemala.jpg",
+            "author": "Carlosmanuel232"
+        },
         "subcategory": 4,
         "center": [15.73694412846272, -90.09228194191516],
         "zoom": 8,
@@ -3802,6 +3992,11 @@ var categories = [
     {
         "name": "belize",
         "img": "assets/belize.jpg",
+        "license": {
+            "type": "CC BY-NC 4.0",
+            "link": "https://tripplaybook.com/best-time-to-visit-belize/",
+            "author": "Merissa Elisei "
+        },
         "subcategory": 4,
         "center": [16.94929500636335, -88.71899100005707],
         "zoom": 8,
@@ -3861,6 +4056,11 @@ var categories = [
     {
         "name": "el salvador",
         "img": "assets/elsalvador.jpg",
+        "license": {
+            "type": "Public Domain",
+            "link": "https://www.pexels.com/photo/aerial-view-of-san-salvador-s-iconic-cathedral-35730892/",
+            "author": "Diego Lopez"
+        },
         "subcategory": 4,
         "center": [13.728914035467005, -89.00463544457013],
         "zoom": 8,
@@ -4062,6 +4262,11 @@ var categories = [
     {
         "name": "honduras",
         "img": "assets/honduras.jpg",
+        "license": {
+            "type": "Public Domain",
+            "link": "https://www.pickpik.com/roatan-honduras-port-architecture-tropical-caribbean-137441",
+            "author": ""
+        },
         "subcategory": 4,
         "center": [14.676797246124472, -87.06005550992582],
         "zoom": 8,
@@ -4289,6 +4494,11 @@ var categories = [
     {
         "name": "nicaragua",
         "img": "assets/nicaragua.jpg",
+        "license": {
+            "type": "Public Domain",
+            "link": "https://www.pexels.com/photo/ometepe-island-with-volcano-in-nicaragua-5274755/",
+            "author": "Roberto Zuniga"
+        },
         "subcategory": 4,
         "center": [12.841461711010574, -85.1813934581052],
         "zoom": 8,
@@ -4450,6 +4660,11 @@ var categories = [
     {
         "name": "oregon",
         "img": "assets/oregon.jpg",
+        "license": {
+            "type": "CC BY-SA 4.0",
+            "link": "https://commons.wikimedia.org/wiki/File:Crater_Lake_October_2019_008.jpg",
+            "author": "King Of Hearts"
+        },
         "subcategory": 3,
         "center": [43.78690171509536, -120.53792419223625],
         "zoom": 6,
@@ -4677,6 +4892,11 @@ var categories = [
     {
         "name": "idaho",
         "img": "assets/idaho.jpg",
+        "license": {
+            "type": "Public Domain",
+            "link": "https://www.pexels.com/photo/photography-of-rocky-mountains-1485317/",
+            "author": "Kevin Bidwell"
+        },
         "subcategory": 3,
         "center": [44.67460457577636, -114.3285308069875],
         "zoom": 6,
@@ -4967,6 +5187,11 @@ var categories = [
     {
         "name": "california",
         "img": "assets/california.jpg",
+        "license": {
+            "type": "CC BY-SA 4.0",
+            "link": "https://commons.wikimedia.org/wiki/File:Echo_park_lake_with_lotus_flowers_and_Los_Angeles_skyline_in_the_background.jpg",
+            "author": "Alaiben"
+        },
         "subcategory": 3,
         "center": [37.018645960361766, -119.8656401819875],
         "zoom": 6,
@@ -5052,6 +5277,11 @@ var categories = [
     {
         "name": "nevada",
         "img": "assets/nevada.jpg",
+        "license": {
+            "type": "CC BY 2.0",
+            "link": "https://www.flickr.com/photos/mypubliclands/31908073276",
+            "author": "Bureau of Land Management"
+        },
         "subcategory": 3,
         "center": [39.421547427932204, -116.9105230612832],
         "zoom": 6,
@@ -5164,6 +5394,11 @@ var categories = [
     {
         "name": "arizona",
         "img": "assets/arizona.jpg",
+        "license": {
+            "type": "CC BY-SA 4.0",
+            "link": "https://commons.wikimedia.org/wiki/File:Unique_Saguaro_Cactus_At_Sunrise_In_The_Arizona_Desert.jpg",
+            "author": "Ray Redstone"
+        },
         "subcategory": 3,
         "center": [34.324945410123966, -111.77501194895324],
         "zoom": 6,
@@ -5459,6 +5694,11 @@ var categories = [
     {
         "name": "new mexico",
         "img": "assets/newmexico.jpg",
+        "license": {
+            "type": "CC BY-SA 3.0",
+            "link": "https://en.wikipedia.org/wiki/File:New_Mexico_Mountains.jpg", 
+            "author": "Atsme"
+        },
         "subcategory": 3,
         "center": [34.4264911617643, -106.12105264863924],
         "zoom": 6,
@@ -5546,6 +5786,11 @@ var categories = [
     {
         "name": "texas",
         "img": "assets/texas.jpg",
+        "license": {
+            "type": "CC BY 2.0",
+            "link": "https://commons.wikimedia.org/wiki/File:Texas_landscape_3.jpg",
+            "author": "The Jamoker"
+        },
         "subcategory": 3,
         "center": [31.538793978184994, -99.22560306735701],
         "zoom": 6,
@@ -6097,6 +6342,11 @@ var categories = [
     {
         "name": "utah",
         "img": "assets/utah.jpg",
+        "license": {
+            "type": "CC BY-SA 3.0 US",
+            "link": "https://greg-willis.com/2017/colonnade-arch/",
+            "author": "Greg Willis"
+        },
         "subcategory": 3,
         "center": [39.27463169649976, -111.64071441703797],
         "zoom": 6,
@@ -6135,6 +6385,11 @@ var categories = [
     {
         "name": "colorado",
         "img": "assets/colorado.jpg",
+        "license": {
+            "type": "CC BY-NC 4.0",
+            "link": "https://canyonoftheancients.com/mesa-verde-photos/nearby-attractions/",
+            "author": "Canyon of the Ancients Guest Ranch"
+        },
         "subcategory": 3,
         "center": [38.976829847046695, -105.70445513938044],
         "zoom": 6,
@@ -6180,6 +6435,11 @@ var categories = [
     {
         "name": "wyoming",
         "img": "assets/wyoming.jpg",
+        "license": {
+            "type": "CC BY-NC-SA 2.0",
+            "link": "https://www.flickr.com/photos/kenlane/35405231644",
+            "author": "Ken Lane"
+        },
         "subcategory": 3,
         "center": [0, 0],
         "zoom": 6,
@@ -6281,6 +6541,11 @@ var categories = [
     {
         "name": "montana",
         "img": "assets/montana.jpg",
+        "license": {
+            "type": "PDM 1.0",
+            "link": "https://picryl.com/media/barn-rural-montana-0811e2",
+            "author": "Carol M. Highsmith"
+        },
         "subcategory": 3,
         "center": [46.87465155299735, -109.82335311952059],
         "zoom": 6,
@@ -6615,6 +6880,11 @@ var categories = [
     {
         "name": "north dakota",
         "img": "assets/northdakota.jpg",
+        "license": {
+            "type": "Public Domain",
+            "link": "https://pxhere.com/en/photo/597153",
+            "author": ""
+        },
         "subcategory": 3,
         "center": [47.409721304860206, -100.4242223198398],
         "zoom": 6,
@@ -6707,6 +6977,11 @@ var categories = [
     {
         "name": "south dakota",
         "img": "assets/southdakota.jpg",
+        "license": {
+            "type": "PDM 1.0",
+            "link": "https://www.flickr.com/photos/volvob12b/52819885721",
+            "author": "Bernard Spragg"
+        },
         "subcategory": 3,
         "center": [44.47714108801498, -100.4022496635898],
         "zoom": 6,
@@ -6838,6 +7113,11 @@ var categories = [
     {
         "name": "nebraska",
         "img": "assets/nebraska.jpg",
+        "license": {
+            "type": "CC BY 2.0",
+            "link": "https://www.flickr.com/photos/rahimageworks/7588700350",
+            "author": "Richard Hurd"
+        },
         "subcategory": 3,
         "center": [41.47178615370718, -99.6112340385898],
         "zoom": 6,
@@ -6966,9 +7246,14 @@ var categories = [
     {
         "name": "kansas",
         "img": "assets/kansas.jpg",
+        "license": {
+            "type": "CC BY 3.0",
+            "link": "https://web.archive.org/web/20161024192442/http://www.panoramio.com/photo/88154677",
+            "author": "On^ste82"
+        },
         "subcategory": 3,
         "center": [38.50255478715873, -98.5126012260898],
-        "zoom": 6,
+        "zoom": 6,  
         "filters": {
             "country": [
                 "United States"
@@ -7046,6 +7331,11 @@ var categories = [
     {
         "name": "oklahoma",
         "img": "assets/oklahoma.jpg",
+        "license": {
+            "type": "CC BY 2.0",
+            "link": "https://pxhere.com/en/photo/410103",
+            "author": "Larry Smith"
+        },
         "subcategory": 3,
         "center": [35.5205430162417, -97.8753941948398],
         "zoom": 6,
@@ -7210,6 +7500,11 @@ var categories = [
     {
         "name": "minnesota",
         "img": "assets/minnesota.jpg",
+        "license": {
+            "type": "CERTIFICATION 1.0 US",
+            "link": "https://www.needpix.com/photo/1086268/minnesota-lakes-blue-sky-clouds-nature-outdoors-river",
+            "author": ""
+        },
         "subcategory": 3,
         "center": [45.810381667551106, -94.68951380279474],
         "zoom": 6,
@@ -7369,6 +7664,11 @@ var categories = [
     {
         "name": "iowa",
         "img": "assets/iowa.jpg",
+        "license": {
+            "type": "Public Domain",
+            "link": "https://www.pexels.com/photo/green-grass-field-during-day-time-206893/",
+            "author": ""
+        },
         "subcategory": 3,
         "center": [41.99065730017831, -93.50259883077209],
         "zoom": 6,
@@ -7461,6 +7761,11 @@ var categories = [
     {
         "name": "missouri",
         "img": "assets/missouri.jpg",
+        "license": {
+            "type": "CC BY-NC-SA 2.0",
+            "link": "https://www.flickr.com/photos/tedengler/15354858974",
+            "author": "Ted Engler"
+        },
         "subcategory": 3,
         "center": [38.400364383081495, -92.62369258077209],
         "zoom": 6,
@@ -7615,6 +7920,11 @@ var categories = [
     {
         "name": "arkansas",
         "img": "assets/arkansas.jpg",
+        "license": {
+            "type": "CC BY 2.0",
+            "link": "https://www.flickr.com/photos/mypubliclands/36651389005",
+            "author": "Bob Wick, Bureau of Land Managament"
+        },
         "subcategory": 3,
         "center": [34.91130429219281, -92.44791133077209],
         "zoom": 6,
@@ -7757,6 +8067,11 @@ var categories = [
     {
         "name": "louisiana",
         "img": "assets/louisiana.jpg",
+        "license": {
+            "type": "CERTIFICATION 1.0 US",
+            "link": "https://www.needpix.com/photo/1686964/bayou-louisiana-marsh-nature-water-foam-plants-cypress",
+            "author": "rauschenberger"
+        },
         "subcategory": 3,
         "center": [31.267432488503495, -92.49185664327209],
         "zoom": 6,
@@ -7875,6 +8190,11 @@ var categories = [
     {
         "name": "wisconsin",
         "img": "assets/wisconsin.jpg",
+        "license": {
+            "type": "Public Domain",
+            "link": "https://www.pexels.com/photo/road-by-the-golden-trees-20255388/",
+            "author": "Tom Fisk"
+        },
         "subcategory": 3,
         "center": [44.63655116337476, -90.07908844576428],
         "zoom": 6,
@@ -7987,6 +8307,11 @@ var categories = [
     {
         "name": "michigan",
         "img": "assets/michigan.jpg",
+        "license": {
+            "type": "CC BY-NC-ND 2.0",
+            "link": "https://www.flickr.com/photos/elviskennedy/8065002761",
+            "author": "Elvis Kennedy"
+        },
         "subcategory": 3,
         "center": [43.53392091245309, -84.56395172701428],
         "zoom": 6,
@@ -8110,6 +8435,11 @@ var categories = [
     {
         "name": "illinois",
         "img": "assets/illinois.jpg",
+        "license": {
+            "type": "Public Domain",
+            "link": "https://www.pexels.com/photo/autumn-forest-on-hill-over-road-and-lake-20372400/",
+            "author": "Tom Fisk"
+        },
         "subcategory": 3,
         "center": [40.14666051186946, -89.28807282076428],
         "zoom": 6,
@@ -8247,6 +8577,11 @@ var categories = [
     {
         "name": "indiana",
         "img": "assets/indiana.jpg",
+        "license": {
+            "type": "CERTIFICATION 1.0 US",
+            "link": "https://www.pickpik.com/barn-usa-indiana-prophetstown-state-park-farmland-farm-145000",
+            "author": ""
+        },
         "subcategory": 3,
         "center": [40.06262949236075, -86.23387360201428],
         "zoom": 6,
@@ -8361,6 +8696,11 @@ var categories = [
     {
         "name": "ohio",
         "img": "assets/ohio.jpg",
+        "license": {
+            "type": "CC BY 2.0",
+            "link": "https://www.flickr.com/photos/mspearman/23053070195/",
+            "author": "Mark Spearman"
+        },
         "subcategory": 3,
         "center": [40.409831402814575, -82.82811188326428],
         "zoom": 6,
@@ -8548,6 +8888,11 @@ var categories = [
     {
         "name": "kentucky",
         "img": "assets/kentucky.jpg",
+        "license": {
+            "type": "CC BY-NC-SA 2.0",
+            "link": "https://www.flickr.com/photos/sniegowski/53082839526",
+            "author": "Don Sniegowski"
+        },
         "subcategory": 3,
         "center": [37.458842046291714, -85.22313141451428],
         "zoom": 6,
@@ -8848,6 +9193,11 @@ var categories = [
     {
         "name": "tennessee",
         "img": "assets/tennessee.jpg",
+        "license": {
+            "type": "CERTIFICATION 1.0 US",
+            "link": "https://www.pickpik.com/scenic-great-smoky-mountains-tennessee-smokies-park-brook-43934",
+            "author": ""
+        },
         "subcategory": 3,
         "center": [35.76579903481394, -86.58543610201428],
         "zoom": 6,
@@ -9161,6 +9511,11 @@ var categories = [
     {
         "name": "mississippi",
         "img": "assets/mississippi.jpg",
+        "license": {
+            "type": "CC BY 2.0",
+            "link": "https://commons.wikimedia.org/wiki/File:Source_of_the_Mississippi.jpg",
+            "author": "Randen Pederson"
+        },
         "subcategory": 3,
         "center": [32.89954434276206, -89.66160797701428],
         "zoom": 6,
@@ -9296,6 +9651,11 @@ var categories = [
     {
         "name": "alabama",
         "img": "assets/alabama.jpg",
+        "license": {
+            "type": "CERTIFICATION 1.0 US",
+            "link": "https://www.pickpik.com/bellingrath-gardens-alabama-landscape-scenic-nature-outside-38841",
+            "author": ""
+        },
         "subcategory": 3,
         "center": [33.04701146333078, -86.80516266451428],
         "zoom": 6,
@@ -9483,6 +9843,11 @@ var categories = [
     {
         "name": "georgia",
         "img": "assets/georgia.jpg",
+        "license": {
+            "type": "CERTIFICATION 1.0 US",
+            "link": "https://www.pickpik.com/georgia-usa-autumn-fall-mountains-sky-149927",
+            "author": ""
+        },
         "subcategory": 3,
         "center": [32.7148646470726, -83.59715485201428],
         "zoom": 6,
@@ -9745,6 +10110,11 @@ var categories = [
     {
         "name": "florida",
         "img": "assets/florida.jpg",
+        "license": {
+            "type": "CC0 1.0",
+            "link": "https://www.publicdomainpictures.net/en/view-image.php?image=237707&picture=daytona-beach-florida",
+            "author": "Paul Brennan"
+        },
         "subcategory": 3,
         "center": [28.170456542763258, -81.75145172701428],
         "zoom": 6,
@@ -9884,6 +10254,11 @@ var categories = [
     {
         "name": "south carolina",
         "img": "assets/southcarolina.jpg",
+        "license": {
+            "type": "CC BY-SA 2.0",
+            "link": "https://www.flickr.com/photos/papa-t/15227184039",
+            "author": "Fran Trudeau"
+        },
         "subcategory": 3,
         "center": [34.026829107447846, -80.91666304034125],
         "zoom": 6,
@@ -9966,6 +10341,11 @@ var categories = [
     {
         "name": "north carolina",
         "img": "assets/northcarolina.jpg",
+        "license": {
+            "type": "CC0 1.0",
+            "link": "https://www.rawpixel.com/image/422110/the-linn-cove-viaduct",
+            "author": "Carol M. Highsmith"
+        },
         "subcategory": 3,
         "center": [35.67198293909561, -79.37857710284125],
         "zoom": 6,
@@ -10271,6 +10651,11 @@ var categories = [
     {
         "name": "virginia",
         "img": "assets/virginia.jpg",
+        "license": {
+            "type": "CC BY-SA 3.0 US",
+            "link": "http://www.forestwander.com/2011/10/autumn-clear-water-waterfall-landscape/",
+            "author": "ForestWander"
+        },
         "subcategory": 3,
         "center": [37.39105187079941, -79.12864055383343],
         "zoom": 6,
@@ -10773,6 +11158,11 @@ var categories = [
     {
         "name": "west virginia",
         "img": "assets/westvirginia.jpg",
+        "license": {
+            "type": "CC BY-NC-SA 3.0",
+            "link": "https://clui.org/newsletter/spring-2003/state-focus-west-virginia",
+            "author": "Zelig Kurland"
+        },
         "subcategory": 3,
         "center": [38.60307844749819, -80.44699992883343],
         "zoom": 6,
@@ -11143,6 +11533,11 @@ var categories = [
     {
         "name": "maryland",
         "img": "assets/maryland.jpg",
+        "license": {
+            "type": "CC BY-SA 4.0",
+            "link": "https://commons.wikimedia.org/wiki/File:Cumberland_Aerial_2022.jpg",
+            "author": "Matthew Binebrink"
+        },
         "subcategory": 3,
         "center": [39.13790001635072, -76.93058786190436],
         "zoom": 6,
@@ -11274,6 +11669,11 @@ var categories = [
     {
         "name": "delaware",
         "img": "assets/delaware.jpg",
+        "license": {
+            "type": "CC BY 2.0",
+            "link": "https://www.flickr.com/photos/nicholas_t/55350882",
+            "author": "Nicholas A. Tonelli"
+        },
         "subcategory": 3,
         "center": [38.991378817126986, -75.47006120770857],
         "zoom": 6,
@@ -11343,6 +11743,11 @@ var categories = [
     {
         "name": "pennsylvania",
         "img": "assets/pennsylvania.jpg",
+        "license": {
+            "type": "CC BY-NC-ND 2.0",
+            "link": "https://www.flickr.com/photos/photophiend/2046650316/",
+            "author": "Photo Phiend"
+        },
         "subcategory": 3,
         "center": [40.847323332050365, -77.76697604275093],
         "zoom": 6,
@@ -11546,6 +11951,11 @@ var categories = [
     {
         "name": "new jersey",
         "img": "assets/newjersey.jpg",
+        "license": {
+            "type": "PDM 1.0",
+            "link": "https://picryl.com/media/statue-of-liberty-officially-liberty-enlightening-the-world-jersey-city-new",
+            "author": "Carol M. Highsmith"
+        },
         "subcategory": 3,
         "center": [40.121226370685136, -74.4701962472119],
         "zoom": 6,
@@ -11686,6 +12096,11 @@ var categories = [
     {
         "name": "new york",
         "img": "assets/newyork.jpg",
+        "license": {
+            "type": "CC BY 2.0",
+            "link": "https://www.flickr.com/photos/scottb211/52457458170/",
+            "author": "Scott Blackwell"
+        },
         "subcategory": 3,
         "center": [42.76989020140479, -74.91845683383707],
         "zoom": 6,
@@ -11935,6 +12350,11 @@ var categories = [
     {
         "name": "connecticut",
         "img": "assets/connecticut.jpg",
+        "license": {
+            "type": "CC BY 4.0",
+            "link": "https://commons.wikimedia.org/wiki/File:Westport,_Connecticut_downtown.jpg",
+            "author": "Quintin Soloviev"
+        },
         "subcategory": 3,
         "center": [41.619201630417976, -72.6743839959096],
         "zoom": 6,
@@ -12011,6 +12431,11 @@ var categories = [
     {
         "name": "rhode island",
         "img": "assets/rhodeisland.jpg",
+        "license": {
+            "type": "Public Domain",
+            "link": "https://www.pexels.com/photo/green-grass-on-cliff-coast-13297739/",
+            "author": "Mohan Nannapaneni"
+        },
         "subcategory": 3,
         "center": [41.68236983531247, -71.52405384488121],
         "zoom": 6,
@@ -12079,6 +12504,11 @@ var categories = [
     {
         "name": "massachusetts",
         "img": "assets/massachusetts.jpg",
+        "license": {
+            "type": "Public Domain",
+            "link": "https://www.pickpik.com/boston-massachusetts-city-urban-buildings-cityscape-146974",
+            "author": ""
+        },
         "subcategory": 3,
         "center": [42.31917925687602, -71.83167103238121],
         "zoom": 6,
@@ -12198,6 +12628,11 @@ var categories = [
     {
         "name": "vermont",
         "img": "assets/vermont.jpg",
+        "license": {
+            "type": "CC BY-SA 4.0",
+            "link": "https://commons.wikimedia.org/wiki/File:Barton_Vermont_October_2021_003.jpg",
+            "author": "King of Hearts"
+        },
         "subcategory": 3,
         "center": [43.84761960489463, -72.82839129107519],
         "zoom": 6,
@@ -12421,6 +12856,11 @@ var categories = [
     {
         "name": "new hampshire",
         "img": "assets/newhampshire.jpg",
+        "license": {
+            "type": "CC BY 4.0",
+            "link": "https://commons.wikimedia.org/wiki/File:Exeter,_New_Hampshire,_USA.jpg",
+            "author": "Quintin Soloviev"
+        },
         "subcategory": 3,
         "center": [43.903056023474036, -71.61989519732519],
         "zoom": 6,
@@ -12602,6 +13042,11 @@ var categories = [
     {
         "name": "maine",
         "img": "assets/maine.jpg",
+        "license": {
+            "type": "CC BY-SA 4.0",
+            "link": "https://www.focusonwildlife.me/",
+            "author": "Chuck Homler"
+        },
         "subcategory": 3,
         "center": [45.10456066934011, -69.24265050296282],
         "zoom": 6,
@@ -12814,6 +13259,11 @@ var categories = [
     {
         "name": "europe",
         "img": "assets/europe.jpg",
+        "license": {
+            "type": "CC BY-SA 3.0",
+            "link": "https://500px.com/photo/130666263/prague-by-night-by-victor",
+            "author": "Victor Porof"
+        },
         "subcategory": 1,
         "center": [48.83524325150736, 14.752620355370754],
         "zoom": 4,
@@ -13059,6 +13509,11 @@ var categories = [
     {
         "name": "london",
         "img": "assets/london.jpg",
+        "license": {
+            "type": "CC BY-SA 2.0",
+            "link": "https://commons.wikimedia.org/wiki/File:London_Eye_%281302205182%29.jpg",
+            "author": "Michal Osmenda"
+        },
         "subcategory": 5,
         "center": [51.5042522167164, -0.12272252568152453],
         "zoom": 9,
@@ -13100,24 +13555,289 @@ var categories = [
         ]
     },
     {
-        "name": "",
-        "img": "assets/.jpg",
+        "name": "colombia",
+        "img": "assets/colombia.jpg",
+        "license": {
+            "type": "Public Domain",
+            "link": "https://www.pexels.com/photo/city-in-colombia-on-a-hill-16637453/",
+            "author": "César Gaviria"
+        },
+        "subcategory": 4,
+        "center": [3.2870472270732987, -73.21685176294636],
+        "zoom": 5,
+        "filters": {
+            "country": [
+                "Colombia"
+            ],
+        },
+        "bounds": [
+            [
+                {"lat":7.218869395185957,"lng":-77.92041003147364},
+                {"lat":7.7498879742177795,"lng":-77.74462878147364},
+                {"lat":7.648386879224011,"lng":-77.552490234375},
+                {"lat":8.027387903262207,"lng":-77.31066882053614},
+                {"lat":8.546066936378269,"lng":-77.54109861989927},
+                {"lat":8.744289267582358,"lng":-77.35433104177427},
+                {"lat":8.724018375256055,"lng":-76.68965819021177},
+                {"lat":9.511642476556196,"lng":-76.2093982017711},
+                {"lat":9.4953891576793,"lng":-75.7259997642711},
+                {"lat":9.646372233233958,"lng":-75.6710681236461},
+                {"lat":9.819623265375952,"lng":-75.9182605064586},
+                {"lat":10.445382083543613,"lng":-75.72768405740891},
+                {"lat":10.82646455288222,"lng":-75.43098207491568},
+                {"lat":11.197131128482738,"lng":-74.87297825850958},
+                {"lat":11.046211141623669,"lng":-74.36211400069708},
+                {"lat":11.401825117134454,"lng":-74.32915501632208},
+                {"lat":11.425595138744637,"lng":-74.03390406974925},
+                {"lat":11.339433203578709,"lng":-73.701567643968},
+                {"lat":11.350204870718674,"lng":-73.30880641349925},
+                {"lat":11.739995350811544,"lng":-72.94042557429776},
+                {"lat":11.957728037220967,"lng":-72.32519119929776},
+                {"lat":12.329714442589589,"lng":-72.24409322532226},
+                {"lat":12.560370231694815,"lng":-71.60413961204101},
+                {"lat":12.337764015005295,"lng":-70.98615865500976},
+                {"lat":11.959169348819591,"lng":-70.91200094016601},
+                {"lat":11.8570453124104,"lng":-71.24159078391601},
+                {"lat":11.849989276234426,"lng":-71.31918172629882},
+                {"lat":11.832180374391063,"lng":-71.35694722922851},
+                {"lat":11.811009793920809,"lng":-71.37033681663085},
+                {"lat":11.634007091673134,"lng":-71.96387125747822},
+                {"lat":11.124803092184731,"lng":-72.24755553633244},
+                {"lat":11.133678457061885,"lng":-72.33720393038209},
+                {"lat":11.086514075864109,"lng":-72.44981379366334},
+                {"lat":10.98407383321766,"lng":-72.48689265108521},
+                {"lat":10.86676307781448,"lng":-72.58164973116334},
+                {"lat":10.739961697233786,"lng":-72.65580744600709},
+                {"lat":10.594209305025466,"lng":-72.74781794405396},
+                {"lat":10.467335180809007,"lng":-72.82255305188396},
+                {"lat":10.382245973252582,"lng":-72.86375178235271},
+                {"lat":10.194427811926733,"lng":-72.87611140149333},
+                {"lat":10.094821166955139,"lng":-72.88984431164958},
+                {"lat":9.978525561826764,"lng":-72.94202937024333},
+                {"lat":9.883835656590053,"lng":-72.94477595227458},
+                {"lat":9.831068005332211,"lng":-72.91868342297771},
+                {"lat":9.754555974915887,"lng":-72.95375476034967},
+                {"lat":9.535929974477531,"lng":-73.0569089890153},
+                {"lat":9.487171164385702,"lng":-73.13243999487467},
+                {"lat":9.28122458216382,"lng":-73.2601560593278},
+                {"lat":9.203963267717702,"lng":-73.31646099096842},
+                {"lat":9.187695571664841,"lng":-73.26290264135905},
+                {"lat":9.31646094043057,"lng":-73.00060405737467},
+                {"lat":9.151090525910035,"lng":-72.92781963354655},
+                {"lat":9.153843551221838,"lng":-72.77817285808109},
+                {"lat":9.095501707455794,"lng":-72.72708452514686},
+                {"lat":8.875796615989271,"lng":-72.68204248698734},
+                {"lat":8.628730633884638,"lng":-72.61996782592811},
+                {"lat":8.463049376668947,"lng":-72.46066606811561},
+                {"lat":8.346214735586544,"lng":-72.34530962280311},
+                {"lat":8.107803760660765,"lng":-72.31647051147499},
+                {"lat":7.982704499325729,"lng":-72.31921709350624},
+                {"lat":7.963664281808491,"lng":-72.39749468139686},
+                {"lat":7.921383845561863,"lng":-72.44069438201122},
+                {"lat":7.831601740292362,"lng":-72.42009501677684},
+                {"lat":7.778539566530182,"lng":-72.41872172576122},
+                {"lat":7.530828042266588,"lng":-72.43520121794872},
+                {"lat":7.435356125704176,"lng":-72.40773539763622},
+                {"lat":7.398587508928336,"lng":-72.31297831755809},
+                {"lat":7.40675857798821,"lng":-72.20174174529247},
+                {"lat":7.331851462274597,"lng":-72.12483744841747},
+                {"lat":7.284869751943948,"lng":-72.13254404716581},
+                {"lat":7.060050012023031,"lng":-72.02405405693143},
+                {"lat":7.045058105160685,"lng":-71.91144419365018},
+                {"lat":7.101343362685325,"lng":-71.77603751380066},
+                {"lat":7.098617841501024,"lng":-71.64145499426941},
+                {"lat":7.056370202249771,"lng":-71.41348868567566},
+                {"lat":7.057733089637725,"lng":-71.12514252368575},
+                {"lat":7.00321447154285,"lng":-71.0235189885295},
+                {"lat":7.11189375843612,"lng":-70.83421035528168},
+                {"lat":7.1364221574506,"lng":-70.67628188848481},
+                {"lat":7.0755778819017054,"lng":-70.50752611484984},
+                {"lat":6.986985287195498,"lng":-70.30290575352171},
+                {"lat":7.010157288086559,"lng":-70.11751146641235},
+                {"lat":6.958359465477726,"lng":-70.05571337070923},
+                {"lat":6.511714430298221,"lng":-69.71937984119216},
+                {"lat":6.138272861950698,"lng":-69.4214875341289},
+                {"lat":6.235208644102706,"lng":-69.10151072748828},
+                {"lat":6.177669666684493,"lng":-68.7555843521142},
+                {"lat":6.206340531029965,"lng":-68.41088830719232},
+                {"lat":6.245931063146146,"lng":-68.16725940368079},
+                {"lat":6.2472962006183215,"lng":-67.97087878844641},
+                {"lat":6.350336580902059,"lng":-67.85372141645102},
+                {"lat":6.3284982825928715,"lng":-67.68480662152915},
+                {"lat":6.298469115691053,"lng":-67.50490549848227},
+                {"lat":6.237144888266035,"lng":-67.43257647593035},
+                {"lat":6.171613024030619,"lng":-67.40099078257097},
+                {"lat":6.132016922626352,"lng":-67.44218951303972},
+                {"lat":5.984529866013838,"lng":-67.34605914194597},
+                {"lat":5.834270651018332,"lng":-67.50948077280535},
+                {"lat":5.776652409929075,"lng":-67.56029254038347},
+                {"lat":5.657770425589084,"lng":-67.5946248157741},
+                {"lat":5.53066266803103,"lng":-67.5506795032741},
+                {"lat":5.420888782948717,"lng":-67.6353197985652},
+                {"lat":5.297832920814031,"lng":-67.8111010485652},
+                {"lat":5.169229963546179,"lng":-67.7797355711391},
+                {"lat":5.063907924362324,"lng":-67.78110886215472},
+                {"lat":4.954464259537857,"lng":-67.79758835434222},
+                {"lat":4.851844354671278,"lng":-67.79896164535785},
+                {"lat":4.563761794485977,"lng":-67.78267984567866},
+                {"lat":4.383039681473764,"lng":-67.71401529489741},
+                {"lat":4.246736495809822,"lng":-67.75384073435053},
+                {"lat":3.9919644676386588,"lng":-67.63573770700678},
+                {"lat":3.7822415642041545,"lng":-67.58039375542225},
+                {"lat":3.8110173839111736,"lng":-67.478770220266},
+                {"lat":3.5629663757988763,"lng":-67.3744001030785},
+                {"lat":3.426219229251915,"lng":-67.28867201369836},
+                {"lat":3.3508202804093226,"lng":-67.27768568557336},
+                {"lat":3.2466231084545045,"lng":-67.34360365432336},
+                {"lat":3.2096030863992455,"lng":-67.43149427932336},
+                {"lat":2.8630830131998772,"lng":-67.82398483361109},
+                {"lat":2.842509176871599,"lng":-67.60288498009547},
+                {"lat":2.749768414743179,"lng":-67.52354245120962},
+                {"lat":2.712731678299042,"lng":-67.5166759961315},
+                {"lat":2.513811666596135,"lng":-67.30106930667837},
+                {"lat":2.395694949394707,"lng":-67.12978907656553},
+                {"lat":2.252990227137688,"lng":-67.15450831484678},
+                {"lat":2.0334175028315618,"lng":-67.01443263125303},
+                {"lat":1.3853736504148595,"lng":-66.81112857106939},
+                {"lat":1.2041654999209663,"lng":-66.81408030932279},
+                {"lat":1.1272771254030396,"lng":-67.10659129565092},
+                {"lat":1.3469523366688896,"lng":-67.18349559252592},
+                {"lat":1.8359600130634972,"lng":-67.29147967127578},
+                {"lat":1.8990978428068528,"lng":-67.75839861658828},
+                {"lat":1.7508576842812995,"lng":-67.87375506190078},
+                {"lat":1.6822239505488248,"lng":-68.17038592127578},
+                {"lat":1.6493759866501179,"lng":-69.80977884895633},
+                {"lat":1.1496487575609382,"lng":-69.80153910286258},
+                {"lat":1.0892354883336628,"lng":-69.19179789192508},
+                {"lat":0.8208380199245395,"lng":-69.06209200181486},
+                {"lat":0.559931894115227,"lng":-69.07033174790861},
+                {"lat":0.4912702365709716,"lng":-69.97945040025236},
+                {"lat":-0.16515662051201627,"lng":-69.98219698228361},
+                {"lat":-0.22815516865848492,"lng":-69.93743548656865},
+                {"lat":-0.49731456608326136,"lng":-69.5446742560999},
+                {"lat":-0.7335606790524557,"lng":-69.51911129732294},
+                {"lat":-0.8901000910863373,"lng":-69.45044674654169},
+                {"lat":-1.156475819386733,"lng":-69.31586422701044},
+                {"lat":-1.4832319223195733,"lng":-69.35156979341669},
+                {"lat":-3.172269437376148,"lng":-69.67566647310419},
+                {"lat":-4.312967095937108,"lng":-69.8714372396614},
+                {"lat":-3.89107797515894,"lng":-70.37406175138015},
+                {"lat":-3.9431411236695197,"lng":-70.48392503263015},
+                {"lat":-3.8088664688390637,"lng":-70.76956956388015},
+                {"lat":-2.769174641387919,"lng":-70.12600803044575},
+                {"lat":-2.398763724209729,"lng":-70.97744846013325},
+                {"lat":-2.4641863338230676,"lng":-71.31484164908338},
+                {"lat":-2.4586982380336835,"lng":-71.55104770377088},
+                {"lat":-2.4314586315101017,"lng":-72.0306926027415},
+                {"lat":-2.558234586046635,"lng":-72.1661976003445},
+                {"lat":-2.4704285837641327,"lng":-73.04235726831325},
+                {"lat":-2.2653598622670947,"lng":-73.24057466758909},
+                {"lat":-1.9469719917415929,"lng":-73.19662935508909},
+                {"lat":-1.7163771414389688,"lng":-73.63333589805784},
+                {"lat":-1.3535563021934005,"lng":-73.74804538838379},
+                {"lat":-0.9855916194144474,"lng":-74.37975925557127},
+                {"lat":-0.5351484772354285,"lng":-74.58263324338222},
+                {"lat":-0.16162088765616786,"lng":-75.10448382931972},
+                {"lat":-0.16857857590372594,"lng":-75.21014596389861},
+                {"lat":-0.09716763974139989,"lng":-75.47107125686736},
+                {"lat":0.0011854400573511126,"lng":-75.76948397821532},
+                {"lat":0.08495616087990986,"lng":-75.89170687860594},
+                {"lat":0.3769204555439248,"lng":-76.28193827699371},
+                {"lat":0.3247363770247631,"lng":-76.37669535707184},
+                {"lat":0.2189941742066293,"lng":-76.38081523011871},
+                {"lat":0.17230255318628845,"lng":-76.58543559144684},
+                {"lat":0.20078450939155257,"lng":-76.86655568557198},
+                {"lat":0.27356830472652166,"lng":-77.16593312697823},
+                {"lat":0.4012821279912515,"lng":-77.55594777541573},
+                {"lat":0.5975166531991921,"lng":-77.55539361643808},
+                {"lat":0.7560830362893134,"lng":-77.76559095151494},
+                {"lat":0.778522864115154,"lng":-77.92761292972178},
+                {"lat":0.8842551251615203,"lng":-78.1432196191749},
+                {"lat":1.1053215169710267,"lng":-78.37667909183115},
+                {"lat":1.0848350786805034,"lng":-78.453369140625},
+                {"lat":1.478818968600632,"lng":-78.91783301501019},
+                {"lat":1.6806952287157455,"lng":-79.05213084715663},
+                {"lat":2.015603452239426,"lng":-78.73490062254726},
+                {"lat":2.190251143768925,"lng":-78.75278968395348},
+                {"lat":2.5954565194245403,"lng":-78.5459272356143},
+                {"lat":2.723035023666062,"lng":-78.32482738209868},
+                {"lat":2.6944772315479213,"lng":-77.96880813294683},
+                {"lat":3.1701713093451964,"lng":-77.66564933631282},
+                {"lat":3.73215052999337,"lng":-77.28024352913994},
+                {"lat":4.087453731454009,"lng":-77.63631979492236},
+                {"lat":4.462944358483246,"lng":-77.4728409885424},
+                {"lat":5.054254726536338,"lng":-77.44812175026115},
+                {"lat":5.564398588600289,"lng":-77.62527629127678},
+                {"lat":5.763920031165468,"lng":-77.37671061744865},
+                {"lat":6.108509948861897,"lng":-77.53952846952897},
+                {"lat":6.5384636800557105,"lng":-77.5024496121071},
+                {"lat":6.822801561477328,"lng":-77.77649559162388}
+            ]
+        ]
+    },
+    {
+        "name": "venezuela",
+        "img": "assets/venezuela.jpg",
+        "license": {
+            "type": "CERTIFICATION 1.0 US",
+            "link": "https://www.needpix.com/photo/76369/venezuela-landscape-scenic-cactus-cacti-mountains-nature-outside-country",
+            "author": ""
+        },
         "subcategory": 0,
         "center": [0, 0],
         "zoom": 1,
         "filters": {
             "country": [
-                ""
-            ],
-            "administrative_area_level_1": [
-               ""
+                "Venezuela"
             ]
         },
         "bounds": [
             [
-                {"lat":-67.87554134672945,"lng":13.35938572883606},
-                {"lat":-69.41124235697255,"lng":-97.03123927116394},
-                {"lat":9.102096738726456,"lng":-46.40623927116394}
+                {"lat":11.654718948307446,"lng":-71.98256963028237},
+                {"lat":11.163176870756121,"lng":-72.26453336391431},
+                {"lat":11.138924313664486,"lng":-72.49387296352369},
+                {"lat":10.837667057297349,"lng":-72.70718232409494},
+                {"lat":10.474833962098032,"lng":-72.90688896495553},
+                {"lat":9.9883125218557,"lng":-73.0318584473774},
+                {"lat":9.38904002538619,"lng":-73.30533083417271},
+                {"lat":9.16947827218884,"lng":-73.42343386151646},
+                {"lat":8.936214655850433,"lng":-72.79721315839146},
+                {"lat":8.534436530713016,"lng":-72.70382936932896},
+                {"lat":7.393346393011255,"lng":-72.50182299729886},
+                {"lat":6.955753196358083,"lng":-72.00959588832222},
+                {"lat":6.918196596241226,"lng":-70.57077988022039},
+                {"lat":6.850438546332143,"lng":-70.07572713192377},
+                {"lat":6.004357725978576,"lng":-69.38358846004877},
+                {"lat":6.153896166470013,"lng":-67.586110702063},
+                {"lat":5.141820046117693,"lng":-67.9998686023633},
+                {"lat":4.355678908574812,"lng":-67.93305223666755},
+                {"lat":3.382149464210154,"lng":-67.61906904183638},
+                {"lat":2.828156634622476,"lng":-67.97063154183638},
+                {"lat":1.0609506106748965,"lng":-66.82578795955261},
+                {"lat":0.5243645946339431,"lng":-66.08573224709907},
+                {"lat":0.6067580343129361,"lng":-65.29471662209907},
+                {"lat":2.1114182782055404,"lng":-63.223793770536574},
+                {"lat":3.5312259066080722,"lng":-63.564369942411574},
+                {"lat":3.5696042529165566,"lng":-62.619545723661574},
+                {"lat":4.7145172838719205,"lng":-60.57183269114225},
+                {"lat":5.076981311088093,"lng":-60.51326972071233},
+                {"lat":5.901467470506516,"lng":-61.22638954778631},
+                {"lat":6.134677799690522,"lng":-61.030731831927014},
+                {"lat":6.617814081984996,"lng":-61.077423726458264},
+                {"lat":6.883655142101207,"lng":-60.20811168565511},
+                {"lat":7.175289608941503,"lng":-60.24302302906251},
+                {"lat":7.592031125346095,"lng":-60.51218806812501},
+                {"lat":8.317505500242905,"lng":-59.570707911190894},
+                {"lat":8.71136975807966,"lng":-60.180449122128394},
+                {"lat":9.750651364131562,"lng":-60.73120079437535},
+                {"lat":9.986068310569424,"lng":-61.88476524750035},
+                {"lat":10.28851088334388,"lng":-62.52630456007429},
+                {"lat":10.551426024673301,"lng":-61.82763475527073},
+                {"lat":10.786247862857486,"lng":-61.80016893495823},
+                {"lat":11.25602027434246,"lng":-63.89079483474773},
+                {"lat":11.2273488578452,"lng":-66.07180115943262},
+                {"lat":11.62983791038899,"lng":-68.96914186661526},
+                {"lat":12.3086426533007,"lng":-70.03719233824462}
             ]
         ]
     },
@@ -13126,6 +13846,11 @@ var categories = [
     {
         "name": "",
         "img": "assets/.jpg",
+        "license": {
+            "type": "",
+            "link": "",
+            "author": ""
+        },
         "subcategory": 0,
         "center": [0, 0],
         "zoom": 1,
@@ -13215,3 +13940,21 @@ for (i in categories) {
 }
 
 //categories.push(mj_cat);
+
+var licenses = {
+    "CC BY-NC-SA 2.0": "https://creativecommons.org/licenses/by-nc-sa/2.0/",
+    "CC BY-NC-ND 2.0": "https://creativecommons.org/licenses/by-nc-nd/2.0/",
+    "CC BY-SA 2.0": "https://creativecommons.org/licenses/by-sa/2.0/",
+    "CC BY 2.0": "https://creativecommons.org/licenses/by/2.0/",
+    "CC BY 3.0": "https://creativecommons.org/licenses/by/3.0/",
+    "CC BY-SA 3.0": "https://creativecommons.org/licenses/by-sa/3.0/",
+    "CC BY-SA 3.0 US" : "https://creativecommons.org/licenses/by-sa/3.0/us/",
+    "CC BY-NC-SA 3.0": "https://creativecommons.org/licenses/by-nc-sa/3.0/",
+    "CC BY-SA 4.0": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "CC BY-NC 4.0": "https://creativecommons.org/licenses/by-nc/4.0/",
+    "CC BY 4.0": "https://creativecommons.org/licenses/by/4.0/",
+    "Public Domain": "https://creativecommons.org/public-domain/",
+    "PDM 1.0": "https://creativecommons.org/publicdomain/mark/1.0/",
+    "CC0 1.0": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "CERTIFICATION 1.0 US": "https://creativecommons.org/publicdomain/certification/1.0/us/"
+}
