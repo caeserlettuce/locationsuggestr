@@ -12,7 +12,7 @@ TO DO LIST::::
 [x] fix the big huge error that occurrs sometimes when moving points in polygon editor
 [ ] make the reflection map slightly shorter so the "main menu" button is clickable without having to scroll down
 [ ] make it so when you go into the polygon editor will scroll you back up to the top of the page so you dont have to
-
+[ ] fix the collapse/expand speed of sections (make the speed relative to the size of the category using javascript)
 
 
 */
@@ -255,12 +255,14 @@ for (i in subcategories) {
   if (i > 0) {
     var subcategory_node = document.querySelector(".template.subcategory-wrapper").cloneNode(true);
     subcategory_node.classList.remove("template");
-    subcategory_node.id = `sb_${i}`;
-    subcategory_node.querySelector(".subcategory-header").setAttribute("onclick", `toggle_subcategory(${i})`);
+    subcategory_node.id = `sb_${subcategories[i]["id"]}`;
+    subcategory_node.querySelector(".subcategory-header").setAttribute("onclick", `toggle_subcategory(${subcategories[i]["id"]})`);
     subcategory_node.querySelector("h2").innerHTML = `${subcategories[i]["name"]}`;
     document.querySelector(".game-subcategories").appendChild(subcategory_node);
   }
 }
+
+
 
 for (i in categories) {
   if (categories[i]["subcategory"] > 0) {
@@ -280,6 +282,9 @@ for (i in categories) {
   }
   
 }
+
+
+
 
 function ray_casting(point, polygon) {
   var n = polygon.length,
@@ -1541,6 +1546,7 @@ function enable_polygon_maker() {
     node_tmtm.classList.add("basic");
     node_tmtm.classList.add("cpj");
     node_tmtm.setAttribute("onclick", `copy_polygon_json()`);
+    node_tmtm.style = "margin-bottom: 2em;";
     node_tmtm.innerHTML = "copy polygon json";
     document.querySelector(".reflection-page").appendChild(node_tmtm);
     var node_tmtm = document.createElement("h2");
@@ -1809,6 +1815,7 @@ function resize_google() {
 function open_polygon_editor() {
   end_game();
   enable_polygon_maker();
+  document.querySelector(".reflection-page").scrollTop = 0;
 }
 
 
